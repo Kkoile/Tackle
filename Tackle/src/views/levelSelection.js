@@ -7,7 +7,7 @@ import React, {
 
 var Button = require('react-native-button');
 
-var Game = require('./game');
+import Game from '../containers/game';
 
 var LevelSelection = React.createClass({
   render: function() {
