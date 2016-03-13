@@ -1,0 +1,56 @@
+import React, {
+  Component,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
+var Button = require('react-native-button');
+
+var LevelSelection = require('./levelSelection');
+
+var Home = React.createClass({
+  getInitialState: function() {
+    return(
+      {
+      }
+    );
+  },
+  render: function() {
+    return (
+      <View style={styles.container}>
+          <Button 
+            style={styles.button}
+            onPress={this.onPressPlay}
+          >
+            Play
+          </Button>
+      </View>
+    );
+  },
+  onPressPlay: function() {
+    //TODO: Implement logic to play against Someone
+    this.props.navigator.push({
+      title: 'Level Selection',
+      component: LevelSelection,
+    }); 
+  }
+});
+
+var styles = StyleSheet.create({
+  button: {
+    marginTop: 20,
+    padding:5,
+    borderWidth: 2,
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#656565'
+  },
+  container: {
+    padding: 30,
+    marginTop: 65,
+    alignItems: 'center',
+  },
+});
+
+module.exports = Home;
