@@ -8,13 +8,7 @@ import React, {
 var GridView = require('react-native-grid-view')
 var Form = require('../components/form')
 
-/* Push to game on click
 import Game from '../containers/game';
-this.props.navigator.replace({
-      title: 'Game',
-      component: Game,
-    });
-*/
 
 class LevelSelection extends Component {
 
@@ -41,6 +35,10 @@ class LevelSelection extends Component {
 
   onPress(name) {
     this.props.onLevelSelect(name)
+    this.props.navigator.replace({
+          title: 'Game',
+          component: Game,
+        });
   }
 }
 
