@@ -5,29 +5,33 @@ import React, {
   TouchableHighlight
 } from 'react-native';
 
-var {width, height} = require('Dimensions').get('window');
-var SIZE = 10;
-var TILE_SIZE = Math.floor(width * .95 / SIZE);
+import {Player} from '../constants/game';
 
-var Stone = React.createClass({
+class Stone extends Component{
+  constructor(props){
+    super(props);
+    this.onPress = this.onPress.bind(this);
+  }
   render() {
     var stone = this.props.stone;
 
     var style = [
       styles.stone,
       {     
-        left: stone.position.col * TILE_SIZE,
-        top: stone.position.row * TILE_SIZE,
+        left: stone.position.col * this.props.screenResolution.TILE_SIZE,
+        top: stone.position.row * this.props.screenResolution.TILE_SIZE,
+        width: this.props.screenResolution.TILE_SIZE,
+        height: this.props.screenResolution.TILE_SIZE,
       }
     ];
     switch (stone.player){
-      case 'WHITE':
+      case Player.WHITE:
         style.push(styles.white);
         break;
-      case 'BLACK':
+      case Player.BLACK:
         style.push(styles.black);
         break;
-      case 'GOLD':
+      case Player.GOLD:
         style.push(styles.gold);
         break;
     }
@@ -38,16 +42,14 @@ var Stone = React.createClass({
           </View>
         </TouchableHighlight>
     );
-  },
+  }
   onPress(){
     this.props.onPress(this.props.stone.id);
   }
-});
+}
 
 var styles = StyleSheet.create({
   stone: {
-    width: TILE_SIZE,
-    height: TILE_SIZE,
     position: 'absolute',
     borderWidth: 1,
   },

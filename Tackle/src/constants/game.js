@@ -1,4 +1,4 @@
-var GameStates = {
+export const GameStates = {
 	WHITE_PLAYER_SET_STONE: 'WHITE_PLAYER_SET_STONE',
 	BLACK_PLAYER_SET_STONE: 'BLACK_PLAYER_SET_STONE',
 	BLACK_PLAYER_SET_GOLDEN_STONE: 'BLACK_PLAYER_SET_GOLDEN_STONE',
@@ -6,4 +6,8 @@ var GameStates = {
 	BLACK_PLAYER_MAKE_TURN: 'BLACK_PLAYER_MAKE_TURN',
 }
 
-module.exports = GameStates;
+export const Player = {
+	WHITE: 'WHITE',
+	BLACK: 'BLACK',
+	GOLD: 'GOLD',
+}

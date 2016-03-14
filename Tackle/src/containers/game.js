@@ -1,6 +1,6 @@
 'use strict';
 import { connect } from 'react-redux'
-import { setStone, setGoldenStone, makeTurn } from '../actions/game'
+import { setStone, makeTurn } from '../actions/game'
 import Game from '../views/game'
 
 const mapStateToProps = (state) => {
@@ -11,9 +11,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onSetStone: (player, position) => {
       dispatch(setStone(player, position))
-    },
-    onSetGoldenStone: (position) => {
-      dispatch(setGoldenStone(position))
     },
     onMakeTurn: (player, turn) => {
       dispatch(makeTurn(player, turn))

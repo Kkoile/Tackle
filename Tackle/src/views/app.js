@@ -2,8 +2,6 @@ import React, {
   Component,
   NavigatorIOS,
   StyleSheet,
-  Text,
-  View,
 } from 'react-native';
 
 import { createStore } from 'redux'
@@ -16,8 +14,8 @@ var Login = require('./login.js');
 
 import Game from '../containers/game'
 
-var App = React.createClass({
-  render: function() {
+class App extends Component{
+  render() {
     return (
       <Provider store={store}>
         <NavigatorIOS
@@ -29,7 +27,7 @@ var App = React.createClass({
       </Provider>
     );
   }
-});
+}
 
 var styles = StyleSheet.create({
   container: {

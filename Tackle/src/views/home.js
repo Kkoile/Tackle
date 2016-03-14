@@ -9,14 +9,12 @@ var Button = require('react-native-button');
 
 var LevelSelection = require('./levelSelection');
 
-var Home = React.createClass({
-  getInitialState: function() {
-    return(
-      {
-      }
-    );
-  },
-  render: function() {
+class Home extends Component{
+  constructor(props) {
+    super(props);
+    this.onPressPlay = this.onPressPlay.bind(this);
+  }
+  render() {
     return (
       <View style={styles.container}>
           <Button 
@@ -27,15 +25,15 @@ var Home = React.createClass({
           </Button>
       </View>
     );
-  },
-  onPressPlay: function() {
+  }
+  onPressPlay() {
     //TODO: Implement logic to play against Someone
     this.props.navigator.push({
       title: 'Level Selection',
       component: LevelSelection,
     }); 
   }
-});
+}
 
 var styles = StyleSheet.create({
   button: {
