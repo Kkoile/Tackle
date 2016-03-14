@@ -7,8 +7,8 @@ import React, {
 
 var Button = require('react-native-button');
 
-var LevelSelection = require('./levelSelection');
-
+import LevelSelection from '../containers/levelSelection'
+ 
 var Home = React.createClass({
   getInitialState: function() {
     return(
@@ -29,8 +29,7 @@ var Home = React.createClass({
     );
   },
   onPressPlay: function() {
-    //TODO: Implement logic to play against Someone
-    this.props.navigator.push({
+    this.props.navigator.replace({
       title: 'Level Selection',
       component: LevelSelection,
     }); 

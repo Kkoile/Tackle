@@ -120,6 +120,7 @@ function stones(state = initialState(), action) {
     case SELECT_LEVEL:
       var newState = Object.assign({}, state);
       newState.level = action.level;
+      console.log("selected level: "+action.level)
       return newState;
     case SET_STONE:
       var newState = Object.assign({}, state);
