@@ -1,31 +1,31 @@
 import { combineReducers } from 'redux'
 import { SET_STONE, SET_GOLDEN_STONE, MAKE_TURN, SELECT_LEVEL } from '../actions/game'
-import gameStates from '../constants/game';
+import {GameStates, Player} from '../constants/game';
 
 function switchGameState(state){
   var gameState = state.gameState;
   switch (gameState.state){
-    case gameStates.WHITE_PLAYER_SET_STONE:
+    case GameStates.WHITE_PLAYER_SET_STONE:
       return {
-        activePlayer: 'BLACK',
-        state: gameStates.BLACK_PLAYER_SET_STONE
+        activePlayer: Player.BLACK,
+        state: GameStates.BLACK_PLAYER_SET_STONE
       };
-    case gameStates.BLACK_PLAYER_SET_STONE:
+    case GameStates.BLACK_PLAYER_SET_STONE:
       if(state.stones.length/2<state.level.numberOfStones){
         return {
-          activePlayer: 'WHITE',
-          state: gameStates.WHITE_PLAYER_SET_STONE
+          activePlayer: Player.WHITE,
+          state: GameStates.WHITE_PLAYER_SET_STONE
         };
       }else{
         return {
-          activePlayer: 'BLACK',
-          state: gameStates.BLACK_PLAYER_SET_GOLDEN_STONE
+          activePlayer: Player.BLACK,
+          state: GameStates.BLACK_PLAYER_SET_GOLDEN_STONE
         };
       }
-    case gameStates.BLACK_PLAYER_SET_GOLDEN_STONE:
+    case GameStates.BLACK_PLAYER_SET_GOLDEN_STONE:
       return{
-        activePlayer: 'WHITE',
-        state: gameStates.WHITE_PLAYER_MAKE_TURN
+        activePlayer: Player.WHITE,
+        state: GameStates.WHITE_PLAYER_MAKE_TURN
       };
   }
 }
@@ -86,7 +86,7 @@ function stoneIsNextToSameColor(state, action){
 
 function positionIsAllowed(state, action){
   var {row, col} = action.position;
-  if(state.gameState.state == gameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
+  if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
     if(!(rowIsInCore(row) && colIsInCore(col))){
       return false;
     }
@@ -108,8 +108,8 @@ function initialState(){
       numberOfStones: 5
     },
     gameState: {
-      state: gameStates.WHITE_PLAYER_SET_STONE,
-      activePlayer: 'WHITE'
+      state: GameStates.WHITE_PLAYER_SET_STONE,
+      activePlayer: Player.WHITE
     },
     stones: []
   }
@@ -124,26 +124,22 @@ function stones(state = initialState(), action) {
       return newState;
     case SET_STONE:
       var newState = Object.assign({}, state);
-      if(positionIsAllowed(state, action)){
-        newState.stones.push(
-          {
-            id: 'stone' + state.stones.length,
-            player: action.player,
-            position: action.position
-          });
-        newState.gameState = switchGameState(state);
-      }
-      return newState;
-    case SET_GOLDEN_STONE:
-      var newState = Object.assign({}, state);
-      if(positionIsAllowed(state, action)){
-        newState.stones.push(
-          {
-            id: 'GOLD',
-            player: 'GOLD',
-            position: action.position
-          });
-        newState.gameState = switchGameState(state);
+      if(state.gameState.state == GameStates.WHITE_PLAYER_SET_STONE ||
+        state.gameState.state == GameStates.BLACK_PLAYER_SET_STONE ||
+        state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
+        if(positionIsAllowed(state, action)){
+          var player = action.player;
+          if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
+            player = Player.GOLD;
+          }
+          newState.stones.push(
+            {
+              id: 'stone' + state.stones.length,
+              player: player,
+              position: action.position
+            });
+          newState.gameState = switchGameState(state);
+        }
       }
       return newState;
     case MAKE_TURN:

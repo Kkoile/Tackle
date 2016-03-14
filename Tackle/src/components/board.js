@@ -10,16 +10,25 @@ import gameStates from '../constants/game';
 var Stone = require('./stone');
 var Tile = require('./tile');
 
-var {width, height} = require('Dimensions').get('window');
-var SIZE = 10;
-var TILE_SIZE = Math.floor(width * .95 / SIZE);
 var BORDER_WIDTH = 1;
 
-var Board = React.createClass({
+class Board extends Component {
+  constructor(props){
+    super(props);
+    this.onPressTile = this.onPressTile.bind(this);
+  }
   render() {
     //TODO: highligh board if this.props.gameState.state == BLACK_PLAYER_SET_GOLDEN_STONE
     return (
-      <View style={styles.container}>
+      <View 
+        style={[
+          styles.container, 
+          {
+            width: this.props.screenResolution.TILE_SIZE * this.props.screenResolution.SIZE,
+            height: this.props.screenResolution.TILE_SIZE * this.props.screenResolution.SIZE
+          }
+        ]}
+      >
         {this.renderTiles()}
         {this.props.stones.map((stone)=>{
           return (
@@ -30,20 +39,21 @@ var Board = React.createClass({
                 player:stone.player, 
                 position:stone.position
               }}
+              screenResolution={this.props.screenResolution}
               onPress={this.props.onPressStone}
             />);
         })}
       </View>
     );
-  },
+  }
   onPressTile(position) {
     this.props.onPressTile(this.props.gameState.activePlayer, position);
-  },
+  }
   renderTiles() {
     var result = [];
-    for (var row = 0; row < SIZE; row++) {
-      for (var col = 0; col < SIZE; col++) {
-        var key = row * SIZE + col;
+    for (var row = 0; row < this.props.screenResolution.SIZE; row++) {
+      for (var col = 0; col < this.props.screenResolution.SIZE; col++) {
+        var key = row * this.props.screenResolution.SIZE + col;
         result.push(
           <Tile 
             key={key} 
@@ -57,29 +67,20 @@ var Board = React.createClass({
             row={row} 
             col={col} 
             onPress={this.onPressTile}
+            screenResolution={this.props.screenResolution}
           />
         );
       }
     }
-    /*is needed to represent the court, but it lies over the tiles, so they can't get the touch event
-    result.push(
-      <View key={'court'} style={styles.court}></View>
-    );*/
     return result;
   }
-});
+}
 
 var styles = StyleSheet.create({
   container: {
-    width: TILE_SIZE * SIZE,
-    height: TILE_SIZE * SIZE,
     backgroundColor: 'transparent',
   },
   court: {
-    width: TILE_SIZE*SIZE-2*TILE_SIZE+2*BORDER_WIDTH,
-    height: TILE_SIZE*SIZE-2*TILE_SIZE+2*BORDER_WIDTH,
-    top: TILE_SIZE-BORDER_WIDTH,
-    left: TILE_SIZE-BORDER_WIDTH,
     borderWidth: 2*BORDER_WIDTH,
     borderColor: '#30292E',
     backgroundColor: 'transparent',

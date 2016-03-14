@@ -10,15 +10,13 @@ var Button = require('react-native-button');
 
 var Home = require('./home');
 
-var Login = React.createClass({
-  getInitialState: function() {
-    return(
-      {
-        name: '',
-      }
-    );
-  },
-  render: function() {
+class Login extends Component{
+  constructor(props){
+    super(props);
+    this.onPressLogin = this.onPressLogin.bind(this);
+    this.state = {name: ''};
+  }
+  render() {
     return (
       <View style={styles.container}>
         <View style={styles.formular}>
@@ -34,15 +32,15 @@ var Login = React.createClass({
         </Button>
       </View>
     );
-  },
-  onPressLogin: function() {
+  }
+  onPressLogin() {
     //TODO: Implement login 
     this.props.navigator.replace({
       title: 'Home',
       component: Home,
     });
   }
-});
+}
 
 var styles = StyleSheet.create({
   button: {

@@ -6,17 +6,15 @@ import React, {
 } from 'react-native';
 
 var Button = require('react-native-button');
-
 import LevelSelection from '../containers/levelSelection'
- 
-var Home = React.createClass({
-  getInitialState: function() {
-    return(
-      {
-      }
-    );
-  },
-  render: function() {
+
+class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.onPressPlay = this.onPressPlay.bind(this);
+  }
+
+  render() {
     return (
       <View style={styles.container}>
           <Button 
@@ -27,14 +25,15 @@ var Home = React.createClass({
           </Button>
       </View>
     );
-  },
-  onPressPlay: function() {
-    this.props.navigator.replace({
+  }
+  onPressPlay() {
+    //TODO: Implement logic to play against Someone
+    this.props.navigator.push({
       title: 'Level Selection',
       component: LevelSelection,
     }); 
   }
-});
+}
 
 var styles = StyleSheet.create({
   button: {
