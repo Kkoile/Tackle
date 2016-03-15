@@ -11,11 +11,11 @@ var {GameStates, Player} = require('../constants/game');
 class Game extends Component {
   constructor(props){
     super(props);
-    this.onPressTile = this.onPressTile.bind(this);
-    this.onPressStone = this.onPressStone.bind(this);
+    this.onPressTile = this.onPressTile.bind(this)
+    this.onPressStone = this.onPressStone.bind(this)
   }
   render() {
-    var game = this.props.game;
+    var game = this.props.game
     return (
       <View style={styles.container}>
         <Text>Game</Text>
@@ -26,15 +26,17 @@ class Game extends Component {
           activePlayer={game.activePlayer}
           gameState={game.gameState}
           screenResolution={this.props.screenResolution}
+          selectedStones={game.selectedStones}
+          possibleTurns={game.possibleTurns}
         />
       </View>
     );
   }
   onPressTile(player, position) {
-    this.props.onSetStone(player, position);
+    this.props.onSetStone(player, position)
   }
   onPressStone(stoneID){
-    console.log('stoneID: '+ stoneID);
+    this.props.onClickStone(stoneID)
   }
 }
 

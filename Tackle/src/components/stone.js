@@ -36,6 +36,10 @@ class Stone extends Component{
         break;
     }
 
+    if(this.props.isSelected){
+      style.push({backgroundColor:'red'})
+    }
+
     return (
         <TouchableHighlight onPress={this.onPress}>
           <View style={style}>

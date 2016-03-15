@@ -27,6 +27,9 @@ class Tile extends Component {
         height: this.props.screenResolution.TILE_SIZE
       }
     ];
+    if(this.props.isPossibleTurn){
+      tileStyles.push({backgroundColor:'green'})
+    }
     if(this.isCornerTile(row,col)){
       tileStyles.push(styles.cornerTile);
     }

@@ -31,6 +31,7 @@ class Board extends Component {
       >
         {this.renderTiles()}
         {this.props.stones.map((stone)=>{
+          var index = this.props.selectedStones.indexOf(stone)
           return (
             <Stone 
               key={stone.id}
@@ -41,6 +42,7 @@ class Board extends Component {
               }}
               screenResolution={this.props.screenResolution}
               onPress={this.props.onPressStone}
+              isSelected={index>-1}
             />);
         })}
       </View>
@@ -53,7 +55,12 @@ class Board extends Component {
     var result = [];
     for (var row = 0; row < this.props.screenResolution.SIZE; row++) {
       for (var col = 0; col < this.props.screenResolution.SIZE; col++) {
-        var key = row * this.props.screenResolution.SIZE + col;
+        var key = row * this.props.screenResolution.SIZE + col
+        var possibleTurnRows = this.props.possibleTurns[col]
+        var isPossibleTurn = false
+        if(possibleTurnRows){
+          isPossibleTurn = possibleTurnRows[row]
+        }
         result.push(
           <Tile 
             key={key} 
@@ -68,6 +75,7 @@ class Board extends Component {
             col={col} 
             onPress={this.onPressTile}
             screenResolution={this.props.screenResolution}
+            isPossibleTurn={isPossibleTurn}
           />
         );
       }
