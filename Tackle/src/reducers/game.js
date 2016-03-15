@@ -3,7 +3,7 @@ import { SET_STONE, SET_GOLDEN_STONE, MAKE_TURN, SELECT_LEVEL, STONE_CLICKED } f
 import { GameStates, Player } from '../constants/game'
 import { levels } from '../constants/levels'
 
-function switchGameState(state) {
+/*tc*/export/*etc*/function switchGameState(state) {
   var gameState = state.gameState
   switch (gameState.state){
     case GameStates.WHITE_PLAYER_SET_STONE:
@@ -31,53 +31,55 @@ function switchGameState(state) {
   }
 }
 
-function rowIsInCourt(row) {
+/*tc*/export/*etc*/function rowIsInCourt(row) {
   if(row>0 && row < 9){
     return true
   }
   return false
 }
 
-function colIsInCourt(col) {
+/*tc*/export/*etc*/function colIsInCourt(col) {
   if(col>0 && col < 9){
     return true
   }
   return false
 }
 
-function rowIsInCore(row) {
+/*tc*/export/*etc*/function rowIsInCore(row) {
   if(row>2 && row < 7){
     return true
   }
   return false
 }
 
-function colIsInCore(col) {
+/*tc*/export/*etc*/function colIsInCore(col) {
   if(col>2 && col < 7){
     return true
   }
   return false
 }
 
-function stonesAreNextToEachOther(stoneA, stoneB) {
-  if(stoneA.row == stoneB.row){
-    if(stoneA.col == stoneB.col+1 || stoneA.col == stoneB.col-1){
+/*tc*/export/*etc*/function stonesAreNextToEachOther(stoneA, stoneB) {
+  if(stoneA.position.row == stoneB.position.row){
+    if(stoneA.position.col == stoneB.position.col+1 || 
+        stoneA.position.col == stoneB.position.col-1){
       return true
     }
   }
-  if(stoneA.col == stoneB.col){
-    if(stoneA.row == stoneB.row+1 || stoneA.row == stoneB.row-1){
+  if(stoneA.position.col == stoneB.position.col){
+    if(stoneA.position.row == stoneB.position.row+1 || 
+        stoneA.position.row == stoneB.position.row-1){
       return true
     }
   }
   return false
 }
 
-function stoneIsNextToSameColor(state, action) {
+/*tc*/export/*etc*/function stoneIsNextToSameColor(state, action) {
   for(var i in state.stones){
     var stone = state.stones[i]
     if(stone.player == action.player){
-      if(stonesAreNextToEachOther(stone.position, action.position)){
+      if(stonesAreNextToEachOther(stone, action)){
         return true
       }
     }
@@ -85,7 +87,7 @@ function stoneIsNextToSameColor(state, action) {
   return false
 }
 
-function positionIsAllowed(state, action) {
+/*tc*/export/*etc*/function positionIsAllowed(state, action) {
   var {row, col} = action.position
   if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
     if(!(rowIsInCore(row) && colIsInCore(col))){
@@ -102,14 +104,14 @@ function positionIsAllowed(state, action) {
   return true
 }
 
-function getLevelFromName(name) {
+/*tc*/export/*etc*/function getLevelFromName(name) {
   var level = levels.filter((level) => {
     return level.name == name
   })
   return level[0]
 }
 
-function getWidthOfSelectedStones(stones) {
+/*tc*/export/*etc*/function getWidthOfSelectedStones(stones) {
   if(stones.length<1){
     return 0
   }
@@ -128,7 +130,7 @@ function getWidthOfSelectedStones(stones) {
   return highestX - lowestX 
 }
 
-function getHeightOfSelectedStones(stones) {
+/*tc*/export/*etc*/function getHeightOfSelectedStones(stones) {
   if(stones.length<1){
     return 0
   }
@@ -147,7 +149,7 @@ function getHeightOfSelectedStones(stones) {
   return highestY - lowestY
 }
 
-function getLowestStoneOfSelectedStones(stones) {
+/*tc*/export/*etc*/function getTopLeftStoneOfSelectedStones(stones) {
   if(stones.length < 1) {
     return false
   }
@@ -163,10 +165,11 @@ function getLowestStoneOfSelectedStones(stones) {
   return lowestStone
 }
 
-function stonesBuildAMovableFigure(state) {
+
+/*tc*/export/*etc*/function stonesBuildAMovableFigure(state) {
   var width = getWidthOfSelectedStones(state.selectedStones) + 1
   var height = getHeightOfSelectedStones(state.selectedStones) + 1
-  var lowestStone = getLowestStoneOfSelectedStones(state.selectedStones)
+  var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
   if(!lowestStone) {
     return false
   }
@@ -180,7 +183,7 @@ function stonesBuildAMovableFigure(state) {
   return true
 }
 
-function changeSelectedStones(state, stoneID) {
+/*tc*/export/*etc*/function changeSelectedStones(state, stoneID) {
   var selectedStones = state.selectedStones
   var clickedStone = state.stones.filter((stone) => {
     return stone.id == stoneID
@@ -199,11 +202,11 @@ function changeSelectedStones(state, stoneID) {
   return selectedStones
 }
 
-function possibleTurnsDiagonal (state) {
+/*tc*/export/*etc*/function possibleTurnsDiagonal (state) {
   var possTurns = []
   var x = getWidthOfSelectedStones(state.selectedStones) + 1
   var y = getHeightOfSelectedStones(state.selectedStones) + 1
-  var lowestStone = getLowestStoneOfSelectedStones(state.selectedStones)
+  var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
   var temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
   for (var i = 0; i < 10; i++) {
@@ -252,11 +255,11 @@ function possibleTurnsDiagonal (state) {
   return possTurns;
 }
 
-function possibleTurnsVertical (state) {
+/*tc*/export/*etc*/function possibleTurnsVertical (state) {
   var possTurns = []
   var x = getWidthOfSelectedStones(state.selectedStones) + 1
   var y = getHeightOfSelectedStones(state.selectedStones) + 1
-  var lowestStone = getLowestStoneOfSelectedStones(state.selectedStones)
+  var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
   var temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
   for (var i = 0; i < 10; i++) {
@@ -414,11 +417,11 @@ function possibleTurnsVertical (state) {
   return possTurns;
 }
 
-function possibleTurnsHorizontal(state) {
+/*tc*/export/*etc*/function possibleTurnsHorizontal(state) {
   var possTurns = []
   var x = getWidthOfSelectedStones(state.selectedStones) + 1
   var y = getHeightOfSelectedStones(state.selectedStones) + 1
-  var lowestStone = getLowestStoneOfSelectedStones(state.selectedStones)
+  var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
 
   var temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -574,7 +577,7 @@ function possibleTurnsHorizontal(state) {
   return possTurns
 }
 
-function getPossibleTurnsForSelectedStones(state) {
+/*tc*/export/*etc*/function getPossibleTurnsForSelectedStones(state) {
   var possTurns = []
   if(stonesBuildAMovableFigure(state)) {
     var x = getWidthOfSelectedStones(state.selectedStones)
@@ -617,7 +620,7 @@ function getPossibleTurnsForSelectedStones(state) {
   return possTurns
 }
 
-function directionBLA (stones, destination) {
+/*tc*/export/*etc*/function directionBLA (stones, destination) {
   var direction = 0;
   if (destination.col != stones[0].position.col && destination.row != stones[0].position.row) {
       //diagonal
@@ -644,13 +647,13 @@ function directionBLA (stones, destination) {
   return direction
 }
 
-function setTurn(state, destination) {
+/*tc*/export/*etc*/function setTurn(state, destination) {
   var moves = [];
   var newState = Object.assign({}, state)
   var stones = newState.selectedStones
   var x = getWidthOfSelectedStones(stones)
   var y = getHeightOfSelectedStones(stones)
-  var lowestStone = Object.assign({}, getLowestStoneOfSelectedStones(stones))
+  var lowestStone = Object.assign({}, getTopLeftStoneOfSelectedStones(stones))
 
   var colorOpp = Player.WHITE
   if (lowestStone.player == Player.WHITE) {
@@ -861,11 +864,11 @@ function setTurn(state, destination) {
   return newState
 }
 
-function turnIsAllowed(state, destination) {
+/*tc*/export/*etc*/function turnIsAllowed(state, destination) {
   return state.possibleTurns[destination.col] && state.possibleTurns[destination.col][destination.row] == 1
 }
 
-function makeTurn(state, action) {
+/*tc*/export/*etc*/function makeTurn(state, action) {
   var newState = Object.assign({}, state)
   if(turnIsAllowed(state, action.position)){
     newState = setTurn(state, action.position)
@@ -875,7 +878,7 @@ function makeTurn(state, action) {
   return newState
 }
 
-function initialState() {
+/*tc*/export/*etc*/function initialState() {
   return {
     level: {},
     gameState: {
@@ -899,7 +902,7 @@ function initialState() {
   }
 }
 
-function stones(state = initialState(), action) {
+/*tc*/export/*etc*/function stones(state = initialState(), action) {
   switch (action.type) {
     case SELECT_LEVEL:
       var newState = Object.assign({}, state)

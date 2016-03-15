@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "mocha src/tests --compilers js:babel/register --recursive",
+    "test:watch": "npm test -- --watch"
   },
   "dependencies": {
     "react-native": "^0.21.0",
@@ -11,5 +13,10 @@
     "react-native-grid-view": "^0.3.7",
     "react-redux": "^4.4.1",
     "redux": "^3.3.1"
+  },
+  "devDependencies": {
+    "babel-register": "^6.7.2",
+    "expect": "^1.15.2",
+    "mocha": "^2.4.5"
   }
 }
