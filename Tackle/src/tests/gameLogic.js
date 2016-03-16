@@ -1186,4 +1186,261 @@ describe('game logic', () => {
     }
     expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
+
+
+  it('should set the turn and return the new state', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var action = {
+      position: {
+        col: 2,
+        row: 0
+      }
+    }
+    var possibleTurns = createFieldWithStones([])
+    possibleTurns[action.position.col][action.position.row] = 1
+    var state = {
+      field: createFieldWithStones([stoneA]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      possibleTurns: possibleTurns,
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedState = {
+      field: [],
+      stones: [],
+      selectedStones: [],
+      possibleTurns: [],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedStone = createStone(types.Player.WHITE, action.position.col, action.position.row)
+    var expectedField = createFieldWithStones([expectedStone])
+    expectedState.field = expectedField
+    expectedState.stones = [expectedStone]
+    expect(reducer.makeTurn(state, action)).toEqual(expectedState)
+  })
+  it('should set the turn and return the new state', () => {
+    var stoneA = createStone(types.Player.WHITE, 0, 0)
+    var action = {
+      position: {
+        col: 4,
+        row: 4
+      }
+    }
+    var possibleTurns = createFieldWithStones([])
+    possibleTurns[action.position.col][action.position.row] = 1
+    var state = {
+      field: createFieldWithStones([stoneA]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      possibleTurns: possibleTurns,
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedState = {
+      field: [],
+      stones: [],
+      selectedStones: [],
+      possibleTurns: [],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedStone = createStone(types.Player.WHITE, action.position.col, action.position.row)
+    var expectedField = createFieldWithStones([expectedStone])
+    expectedState.field = expectedField
+    expectedState.stones = [expectedStone]
+    expect(reducer.makeTurn(state, action)).toEqual(expectedState)
+  })
+  it('should set the turn and return the new state', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var stoneB = createStone(types.Player.GOLD, 5, 5)
+    var action = {
+      position: {
+        col: 2,
+        row: 0
+      }
+    }
+    var possibleTurns = createFieldWithStones([])
+    possibleTurns[action.position.col][action.position.row] = 1
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB]),
+      stones: [stoneA, stoneB],
+      selectedStones: [stoneA],
+      possibleTurns: possibleTurns,
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedState = {
+      field: [],
+      stones: [],
+      selectedStones: [],
+      possibleTurns: [],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedStoneA = createStone(types.Player.WHITE, action.position.col, action.position.row)
+    var expectedStoneB = createStone(types.Player.GOLD, stoneB.position.col, stoneB.position.row)
+
+    var expectedField = createFieldWithStones([expectedStoneA, expectedStoneB])
+    expectedState.field = expectedField
+    expectedState.stones = [expectedStoneA, expectedStoneB]
+    expect(reducer.makeTurn(state, action)).toEqual(expectedState)
+  })
+  it('should not set the turn and return the old state, because turn is not allowed', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var action = {
+      position: {
+        col: 2,
+        row: 1
+      }
+    }
+    var possibleTurns = createFieldWithStones([])
+    var state = {
+      field: createFieldWithStones([stoneA]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      possibleTurns: possibleTurns,
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedState = {
+      field: [],
+      stones: [],
+      selectedStones: [],
+      possibleTurns: possibleTurns,
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedStone = createStone(types.Player.WHITE, 4, 0)
+    var expectedField = createFieldWithStones([expectedStone])
+    expectedState.field = expectedField
+    expectedState.stones = [expectedStone]
+    expectedState.selectedStones = [expectedStone]
+    expect(reducer.makeTurn(state, action)).toEqual(expectedState)
+  })
+  it('should set the turn and return the new state', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var stoneB = createStone(types.Player.WHITE, 4, 1)
+    var action = {
+      position: {
+        col: 4,
+        row: 4
+      }
+    }
+    var possibleTurns = createFieldWithStones([])
+    possibleTurns[action.position.col][action.position.row] = 1
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB]),
+      stones: [stoneA, stoneB],
+      selectedStones: [stoneA, stoneB],
+      possibleTurns: possibleTurns,
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedState = {
+      field: [],
+      stones: [],
+      selectedStones: [],
+      possibleTurns: [],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedStoneA = createStone(types.Player.WHITE, action.position.col, action.position.row)
+    var expectedStoneB = createStone(types.Player.WHITE, action.position.col, action.position.row + 1)
+    var expectedField = createFieldWithStones([expectedStoneA, expectedStoneB])
+    expectedState.field = expectedField
+    expectedState.stones = [expectedStoneA, expectedStoneB]
+    expect(reducer.makeTurn(state, action)).toEqual(expectedState)
+  })
+  it('should set the turn and return the new state', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var stoneB = createStone(types.Player.WHITE, 4, 1)
+    var stoneC = createStone(types.Player.BLACK, 4, 2)
+    var action = {
+      position: {
+        col: 4,
+        row: 4
+      }
+    }
+    var possibleTurns = createFieldWithStones([])
+    possibleTurns[action.position.col][action.position.row] = 1
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneA, stoneB],
+      possibleTurns: possibleTurns,
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedState = {
+      field: [],
+      stones: [],
+      selectedStones: [],
+      possibleTurns: [],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedStoneA = createStone(types.Player.WHITE, action.position.col, action.position.row)
+    var expectedStoneB = createStone(types.Player.WHITE, action.position.col, action.position.row + 1)
+    var expectedStoneC = createStone(types.Player.BLACK, action.position.col, action.position.row + 2)
+    var expectedField = createFieldWithStones([expectedStoneA, expectedStoneB, expectedStoneC])
+    expectedState.field = expectedField
+    expectedState.stones = [expectedStoneA, expectedStoneB, expectedStoneC]
+    expect(reducer.makeTurn(state, action)).toEqual(expectedState)
+  })
+  it('should set the turn and return the new state', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var stoneB = createStone(types.Player.WHITE, 4, 1)
+    var stoneC = createStone(types.Player.WHITE, 5, 0)
+    var stoneD = createStone(types.Player.WHITE, 5, 1)
+    var stoneE = createStone(types.Player.BLACK, 4, 2)
+    var action = {
+      position: {
+        col: 4,
+        row: 4
+      }
+    }
+    var possibleTurns = createFieldWithStones([])
+    possibleTurns[action.position.col][action.position.row] = 1
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC, stoneD, stoneE]),
+      stones: [stoneA, stoneB, stoneC, stoneD, stoneE],
+      selectedStones: [stoneA, stoneB, stoneC, stoneD],
+      possibleTurns: possibleTurns,
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedState = {
+      field: [],
+      stones: [],
+      selectedStones: [],
+      possibleTurns: [],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedStoneA = createStone(types.Player.WHITE, action.position.col, action.position.row)
+    var expectedStoneB = createStone(types.Player.WHITE, action.position.col, action.position.row + 1)
+    var expectedStoneC = createStone(types.Player.WHITE, action.position.col + 1, action.position.row)
+    var expectedStoneD = createStone(types.Player.WHITE, action.position.col + 1, action.position.row + 1)
+    var expectedStoneE = createStone(types.Player.BLACK, action.position.col, action.position.row + 2)
+    var expectedField = createFieldWithStones([expectedStoneA, expectedStoneB, expectedStoneC, expectedStoneD, expectedStoneE])
+    expectedState.field = expectedField
+    expectedState.stones = [expectedStoneA, expectedStoneB, expectedStoneC, expectedStoneD, expectedStoneE]
+    expect(reducer.makeTurn(state, action)).toEqual(expectedState)
+  })
 })
