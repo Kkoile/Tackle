@@ -28,6 +28,16 @@ import { levels } from '../constants/levels'
         activePlayer: Player.WHITE,
         state: GameStates.WHITE_PLAYER_MAKE_TURN
       }
+    case GameStates.WHITE_PLAYER_MAKE_TURN:
+      return{
+        activePlayer: Player.BLACK,
+        state: GameStates.BLACK_PLAYER_MAKE_TURN
+      }
+    case GameStates.BLACK_PLAYER_MAKE_TURN:
+      return{
+        activePlayer: Player.WHITE,
+        state: GameStates.WHITE_PLAYER_MAKE_TURN
+      }
   }
 }
 
@@ -89,6 +99,15 @@ import { levels } from '../constants/levels'
 
 /*tc*/export/*etc*/function positionIsAllowed(state, action) {
   var {row, col} = action.position
+  var locationIsAlreadyTaken = false
+  state.stones.map((stone) => {
+    if(stone.position == action.position) {
+      locationIsAlreadyTaken = true
+    }
+  })
+  if(locationIsAlreadyTaken) {
+    return false
+  }
   if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
     if(!(rowIsInCore(row) && colIsInCore(col))){
       return false
@@ -585,7 +604,18 @@ import { levels } from '../constants/levels'
 }
 
 /*tc*/export/*etc*/function getPossibleTurnsForSelectedStones(state) {
-  var possTurns = []
+  var possTurns = [
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0]
+  ]
   if(stonesBuildAMovableFigure(state)) {
     var x = getWidthOfSelectedStones(state.selectedStones)
     var y = getHeightOfSelectedStones(state.selectedStones)
@@ -876,6 +906,7 @@ import { levels } from '../constants/levels'
     newState = setTurn(state, action.position)
     newState.selectedStones = []
     newState.possibleTurns = []
+    newState.gameState = switchGameState(state)
   }
   return newState
 }
@@ -900,7 +931,18 @@ import { levels } from '../constants/levels'
       [0,0,0,0,0,0,0,0,0,0]],
     stones: [],
     selectedStones: [],
-    possibleTurns: []
+    possibleTurns: [
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0]
+    ]
   }
 }
 
@@ -908,26 +950,48 @@ import { levels } from '../constants/levels'
   switch (action.type) {
     case SELECT_LEVEL:
       var newState = Object.assign({}, state)
-      newState.level = getLevelFromName(action.level)
+      var level = getLevelFromName(action.level)
+      if(level) {
+        newState.level = level
+      }
       return newState
     case SET_STONE:
       var newState = Object.assign({}, state)
       if(state.gameState.state == GameStates.WHITE_PLAYER_SET_STONE ||
           state.gameState.state == GameStates.BLACK_PLAYER_SET_STONE ||
           state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
+        if(state.gameState.state == GameStates.WHITE_PLAYER_SET_STONE &&
+            action.player != Player.WHITE){
+          return newState
+        }
+        if(state.gameState.state == GameStates.BLACK_PLAYER_SET_STONE &&
+            action.player != Player.BLACK){
+          return newState
+        }
+        if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE &&
+            action.player != Player.GOLD){
+          return newState
+        }
         if(positionIsAllowed(state, action)){
           var player = action.player
           if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
             player = Player.GOLD
           }
-          newState.stones.push(
-            {
-              id: 'stone' + state.stones.length,
-              player: player,
-              position: action.position
-            })
-          newState.field[action.position.col][action.position.row] = action.player
-          newState.gameState = switchGameState(state)
+          if(state.stones.length / 2 < state.level.count + 2) {
+            newState.stones.push(
+              {
+                id: 'stone' + state.stones.length,
+                player: player,
+                position: action.position
+              })
+            newState.field[action.position.col][action.position.row] = action.player
+            newState.gameState = switchGameState(state)
+          }else{
+            newState.gameState = {
+              state: GameStates.BLACK_PLAYER_SET_GOLDEN_STONE,
+              activePlayer: Player.BLACK
+            }
+          }
         }
       }else if(state.gameState.state == GameStates.WHITE_PLAYER_MAKE_TURN ||
           state.gameState.state == GameStates.BLACK_PLAYER_MAKE_TURN) {

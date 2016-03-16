@@ -1213,7 +1213,8 @@ describe('game logic', () => {
       selectedStones: [],
       possibleTurns: [],
       gameState: {
-        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+        activePlayer: types.Player.BLACK,
+        state: types.GameStates.BLACK_PLAYER_MAKE_TURN
       }
     }
     var expectedStone = createStone(types.Player.WHITE, action.position.col, action.position.row)
@@ -1247,7 +1248,8 @@ describe('game logic', () => {
       selectedStones: [],
       possibleTurns: [],
       gameState: {
-        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+        activePlayer: types.Player.BLACK,
+        state: types.GameStates.BLACK_PLAYER_MAKE_TURN
       }
     }
     var expectedStone = createStone(types.Player.WHITE, action.position.col, action.position.row)
@@ -1282,7 +1284,8 @@ describe('game logic', () => {
       selectedStones: [],
       possibleTurns: [],
       gameState: {
-        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+        activePlayer: types.Player.BLACK,
+        state: types.GameStates.BLACK_PLAYER_MAKE_TURN
       }
     }
     var expectedStoneA = createStone(types.Player.WHITE, action.position.col, action.position.row)
@@ -1353,7 +1356,8 @@ describe('game logic', () => {
       selectedStones: [],
       possibleTurns: [],
       gameState: {
-        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+        activePlayer: types.Player.BLACK,
+        state: types.GameStates.BLACK_PLAYER_MAKE_TURN
       }
     }
     var expectedStoneA = createStone(types.Player.WHITE, action.position.col, action.position.row)
@@ -1390,7 +1394,8 @@ describe('game logic', () => {
       selectedStones: [],
       possibleTurns: [],
       gameState: {
-        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+        activePlayer: types.Player.BLACK,
+        state: types.GameStates.BLACK_PLAYER_MAKE_TURN
       }
     }
     var expectedStoneA = createStone(types.Player.WHITE, action.position.col, action.position.row)
@@ -1430,7 +1435,8 @@ describe('game logic', () => {
       selectedStones: [],
       possibleTurns: [],
       gameState: {
-        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+        activePlayer: types.Player.BLACK,
+        state: types.GameStates.BLACK_PLAYER_MAKE_TURN
       }
     }
     var expectedStoneA = createStone(types.Player.WHITE, action.position.col, action.position.row)
