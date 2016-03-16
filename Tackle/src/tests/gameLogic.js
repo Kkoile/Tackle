@@ -1166,7 +1166,7 @@ describe('game logic', () => {
     }
     expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
-  it('should return all possible vertical turns for stone', () => {
+  it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
     var stoneB = createStone(types.Player.WHITE, 4, 1)
     var stoneC = createStone(types.Player.BLACK, 4, 2)
