@@ -175,7 +175,14 @@ import { levels } from '../constants/levels'
   }
   for (var i = 0; i < width; i++) {
     for (var j = 0; j < height; j++) {
-      if (state.field[lowestStone.position.col + i] && state.field[lowestStone.position.col + i][lowestStone.position.row + j] != lowestStone.player) {
+      var stoneIsSelected = false
+      state.selectedStones.map((stone) => {
+        if(stone.position.col == lowestStone.position.col + i && 
+            stone.position.row == lowestStone.position.row + j) {
+          stoneIsSelected = true
+        }
+      })
+      if (!stoneIsSelected) {
           return false
       }
     }
@@ -761,7 +768,7 @@ import { levels } from '../constants/levels'
         lengthOpp = b
       }
     }
-    for (var i = 0; i <= destination.row - lowestStone.row; i++) {
+    for (var i = 0; i <= destination.row - lowestStone.position.row; i++) {
       for (var j = 0; j < x + 1; j++) {
         if (newState.field[lowestStone.position.col + j][lowestStone.position.row + y + i] == colorOpp) {
           newState.field[destination.col + j][destination.row + y + i] = colorOpp
@@ -853,11 +860,6 @@ import { levels } from '../constants/levels'
     })
     if(index > -1){
       newState.stones[index].position = move.destination
-    }else{
-      console.log('------stones-------')
-      console.log(newState.stones)
-      console.log('------moves-------')
-      console.log(move)
     }
   })
 
