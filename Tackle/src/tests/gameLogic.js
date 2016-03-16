@@ -800,4 +800,390 @@ describe('game logic', () => {
     var expectedField = createFieldWithStones([])
     expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
   })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var state = {
+      field: createFieldWithStones([stoneA]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var state = {
+      field: createFieldWithStones([stoneA]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.GOLD, 5, 4)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 5, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB]),
+      stones: [stoneA, stoneB],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<9;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 4)
+    var stoneB = createStone(types.Player.WHITE, 5, 4)
+    var stoneC = createStone(types.Player.GOLD, 6, 4)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<stoneA.position.col;i++){
+      expectedField[i][stoneA.position.row] = 1
+    }
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 0, 3)
+    var stoneB = createStone(types.Player.WHITE, 1, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB]),
+      stones: [stoneA, stoneB],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<9;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 0, 3)
+    var stoneB = createStone(types.Player.WHITE, 1, 3)
+    var stoneC = createStone(types.Player.WHITE, 2, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 0, 3)
+    var stoneB = createStone(types.Player.WHITE, 1, 3)
+    var stoneC = createStone(types.Player.BLACK, 2, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<8;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 0, 3)
+    var stoneB = createStone(types.Player.WHITE, 1, 3)
+    var stoneC = createStone(types.Player.BLACK, 2, 3)
+    var stoneD = createStone(types.Player.BLACK, 3, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC, stoneD]),
+      stones: [stoneA, stoneB, stoneC, stoneD],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+  it('should return all possible horizontal turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 0, 3)
+    var stoneB = createStone(types.Player.WHITE, 1, 3)
+    var stoneC = createStone(types.Player.BLACK, 2, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+  })
+
+
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var state = {
+      field: createFieldWithStones([stoneA]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=1;i<10;i++){
+      expectedField[stoneA.position.col][i] = 1
+    }
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var state = {
+      field: createFieldWithStones([stoneA]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.row){
+        expectedField[stoneA.position.col][i] = 1
+      }
+    }
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 0, 0)
+    var state = {
+      field: createFieldWithStones([stoneA]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.row){
+        expectedField[stoneA.position.col][i] = 1
+      }
+    }
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][i] = 1
+      }
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.GOLD, 5, 4)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB]),
+      stones: [stoneA],
+      selectedStones: [stoneA],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.row){
+        expectedField[stoneA.position.col][i] = 1
+      }
+    }
+    for(var i=0;i<10;i++){
+      if(i != stoneA.position.col){
+        expectedField[i][stoneA.position.row] = 1
+      }
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 4, 4)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB]),
+      stones: [stoneA, stoneB],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<9;i++){
+      if(i != stoneA.position.row){
+        expectedField[stoneA.position.col][i] = 1
+      }
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 4, 4)
+    var stoneC = createStone(types.Player.GOLD, 4, 5)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<stoneA.position.row;i++){
+      expectedField[stoneA.position.col][i] = 1
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var stoneB = createStone(types.Player.WHITE, 4, 1)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB]),
+      stones: [stoneA, stoneB],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<9;i++){
+      if(i != stoneA.position.row){
+        expectedField[stoneA.position.col][i] = 1
+      }
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var stoneB = createStone(types.Player.WHITE, 4, 1)
+    var stoneC = createStone(types.Player.WHITE, 4, 2)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var stoneB = createStone(types.Player.WHITE, 4, 1)
+    var stoneC = createStone(types.Player.BLACK, 4, 2)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneA, stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<8;i++){
+      if(i != stoneA.position.row){
+        expectedField[stoneA.position.col][i] = 1
+      }
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
+  it('should return all possible vertical turns for stone', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 0)
+    var stoneB = createStone(types.Player.WHITE, 4, 1)
+    var stoneC = createStone(types.Player.BLACK, 4, 2)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [stoneB],
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var expectedField = createFieldWithStones([])
+    for(var i=0;i<10;i++){
+      if(i != stoneB.position.col){
+        expectedField[i][stoneB.position.row] = 1
+      }
+    }
+    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+  })
 })
