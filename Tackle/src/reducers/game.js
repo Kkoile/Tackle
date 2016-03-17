@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { SET_STONE, SET_GOLDEN_STONE, MAKE_TURN, SELECT_LEVEL, STONE_CLICKED } from '../actions/game'
-import { GameStates, Player } from '../constants/game'
+import { GameStates, Player, SIZE } from '../constants/game'
 import { levels } from '../constants/levels'
 
 /*tc*/export/*etc*/function switchGameState(state) {
@@ -70,7 +70,7 @@ import { levels } from '../constants/levels'
 }
 
 /*tc*/export/*etc*/function stonesAreNextToEachOther(stoneA, stoneB) {
-  if(stoneA.position.row == stoneB.position.row){
+  if(stoneA.position.row == stoneB.position.row) {
     if(stoneA.position.col == stoneB.position.col+1 || 
         stoneA.position.col == stoneB.position.col-1){
       return true
@@ -184,64 +184,98 @@ import { levels } from '../constants/levels'
   return lowestStone
 }
 
+/*tc*/export/*etc*/function stoneAtPositionIsNotSelected(selectedStones, position) {
+  var stoneIsSelected = false
+  selectedStones.map((stone) => {
+    if(stone.position.col == position.col && 
+        stone.position.row == position.row) {
+      stoneIsSelected = true
+    }
+  })
+  return stoneIsSelected
+}
 
 /*tc*/export/*etc*/function stonesBuildAMovableFigure(state) {
-  var width = getWidthOfSelectedStones(state.selectedStones) + 1
-  var height = getHeightOfSelectedStones(state.selectedStones) + 1
-  var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
-  if(!lowestStone) {
-    return false
-  }
-  for (var i = 0; i < width; i++) {
-    for (var j = 0; j < height; j++) {
-      var stoneIsSelected = false
-      state.selectedStones.map((stone) => {
-        if(stone.position.col == lowestStone.position.col + i && 
-            stone.position.row == lowestStone.position.row + j) {
-          stoneIsSelected = true
-        }
-      })
-      if (!stoneIsSelected) {
-          return false
-      }
-    }
-  }
-  return true
+  var width = getWidthOfSelectedStones(state.selectedStones) + 1
+  var height = getHeightOfSelectedStones(state.selectedStones) + 1
+  var topLeftStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
+  if(!topLeftStone) {
+    return false
+  }
+  for (var i = 0; i < width; i++) {
+    for (var j = 0; j < height; j++) {
+      var position = {
+        col: topLeftStone.position.col + i,
+        row: topLeftStone.position.row + j
+      }
+      if(!stoneAtPositionIsNotSelected(state.selectedStones, position)) {
+        return false
+      }
+    }
+  }
+  return true
+}
+
+/*tc*/export/*etc*/function clickedStoneHasOwnColor(state, clickedStone) {
+  return state.gameState.activePlayer == clickedStone.player
+}
+
+/*tc*/export/*etc*/function clickedStoneIsAlreadySelected(state, clickedStone) {
+  var stones = state.selectedStones.filter((stone) => {
+    return stone.id == clickedStone.id
+  })
+  return stones.length > 0
+}
+
+/*tc*/export/*etc*/function getStoneFromID(state, stoneID) {
+  return state.stones.find((stone) => {
+    return stone.id == stoneID
+  })
+}
+
+/*tc*/export/*etc*/function removeStoneFromSelectedStones(selectedStones, stone) {
+  var index = selectedStones.indexOf(clickedStone)
+  selectedStones.splice(index, 1)
+  return selectedStones
 }
 
 /*tc*/export/*etc*/function changeSelectedStones(state, stoneID) {
-  var selectedStones = state.selectedStones
-  var clickedStone = state.stones.filter((stone) => {
-    return stone.id == stoneID
-  })[0]
-  if(state.gameState.activePlayer == clickedStone.player) {
-    var stones = state.selectedStones.filter((stone) => {
-      return stone.id == clickedStone.id
-    })
-    if(stones.length == 0) {
-      selectedStones.push(clickedStone)
-    }else{
-      var index = selectedStones.indexOf(clickedStone)
-      selectedStones.splice(index, 1)
-    }
-  }
-  return selectedStones
+  var selectedStones = state.selectedStones.slice()
+  var clickedStone = getStoneFromID(state, stoneID)
+  if(clickedStoneHasOwnColor(state, clickedStone)) {
+    if(!clickedStoneIsAlreadySelected(state, clickedStone)) {
+      selectedStones.push(clickedStone)
+    }else{
+      selectedStones = removeStoneFromSelectedStones(selectedStones, stone)
+    }
+  }
+  return selectedStones
+}
+
+/*tc*/export/*etc*/function isTopLeftStone(stone) {
+  return stone.position.row == 0 && stone.position.col == 0
+}
+
+/*tc*/export/*etc*/function isBottomLeftStone(stone) {
+  return stone.position.row == 9 && stone.position.col == 0
+}
+
+/*tc*/export/*etc*/function isTopRightStone(stone) {
+  return stone.position.row == 0 && stone.position.col == 9
+}
+
+/*tc*/export/*etc*/function isBottomRightStone(stone) {
+  return stone.position.row == 9 && stone.position.col == 9
 }
 
 /*tc*/export/*etc*/function possibleTurnsDiagonal (state) {
-  var possTurns = []
+  var possTurns = createEmptyBoardMatrix(state.field.length)
   var x = getWidthOfSelectedStones(state.selectedStones) + 1
   var y = getHeightOfSelectedStones(state.selectedStones) + 1
-  var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
-  var temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-  for (var i = 0; i < 10; i++) {
-    possTurns[i] = JSON.parse(JSON.stringify(temp))
-  }
-
+  var topLeftStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
+  
   //define edges
-  if (lowestStone.position.col == 0 && lowestStone.position.row == 0) {
-    //top left
+  if (isTopLeftStone(topLeftStone)) {
     for (var i = 1; i < state.field.length; i++) {
       if (state.field[i][i] == 0) {
         possTurns[i][i] = 1
@@ -249,8 +283,7 @@ import { levels } from '../constants/levels'
         break
       }
     }
-  } else if (lowestStone.position.col == state.field.length - 1 && lowestStone.position.row == 0) {
-    //top right
+  } else if (isTopRightStone(topLeftStone)) {
     for (var i = state.field.length - 1; i > 0; i--) {
       if (state.field[i - 1][state.field.length - i] == 0) {
         possTurns[i - 1][state.field.length - i] = 1
@@ -258,8 +291,7 @@ import { levels } from '../constants/levels'
         break
       }
     }
-  } else if (lowestStone.position.col == 0 && lowestStone.position.row == state.field.length - 1) {
-    //bottom left
+  } else if (isBottomLeftStone(topLeftStone)) {
     for (var i = 1; i < state.field.length; i++) {
       if (state.field[i][state.field.length - i - 1] == 0) {
         possTurns[i][state.field.length - i - 1] = 1
@@ -267,8 +299,7 @@ import { levels } from '../constants/levels'
         break
       }
     }
-  } else if (lowestStone.position.col == state.field.length - 1 && lowestStone.position.row == state.field.length - 1) {
-    //bottom right
+  } else if (isBottomRightStone(topLeftStone)) {
     for (var i = state.field.length - 2; i >= 0; i--) {
       if (state.field[i][i] == 0) {
         possTurns[i][i] = 1
@@ -282,15 +313,10 @@ import { levels } from '../constants/levels'
 }
 
 /*tc*/export/*etc*/function possibleTurnsVertical (state) {
-  var possTurns = []
+  var possTurns = createEmptyBoardMatrix(state.field.length)
   var x = getWidthOfSelectedStones(state.selectedStones) + 1
   var y = getHeightOfSelectedStones(state.selectedStones) + 1
   var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
-  var temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-  for (var i = 0; i < 10; i++) {
-      possTurns[i] = JSON.parse(JSON.stringify(temp))
-  }
 
   var colorOpp = Player.WHITE
   if (lowestStone.player == Player.WHITE) {
@@ -444,16 +470,10 @@ import { levels } from '../constants/levels'
 }
 
 /*tc*/export/*etc*/function possibleTurnsHorizontal(state) {
-  var possTurns = []
+  var possTurns = createEmptyBoardMatrix(state.field.length)
   var x = getWidthOfSelectedStones(state.selectedStones) + 1
   var y = getHeightOfSelectedStones(state.selectedStones) + 1
   var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
-
-  var temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-  for (var i = 0; i < 10; i++) {
-      possTurns[i] = JSON.parse(JSON.stringify(temp))
-  }
 
   var colorOpp = Player.WHITE
   if (lowestStone.player == Player.WHITE) {
@@ -603,19 +623,25 @@ import { levels } from '../constants/levels'
   return possTurns
 }
 
+/*tc*/export/*etc*/function isCornerStone(stone) {
+  return (stone.position.row == 0 || stone.position.row == 9) && (stone.position.col == 0 || stone.position.col == 9)
+}
+
+/*tc*/export/*etc*/function getJoinedPossibleTurns(possibleTurnsA, possibleTurnsB) {
+  var joinedPossibleTurns = possibleTurnsA.slice()
+  for (var i = 0; i < possibleTurnsB.length; i++) {
+    for (var j = 0; j < possibleTurnsB[i].length; j++) {
+      if (possibleTurnsB[i][j] > 0) {
+        joinedPossibleTurns[i][j] = possibleTurnsB[i][j]
+      }
+    }
+  }
+  return joinedPossibleTurns
+}
+
 /*tc*/export/*etc*/function getPossibleTurnsForSelectedStones(state) {
-  var possTurns = [
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0]
-  ]
+  var possTurns = createEmptyBoardMatrix(10)
+
   if(stonesBuildAMovableFigure(state)) {
     var x = getWidthOfSelectedStones(state.selectedStones)
     var y = getHeightOfSelectedStones(state.selectedStones)
@@ -623,28 +649,16 @@ import { levels } from '../constants/levels'
       //block
       possTurns = possibleTurnsHorizontal(state)
       var possTurns2 = possibleTurnsVertical(state)
-      //join arrays
-      for (var i = 0; i < possTurns2.length; i++) {
-        for (var j = 0; j < possTurns2[i].length; j++) {
-          if (possTurns2[i][j] > 0) {
-            possTurns[i][j] = possTurns2[i][j]
-          }
-        }
-      }
 
+      //join arrays
+      possTurns = getJoinedPossibleTurns(possTurns, possTurns2);
+    
       var stones = state.selectedStones
-      if (stones.length == 1 && ((stones[0].position.col == 0 && stones[0].position.row == 0) || (stones[0].position.col == 0 && stones[0].position.row == 9) ||
-          (stones[0].position.col == 9 && stones[0].position.row == 0) || (stones[0].position.col == 9 && stones[0].position.row == 9))) {
+      if (stones.length == 1 && isCornerStone(stones[0])) {
         //Diagonal
         var possTurns3 = possibleTurnsDiagonal(state)
         //join arrays
-        for (var i = 0; i < possTurns3.length; i++) {
-          for (var j = 0; j < possTurns3[i].length; j++) {
-            if (possTurns3[i][j] > 0) {
-              possTurns[i][j] = possTurns3[i][j]
-            }
-          }
-        }
+        possTurns = getJoinedPossibleTurns(possTurns, possTurns3)        
       }
     } else if (x > y) {
       //horizontal
@@ -918,32 +932,19 @@ import { levels } from '../constants/levels'
       state: GameStates.WHITE_PLAYER_SET_STONE,
       activePlayer: Player.WHITE
     },
-    field: [
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0]],
+    field: createEmptyBoardMatrix(10),
     stones: [],
     selectedStones: [],
-    possibleTurns: [
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0]
-    ]
+    possibleTurns: createEmptyBoardMatrix(10)
   }
+}
+
+/*tc*/export/*etc*/function createEmptyBoardMatrix(size) {
+  var matrix = []
+  for(var i=0;i<size;i++) {
+    matrix.push(Array(size).fill(0))
+  }
+  return matrix
 }
 
 /*tc*/export/*etc*/function stones(state = initialState(), action) {
