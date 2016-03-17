@@ -178,7 +178,7 @@ describe('game reducer', () => {
       row: 0
     }
     var action = { 
-      type: actions.SET_STONE, 
+      type: actions.FIELD_CLICKED, 
       player: types.Player.WHITE, 
       position: position 
     }
@@ -206,7 +206,7 @@ describe('game reducer', () => {
       row: 0
     }
     var action = { 
-      type: actions.SET_STONE, 
+      type: actions.FIELD_CLICKED, 
       player: types.Player.BLACK, 
       position: position 
     }
@@ -255,7 +255,7 @@ describe('game reducer', () => {
       row: 0
     }
     var action = { 
-      type: actions.SET_STONE, 
+      type: actions.FIELD_CLICKED, 
       player: types.Player.BLACK, 
       position: position 
     }
@@ -282,70 +282,6 @@ describe('game reducer', () => {
     ]
     expect(reducer(state, action)).toEqual(expectedState)
   })
-  it('should return the original state, because it is tried to set the wrong stone regarding to the color', () => {
-    var state = createInitialState()
-    state.level = levels[0]
-    state.gameState.state = types.GameStates.BLACK_PLAYER_SET_STONE
-    state.gameState.activePlayer = types.Player.BLACK
-    var position = {
-      col: 6,
-      row: 0
-    }
-    var action = { 
-      type: actions.SET_STONE, 
-      player: types.Player.WHITE, 
-      position: position 
-    }
-    state.stones = [
-      {
-        id: 'stone0',
-        player: types.Player.WHITE,
-        position: {
-          col: 4,
-          row: 0
-        }
-      }
-    ]
-    state.field[4][0] = types.Player.WHITE
-
-    var expectedState = createInitialState()
-    expectedState.level = levels[0]
-    expectedState.gameState.state = types.GameStates.BLACK_PLAYER_SET_STONE
-    expectedState.gameState.activePlayer = types.Player.BLACK
-    expectedState.field[4][0] = types.Player.WHITE
-    expectedState.stones = [
-      {
-        id: 'stone0',
-        player: types.Player.WHITE,
-        position: {
-          col: 4,
-          row: 0
-        }
-      }
-    ]
-    expect(reducer(state, action)).toEqual(expectedState)
-  })
-  it('should return the original state, because it is tried to set the wrong stone regarding to the color', () => {
-    var state = createInitialState()
-    state.level = levels[0]
-    state.gameState.state = types.GameStates.WHITE_PLAYER_SET_STONE
-    state.gameState.activePlayer = types.Player.WHITE
-    var position = {
-      col: 4,
-      row: 0
-    }
-    var action = { 
-      type: actions.SET_STONE, 
-      player: types.Player.BLACK, 
-      position: position 
-    }
-
-    var expectedState = createInitialState()
-    expectedState.level = levels[0]
-    expectedState.gameState.state = types.GameStates.WHITE_PLAYER_SET_STONE
-    expectedState.gameState.activePlayer = types.Player.WHITE
-    expect(reducer(state, action)).toEqual(expectedState)
-  })
   it('should return the original state, because it is tried to set a stone next to the same color', () => {
     var state = createInitialState()
     state.level = levels[0]
@@ -356,7 +292,7 @@ describe('game reducer', () => {
       row: 0
     }
     var action = { 
-      type: actions.SET_STONE, 
+      type: actions.FIELD_CLICKED, 
       player: types.Player.WHITE, 
       position: position 
     }
@@ -417,7 +353,7 @@ describe('game reducer', () => {
       row: 0
     }
     var action = { 
-      type: actions.SET_STONE, 
+      type: actions.FIELD_CLICKED, 
       player: types.Player.BLACK, 
       position: position 
     }
@@ -516,118 +452,6 @@ describe('game reducer', () => {
     expectedState.field[position.col][position.row] = types.Player.BLACK
     expect(reducer(state, action)).toEqual(expectedState)
   })
-  it('should return a state to set the golden stone, because there are alredy enough stones on the field', () => {
-    var state = createInitialState()
-    state.level = levels[0]
-    state.gameState.state = types.GameStates.WHITE_PLAYER_SET_STONE
-    state.gameState.activePlayer = types.Player.WHITE
-    var position = {
-      col: 2,
-      row: 0
-    }
-    var action = { 
-      type: actions.SET_STONE, 
-      player: types.Player.WHITE, 
-      position: position 
-    }
-    var stones = [
-      {
-        id: 'stone0',
-        player: types.Player.WHITE,
-        position: {
-          col: 4,
-          row: 0
-        }
-      },
-      {
-        id: 'stone1',
-        player: types.Player.BLACK,
-        position: {
-          col: 6,
-          row: 0
-        }
-      },
-      {
-        id: 'stone2',
-        player: types.Player.WHITE,
-        position: {
-          col: 7,
-          row: 0
-        }
-      },
-      {
-        id: 'stone3',
-        player: types.Player.BLACK,
-        position: {
-          col: 8,
-          row: 0
-        }
-      },
-      {
-        id: 'stone4',
-        player: types.Player.WHITE,
-        position: {
-          col: 9,
-          row: 0
-        }
-      },
-      {
-        id: 'stone5',
-        player: types.Player.BLACK,
-        position: {
-          col: 9,
-          row: 1
-        }
-      },
-      {
-        id: 'stone6',
-        player: types.Player.WHITE,
-        position: {
-          col: 9,
-          row: 2
-        }
-      },
-      {
-        id: 'stone7',
-        player: types.Player.BLACK,
-        position: {
-          col: 9,
-          row: 3
-        }
-      },
-      {
-        id: 'stone8',
-        player: types.Player.WHITE,
-        position: {
-          col: 9,
-          row: 4
-        }
-      },
-      {
-        id: 'stone9',
-        player: types.Player.BLACK,
-        position: {
-          col: 9,
-          row: 5
-        }
-      }
-    ]
-    state.stones = stones
-    stones.map((stone) => {
-      state.field[stone.position.col][stone.position.row] = stone.player
-    })
-
-    var expectedState = createInitialState()
-    expectedState.level = levels[0]
-    expectedState.gameState.state = types.GameStates.BLACK_PLAYER_SET_GOLDEN_STONE
-    expectedState.gameState.activePlayer = types.Player.BLACK
-    expectedState.stones = stones.slice()
-    stones.map((stone) => {
-      expectedState.field[stone.position.col][stone.position.row] = stone.player
-    })
-    expect(reducer(state, action)).toEqual(expectedState)
-  })
-
 
   it('should return a state with all possible turns and stone is selected', () => {
     var state = createNormalStateForGame()

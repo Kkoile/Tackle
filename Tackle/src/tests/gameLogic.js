@@ -1,4 +1,5 @@
 import expect from 'expect'
+import * as gameLogic from '../logic/gameLogic'
 import * as reducer from '../reducers/game'
 import * as types from '../constants/game'
 
@@ -40,7 +41,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(selectedStones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(true)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(true)
   })
   it('should allow two vertical selected stones to be moved', () => {
     var selectedStones = [
@@ -51,7 +52,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(selectedStones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(true)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(true)
   })
   it('should allow two horizontal selected stones to be moved', () => {
     var selectedStones = [
@@ -62,7 +63,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(selectedStones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(true)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(true)
   })
   it('should allow a block of selected stones to be moved', () => {
     var selectedStones = [
@@ -75,7 +76,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(selectedStones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(true)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(true)
   })
   it('should not allow two seperate selected stones to be moved', () => {
     var selectedStones = [
@@ -86,7 +87,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(selectedStones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(false)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(false)
   })
   it('should not allow nearly a block of selected stones to be moved', () => {
     var selectedStones = [
@@ -98,7 +99,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(selectedStones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(false)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(false)
   })
   it('should not allow nearly a block of selected stones to be moved', () => {
     var selectedStones = [
@@ -112,7 +113,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(stones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(false)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(false)
   })
   it('should allow a horizontal block of selected stones to be moved', () => {
     var selectedStones = [
@@ -127,7 +128,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(selectedStones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(true)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(true)
   })
   it('should not allow a horizontal block of with an extra stone selected stones to be moved', () => {
     var selectedStones = [
@@ -143,7 +144,7 @@ describe('game logic', () => {
       selectedStones: selectedStones,
       field: createFieldWithStones(selectedStones)
     }
-    expect(reducer.stonesBuildAMovableFigure(state)).toEqual(false)
+    expect(gameLogic.stonesBuildAMovableFigure(state)).toEqual(false)
   })
 
 
@@ -152,14 +153,14 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 3, 3)
     ]
     var expectedWidth = 0
-    expect(reducer.getWidthOfSelectedStones(selectedStones)).toEqual(expectedWidth)
+    expect(gameLogic.getWidthOfSelectedStones(selectedStones)).toEqual(expectedWidth)
   })
   it('should return the height of one selected stone', () => {
     var selectedStones = [
       createStone(types.Player.WHITE, 3, 3)
     ]
     var expectedWidth = 0
-    expect(reducer.getHeightOfSelectedStones(selectedStones)).toEqual(expectedWidth)
+    expect(gameLogic.getHeightOfSelectedStones(selectedStones)).toEqual(expectedWidth)
   })
   it('should return the width of two horizontal selected stones', () => {
     var selectedStones = [
@@ -167,7 +168,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 4, 3)
     ]
     var expectedWidth = 1
-    expect(reducer.getWidthOfSelectedStones(selectedStones)).toEqual(expectedWidth)
+    expect(gameLogic.getWidthOfSelectedStones(selectedStones)).toEqual(expectedWidth)
   })
   it('should return the height of two horizontal selected stones', () => {
     var selectedStones = [
@@ -175,7 +176,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 4, 3)
     ]
     var expectedWidth = 0
-    expect(reducer.getHeightOfSelectedStones(selectedStones)).toEqual(expectedWidth)
+    expect(gameLogic.getHeightOfSelectedStones(selectedStones)).toEqual(expectedWidth)
   })
   it('should return the width of two vertical selected stones', () => {
     var selectedStones = [
@@ -183,7 +184,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 3, 4)
     ]
     var expectedWidth = 0
-    expect(reducer.getWidthOfSelectedStones(selectedStones)).toEqual(expectedWidth)
+    expect(gameLogic.getWidthOfSelectedStones(selectedStones)).toEqual(expectedWidth)
   })
   it('should return the height of two vertical selected stones', () => {
     var selectedStones = [
@@ -191,7 +192,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 3, 4)
     ]
     var expectedWidth = 1
-    expect(reducer.getHeightOfSelectedStones(selectedStones)).toEqual(expectedWidth)
+    expect(gameLogic.getHeightOfSelectedStones(selectedStones)).toEqual(expectedWidth)
   })
 
   it('should return the width of two sperate selected stones', () => {
@@ -200,7 +201,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 7, 6)
     ]
     var expectedWidth = 4
-    expect(reducer.getWidthOfSelectedStones(selectedStones)).toEqual(expectedWidth)
+    expect(gameLogic.getWidthOfSelectedStones(selectedStones)).toEqual(expectedWidth)
   })
   it('should return the height of two seperate selected stones', () => {
     var selectedStones = [
@@ -208,7 +209,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 7, 6)
     ]
     var expectedWidth = 3
-    expect(reducer.getHeightOfSelectedStones(selectedStones)).toEqual(expectedWidth)
+    expect(gameLogic.getHeightOfSelectedStones(selectedStones)).toEqual(expectedWidth)
   })
 
 
@@ -218,7 +219,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 3, 3)
     ]
     var expectedStone = createStone(types.Player.WHITE, 3, 3)
-    expect(reducer.getTopLeftStoneOfSelectedStones(selectedStones)).toEqual(expectedStone)
+    expect(gameLogic.getTopLeftStoneOfSelectedStones(selectedStones)).toEqual(expectedStone)
   })
   it('should return the top left stone of two horizontal selected stones', () => {
     var selectedStones = [
@@ -226,7 +227,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 4, 3)
     ]
     var expectedStone = createStone(types.Player.WHITE, 3, 3)
-    expect(reducer.getTopLeftStoneOfSelectedStones(selectedStones)).toEqual(expectedStone)
+    expect(gameLogic.getTopLeftStoneOfSelectedStones(selectedStones)).toEqual(expectedStone)
   })
   it('should return the top left stone of two vertical selected stones', () => {
     var selectedStones = [
@@ -234,7 +235,7 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 3, 4)
     ]
     var expectedStone = createStone(types.Player.WHITE, 3, 3)
-    expect(reducer.getTopLeftStoneOfSelectedStones(selectedStones)).toEqual(expectedStone)
+    expect(gameLogic.getTopLeftStoneOfSelectedStones(selectedStones)).toEqual(expectedStone)
   })
   it('should return the top left stone of a block of selected stones', () => {
     var selectedStones = [
@@ -244,100 +245,100 @@ describe('game logic', () => {
       createStone(types.Player.WHITE, 4, 4),
     ]
     var expectedStone = createStone(types.Player.WHITE, 3, 3)
-    expect(reducer.getTopLeftStoneOfSelectedStones(selectedStones)).toEqual(expectedStone)
+    expect(gameLogic.getTopLeftStoneOfSelectedStones(selectedStones)).toEqual(expectedStone)
   })
 
 
 
   it('should return that row 0 is not in court', () => {
-    expect(reducer.rowIsInCourt(0)).toEqual(false)
+    expect(gameLogic.rowIsInCourt(0)).toEqual(false)
   })
   it('should return that row 1 is in court', () => {
-    expect(reducer.rowIsInCourt(1)).toEqual(true)
+    expect(gameLogic.rowIsInCourt(1)).toEqual(true)
   })
   it('should return that row 8 is in court', () => {
-    expect(reducer.rowIsInCourt(8)).toEqual(true)
+    expect(gameLogic.rowIsInCourt(8)).toEqual(true)
   })
   it('should return that row 9 is not in court', () => {
-    expect(reducer.rowIsInCourt(9)).toEqual(false)
+    expect(gameLogic.rowIsInCourt(9)).toEqual(false)
   })
 
   it('should return that col 0 is not in court', () => {
-    expect(reducer.colIsInCourt(0)).toEqual(false)
+    expect(gameLogic.colIsInCourt(0)).toEqual(false)
   })
   it('should return that col 1 is in court', () => {
-    expect(reducer.colIsInCourt(1)).toEqual(true)
+    expect(gameLogic.colIsInCourt(1)).toEqual(true)
   })
   it('should return that col 8 is in court', () => {
-    expect(reducer.colIsInCourt(8)).toEqual(true)
+    expect(gameLogic.colIsInCourt(8)).toEqual(true)
   })
   it('should return that col 9 is not in court', () => {
-    expect(reducer.colIsInCourt(9)).toEqual(false)
+    expect(gameLogic.colIsInCourt(9)).toEqual(false)
   })
 
   it('should return that col 0 is not in core', () => {
-    expect(reducer.colIsInCore(0)).toEqual(false)
+    expect(gameLogic.colIsInCore(0)).toEqual(false)
   })
   it('should return that col 2 is not in core', () => {
-    expect(reducer.colIsInCore(2)).toEqual(false)
+    expect(gameLogic.colIsInCore(2)).toEqual(false)
   })
   it('should return that col 3 is in core', () => {
-    expect(reducer.colIsInCore(3)).toEqual(true)
+    expect(gameLogic.colIsInCore(3)).toEqual(true)
   })
   it('should return that col 6 is in core', () => {
-    expect(reducer.colIsInCore(6)).toEqual(true)
+    expect(gameLogic.colIsInCore(6)).toEqual(true)
   })
   it('should return that col 7 is not in core', () => {
-    expect(reducer.colIsInCore(7)).toEqual(false)
+    expect(gameLogic.colIsInCore(7)).toEqual(false)
   })
   it('should return that col 9 is not in core', () => {
-    expect(reducer.colIsInCore(9)).toEqual(false)
+    expect(gameLogic.colIsInCore(9)).toEqual(false)
   })
 
   it('should return that row 0 is not in core', () => {
-    expect(reducer.rowIsInCore(0)).toEqual(false)
+    expect(gameLogic.rowIsInCore(0)).toEqual(false)
   })
   it('should return that row 2 is not in core', () => {
-    expect(reducer.rowIsInCore(2)).toEqual(false)
+    expect(gameLogic.rowIsInCore(2)).toEqual(false)
   })
   it('should return that row 3 is in core', () => {
-    expect(reducer.rowIsInCore(3)).toEqual(true)
+    expect(gameLogic.rowIsInCore(3)).toEqual(true)
   })
   it('should return that row 6 is in core', () => {
-    expect(reducer.rowIsInCore(6)).toEqual(true)
+    expect(gameLogic.rowIsInCore(6)).toEqual(true)
   })
   it('should return that row 7 is not in core', () => {
-    expect(reducer.rowIsInCore(7)).toEqual(false)
+    expect(gameLogic.rowIsInCore(7)).toEqual(false)
   })
   it('should return that row 9 is not in core', () => {
-    expect(reducer.rowIsInCore(9)).toEqual(false)
+    expect(gameLogic.rowIsInCore(9)).toEqual(false)
   })
 
 
   it('should return that stones are next to each other', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
     var stoneB = createStone(types.Player.WHITE, 1, 0)
-    expect(reducer.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(true)
+    expect(gameLogic.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(true)
   })
   it('should return that stones are next to each other', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
     var stoneB = createStone(types.Player.WHITE, 0, 1)
-    expect(reducer.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(true)
+    expect(gameLogic.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(true)
   })
   it('should return that stones are next to each other', () => {
     var stoneA = createStone(types.Player.WHITE, 5, 4)
     var stoneB = createStone(types.Player.WHITE, 6, 4)
-    expect(reducer.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(true)
+    expect(gameLogic.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(true)
   })
   it('should return that stones are not next to each other', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 1)
     var stoneB = createStone(types.Player.WHITE, 1, 0)
-    expect(reducer.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(false)
+    expect(gameLogic.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(false)
   })
   it('should return that stones are not next to each other', () => {
     var stoneA = createStone(types.Player.WHITE, 2, 3)
     var stoneB = createStone(types.Player.WHITE, 7, 6)
-    expect(reducer.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(false)
+    expect(gameLogic.stonesAreNextToEachOther(stoneA, stoneB)).toEqual(false)
   })
 
 
@@ -347,7 +348,7 @@ describe('game logic', () => {
     var state = {
       stones: [stoneA]
     }
-    expect(reducer.stoneIsNextToSameColor(state, stoneB)).toEqual(true)
+    expect(gameLogic.stoneIsNextToSameColor(state, stoneB)).toEqual(true)
   })
   it('should return that stone is not next to the same color', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -355,7 +356,7 @@ describe('game logic', () => {
     var state = {
       stones: [stoneA]
     }
-    expect(reducer.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
+    expect(gameLogic.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
   })
   it('should return that stone is next to the same color', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -363,7 +364,7 @@ describe('game logic', () => {
     var state = {
       stones: [stoneA]
     }
-    expect(reducer.stoneIsNextToSameColor(state, stoneB)).toEqual(true)
+    expect(gameLogic.stoneIsNextToSameColor(state, stoneB)).toEqual(true)
   })
   it('should return that stone is not next to the same color', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -371,7 +372,7 @@ describe('game logic', () => {
     var state = {
       stones: [stoneA]
     }
-    expect(reducer.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
+    expect(gameLogic.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
   })
   it('should return that stone is next to the same color', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -380,7 +381,7 @@ describe('game logic', () => {
     var state = {
       stones: [stoneA, stoneC]
     }
-    expect(reducer.stoneIsNextToSameColor(state, stoneB)).toEqual(true)
+    expect(gameLogic.stoneIsNextToSameColor(state, stoneB)).toEqual(true)
   })
   it('should return that stone is not next to the same color', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -389,7 +390,7 @@ describe('game logic', () => {
     var state = {
       stones: [stoneA, stoneC]
     }
-    expect(reducer.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
+    expect(gameLogic.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
   })
   it('should return that stone is not next to the same color', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -397,7 +398,7 @@ describe('game logic', () => {
     var state = {
       stones: [stoneA]
     }
-    expect(reducer.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
+    expect(gameLogic.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
   })
   it('should return that stone is not next to the same color', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -405,7 +406,7 @@ describe('game logic', () => {
     var state = {
       stones: [stoneA]
     }
-    expect(reducer.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
+    expect(gameLogic.stoneIsNextToSameColor(state, stoneB)).toEqual(false)
   })
 
 
@@ -419,7 +420,7 @@ describe('game logic', () => {
         state: types.GameStates.WHITE_PLAYER_SET_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(true)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(true)
   })
   it('should return that the position is allowed', () => {
     var stoneA = createStone(types.Player.WHITE, 3, 0)
@@ -430,7 +431,7 @@ describe('game logic', () => {
         state: types.GameStates.WHITE_PLAYER_SET_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(true)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(true)
   })
   it('should return that the position is allowed', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -441,7 +442,7 @@ describe('game logic', () => {
         state: types.GameStates.BLACK_PLAYER_SET_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(true)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(true)
   })
   it('should return that the position is allowed', () => {
     var stoneA = createStone(types.Player.WHITE, 3, 0)
@@ -452,7 +453,7 @@ describe('game logic', () => {
         state: types.GameStates.BLACK_PLAYER_SET_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(true)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(true)
   })
   it('should return that the position is allowed', () => {
     var stoneA = createStone(types.Player.WHITE, 3, 0)
@@ -463,7 +464,7 @@ describe('game logic', () => {
         state: types.GameStates.BLACK_PLAYER_SET_GOLDEN_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(true)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(true)
   })
   it('should return that the position is not allowed', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -474,7 +475,7 @@ describe('game logic', () => {
         state: types.GameStates.WHITE_PLAYER_SET_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(false)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(false)
   })
   it('should return that the position is not allowed', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -485,7 +486,7 @@ describe('game logic', () => {
         state: types.GameStates.WHITE_PLAYER_SET_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(false)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(false)
   })
   it('should return that the position is not allowed', () => {
     var stoneA = createStone(types.Player.BLACK, 0, 0)
@@ -496,7 +497,7 @@ describe('game logic', () => {
         state: types.GameStates.BLACK_PLAYER_SET_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(false)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(false)
   })
   it('should return that the position is not allowed', () => {
     var stoneA = createStone(types.Player.BLACK, 0, 0)
@@ -507,7 +508,7 @@ describe('game logic', () => {
         state: types.GameStates.BLACK_PLAYER_SET_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(false)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(false)
   })
   it('should return that the position is not allowed', () => {
     var stoneA = createStone(types.Player.BLACK, 0, 0)
@@ -518,7 +519,7 @@ describe('game logic', () => {
         state: types.GameStates.BLACK_PLAYER_SET_GOLDEN_STONE
       }
     }
-    expect(reducer.positionIsAllowed(state, stoneB)).toEqual(false)
+    expect(gameLogic.positionIsAllowed(state, stoneB)).toEqual(false)
   })
 
 
@@ -537,7 +538,7 @@ describe('game logic', () => {
     for(var i=1;i<state.field.length;i++){
       expectedField[i][i] = 1
     }
-    expect(reducer.possibleTurnsDiagonal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsDiagonal(state)).toEqual(expectedField)
   })
   it('should return all possible diagonal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -554,7 +555,7 @@ describe('game logic', () => {
     for(var i=1;i<stoneB.position.col;i++){
       expectedField[i][i] = 1
     }
-    expect(reducer.possibleTurnsDiagonal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsDiagonal(state)).toEqual(expectedField)
   })
   it('should return all possible diagonal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -571,7 +572,7 @@ describe('game logic', () => {
     for(var i=1;i<stoneB.position.col;i++){
       expectedField[i][i] = 1
     }
-    expect(reducer.possibleTurnsDiagonal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsDiagonal(state)).toEqual(expectedField)
   })
   it('should return all possible diagonal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -588,7 +589,7 @@ describe('game logic', () => {
     for(var i=1;i<stoneB.position.col;i++){
       expectedField[i][i] = 1
     }
-    expect(reducer.possibleTurnsDiagonal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsDiagonal(state)).toEqual(expectedField)
   })
   it('should return all possible diagonal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -605,7 +606,7 @@ describe('game logic', () => {
     for(var i=1;i<stoneB.position.col;i++){
       expectedField[i][i] = 1
     }
-    expect(reducer.possibleTurnsDiagonal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsDiagonal(state)).toEqual(expectedField)
   })
   it('should return all possible diagonal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -622,7 +623,7 @@ describe('game logic', () => {
     for(var i=1;i<stoneB.position.col;i++){
       expectedField[i][i] = 1
     }
-    expect(reducer.possibleTurnsDiagonal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsDiagonal(state)).toEqual(expectedField)
   })
   it('should return all possible diagonal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 9, 0)
@@ -639,7 +640,7 @@ describe('game logic', () => {
     for(var i=8;i>stoneB.position.col;i--){
       expectedField[i][9-i] = 1
     }
-    expect(reducer.possibleTurnsDiagonal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsDiagonal(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -655,7 +656,7 @@ describe('game logic', () => {
     for(var i=1;i<10;i++){
       expectedField[stoneA.position.col][i] = 1
     }
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -673,7 +674,7 @@ describe('game logic', () => {
         expectedField[stoneA.position.col][i] = 1
       }
     }
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -692,7 +693,7 @@ describe('game logic', () => {
         expectedField[stoneA.position.col][i] = 1
       }
     }
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -711,7 +712,7 @@ describe('game logic', () => {
         expectedField[stoneA.position.col][i] = 1
       }
     }
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -729,7 +730,7 @@ describe('game logic', () => {
     for(var i=0;i<stoneA.position.row;i++){
       expectedField[stoneA.position.col][i] = 1
     }
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -748,7 +749,7 @@ describe('game logic', () => {
         expectedField[stoneA.position.col][i] = 1
       }
     }
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -763,7 +764,7 @@ describe('game logic', () => {
       }
     }
     var expectedField = createFieldWithStones([])
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -783,7 +784,7 @@ describe('game logic', () => {
         expectedField[stoneA.position.col][i] = 1
       }
     }
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible vertical turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -798,7 +799,7 @@ describe('game logic', () => {
       }
     }
     var expectedField = createFieldWithStones([])
-    expect(reducer.possibleTurnsVertical(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsVertical(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -816,7 +817,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -834,7 +835,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -853,7 +854,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -872,7 +873,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 4)
@@ -890,7 +891,7 @@ describe('game logic', () => {
     for(var i=0;i<stoneA.position.col;i++){
       expectedField[i][stoneA.position.row] = 1
     }
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 3)
@@ -909,7 +910,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 3)
@@ -924,7 +925,7 @@ describe('game logic', () => {
       }
     }
     var expectedField = createFieldWithStones([])
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 3)
@@ -944,7 +945,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 3)
@@ -960,7 +961,7 @@ describe('game logic', () => {
       }
     }
     var expectedField = createFieldWithStones([])
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
   it('should return all possible horizontal turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 3)
@@ -975,7 +976,7 @@ describe('game logic', () => {
       }
     }
     var expectedField = createFieldWithStones([])
-    expect(reducer.possibleTurnsHorizontal(state)).toEqual(expectedField)
+    expect(gameLogic.possibleTurnsHorizontal(state)).toEqual(expectedField)
   })
 
 
@@ -998,7 +999,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -1021,7 +1022,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 0, 0)
@@ -1049,7 +1050,7 @@ describe('game logic', () => {
         expectedField[i][i] = 1
       }
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -1073,7 +1074,7 @@ describe('game logic', () => {
         expectedField[i][stoneA.position.row] = 1
       }
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -1092,7 +1093,7 @@ describe('game logic', () => {
         expectedField[stoneA.position.col][i] = 1
       }
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 3)
@@ -1110,7 +1111,7 @@ describe('game logic', () => {
     for(var i=0;i<stoneA.position.row;i++){
       expectedField[stoneA.position.col][i] = 1
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -1129,7 +1130,7 @@ describe('game logic', () => {
         expectedField[stoneA.position.col][i] = 1
       }
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -1144,7 +1145,7 @@ describe('game logic', () => {
       }
     }
     var expectedField = createFieldWithStones([])
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -1164,7 +1165,7 @@ describe('game logic', () => {
         expectedField[stoneA.position.col][i] = 1
       }
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
   it('should return all possible turns for stone', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
@@ -1184,7 +1185,7 @@ describe('game logic', () => {
         expectedField[i][stoneB.position.row] = 1
       }
     }
-    expect(reducer.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
+    expect(gameLogic.getPossibleTurnsForSelectedStones(state)).toEqual(expectedField)
   })
 
 

@@ -33,7 +33,7 @@ class Game extends Component {
     );
   }
   onPressTile(player, position) {
-    this.props.onSetStone(player, position)
+    this.props.onClickField(player, position)
   }
   onPressStone(stoneID){
     this.props.onClickStone(stoneID)

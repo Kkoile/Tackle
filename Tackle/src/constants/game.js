@@ -11,3 +11,5 @@ export const Player = {
 	BLACK: 'BLACK',
 	GOLD: 'GOLD',
 }
+
+export const FIELD_SIZE = 10

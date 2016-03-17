@@ -1,10 +1,10 @@
-export const SET_STONE = 'SET_STONE'
+export const FIELD_CLICKED = 'FIELD_CLICKED'
 export const MAKE_TURN = 'MAKE_TURN'
 export const SELECT_LEVEL = 'SELECT_LEVEL'
 export const STONE_CLICKED = 'STONE_CLICKED'
 
-export function setStone(player, position) {
-  return { type: SET_STONE, player, position }
+export function fieldClicked(player, position) {
+  return { type: FIELD_CLICKED, player, position }
 }
 
 export function makeTurn(player, turn) {
