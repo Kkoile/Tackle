@@ -1212,7 +1212,7 @@ describe('game logic', () => {
       field: [],
       stones: [],
       selectedStones: [],
-      possibleTurns: [],
+      possibleTurns: createFieldWithStones([]),
       gameState: {
         activePlayer: types.Player.BLACK,
         state: types.GameStates.BLACK_PLAYER_MAKE_TURN
@@ -1247,7 +1247,7 @@ describe('game logic', () => {
       field: [],
       stones: [],
       selectedStones: [],
-      possibleTurns: [],
+      possibleTurns: createFieldWithStones([]),
       gameState: {
         activePlayer: types.Player.BLACK,
         state: types.GameStates.BLACK_PLAYER_MAKE_TURN
@@ -1283,7 +1283,7 @@ describe('game logic', () => {
       field: [],
       stones: [],
       selectedStones: [],
-      possibleTurns: [],
+      possibleTurns: createFieldWithStones([]),
       gameState: {
         activePlayer: types.Player.BLACK,
         state: types.GameStates.BLACK_PLAYER_MAKE_TURN
@@ -1297,7 +1297,7 @@ describe('game logic', () => {
     expectedState.stones = [expectedStoneA, expectedStoneB]
     expect(reducer.makeTurn(state, action)).toEqual(expectedState)
   })
-  it('should not set the turn and return the old state, because turn is not allowed', () => {
+  it('should not set the turn and clear the selected stones', () => {
     var stoneA = createStone(types.Player.WHITE, 4, 0)
     var action = {
       position: {
@@ -1328,7 +1328,7 @@ describe('game logic', () => {
     var expectedField = createFieldWithStones([expectedStone])
     expectedState.field = expectedField
     expectedState.stones = [expectedStone]
-    expectedState.selectedStones = [expectedStone]
+    expectedState.selectedStones = []
     expect(reducer.makeTurn(state, action)).toEqual(expectedState)
   })
   it('should set the turn and return the new state', () => {
@@ -1355,7 +1355,7 @@ describe('game logic', () => {
       field: [],
       stones: [],
       selectedStones: [],
-      possibleTurns: [],
+      possibleTurns: createFieldWithStones([]),
       gameState: {
         activePlayer: types.Player.BLACK,
         state: types.GameStates.BLACK_PLAYER_MAKE_TURN
@@ -1393,7 +1393,7 @@ describe('game logic', () => {
       field: [],
       stones: [],
       selectedStones: [],
-      possibleTurns: [],
+      possibleTurns: createFieldWithStones([]),
       gameState: {
         activePlayer: types.Player.BLACK,
         state: types.GameStates.BLACK_PLAYER_MAKE_TURN
@@ -1434,7 +1434,7 @@ describe('game logic', () => {
       field: [],
       stones: [],
       selectedStones: [],
-      possibleTurns: [],
+      possibleTurns: createFieldWithStones([]),
       gameState: {
         activePlayer: types.Player.BLACK,
         state: types.GameStates.BLACK_PLAYER_MAKE_TURN

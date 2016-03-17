@@ -179,26 +179,19 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return stones.length > 0
 }
 
-/*tc*/export/*etc*/function getStoneFromID(state, stoneID) {
-  return state.stones.find((stone) => {
-    return stone.id == stoneID
-  })
-}
-
 /*tc*/export/*etc*/function removeStoneFromSelectedStones(selectedStones, stone) {
-  var index = selectedStones.indexOf(clickedStone)
+  var index = selectedStones.indexOf(stone)
   selectedStones.splice(index, 1)
   return selectedStones
 }
 
-/*tc*/export/*etc*/function changeSelectedStones(state, stoneID) {
+/*tc*/export/*etc*/function changeSelectedStones(state, clickedStone) {
   var selectedStones = state.selectedStones.slice()
-  var clickedStone = getStoneFromID(state, stoneID)
   if(clickedStoneHasOwnColor(state, clickedStone)) {
     if(!clickedStoneIsAlreadySelected(state, clickedStone)) {
       selectedStones.push(clickedStone)
     }else{
-      selectedStones = removeStoneFromSelectedStones(selectedStones, stone)
+      selectedStones = removeStoneFromSelectedStones(selectedStones, clickedStone)
     }
   }
   return selectedStones

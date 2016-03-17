@@ -42,15 +42,29 @@ import * as gameLogic from '../logic/gameLogic'
   }
 }
 
-/*tc*/export/*etc*/function makeTurn(state, action) {
+/*tc*/export/*etc*/function setTurn(state, action) {
   var newState = Object.assign({}, state)
-  if(gameLogic.turnIsAllowed(state, action.position)){
-    newState = gameLogic.setTurn(state, action.position)
-    newState.selectedStones = []
-    newState.possibleTurns = []
-    newState.gameState = switchGameState(state)
-  }
+  newState = gameLogic.setTurn(state, action.position)
+  newState.selectedStones = []
+  newState.possibleTurns = createEmptyBoardMatrix()
+  newState.gameState = switchGameState(state)
   return newState
+}
+
+/*tc*/export/*etc*/function clearSelectedStones(state, action) {
+  var newState = Object.assign({}, state)
+  newState.selectedStones = []
+  newState.possibleTurns = createEmptyBoardMatrix()
+  return newState
+}
+
+/*tc*/export/*etc*/function makeTurn(state, action) {
+  if(gameLogic.turnIsAllowed(state, action.position)){
+    return setTurn(state, action)
+  }else{
+    return clearSelectedStones(state, action)
+  }
+  return state
 }
 
 /*tc*/export/*etc*/function createStone(state, player, position) {
@@ -156,13 +170,33 @@ import * as gameLogic from '../logic/gameLogic'
   return newState
 }
 
-/*tc*/export/*etc*/function handleClickedOnStone(state, action) {
+/*tc*/export/*etc*/function stoneIsOnPossibleField(state, clickedStone) {
+  return state.possibleTurns[clickedStone.position.col][clickedStone.position.row]
+}
+
+/*tc*/export/*etc*/function getStoneFromID(state, stoneID) {
+  return state.stones.find((stone) => {
+    return stone.id == stoneID
+  })
+}
+
+/*tc*/export/*etc*/function selectStone(state, clickedStone) {
   var newState = Object.assign({}, state)
-  if(gameStateIsInMakeTurnPhase(state)){
-    newState.selectedStones = gameLogic.changeSelectedStones(newState, action.stoneID)
-    newState.possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
-  }
+  newState.selectedStones = gameLogic.changeSelectedStones(newState, clickedStone)
+  newState.possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
   return newState
+}
+
+/*tc*/export/*etc*/function handleClickedOnStone(state, action) {
+  if(gameStateIsInMakeTurnPhase(state)){
+    var clickedStone = getStoneFromID(state, action.stoneID)
+    if(stoneIsOnPossibleField(state, clickedStone)){
+      return makeTurn(state, clickedStone)
+    }else{
+      return selectStone(state, clickedStone)
+    }
+  }
+  return state
 }
 
 /*tc*/export/*etc*/function stones(state = getInitialState(), action) {
