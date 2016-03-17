@@ -970,7 +970,7 @@ import { levels } from '../constants/levels'
           return newState
         }
         if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE &&
-            action.player != Player.GOLD){
+            action.player != Player.BLACK){
           return newState
         }
         if(positionIsAllowed(state, action)){
@@ -978,7 +978,7 @@ import { levels } from '../constants/levels'
           if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
             player = Player.GOLD
           }
-          if(state.stones.length / 2 < state.level.count + 2) {
+          if(state.stones.length / 2 < state.level.count + 2 || state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE) {
             newState.stones.push(
               {
                 id: 'stone' + state.stones.length,
