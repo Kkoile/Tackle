@@ -5,14 +5,16 @@ import React, {
   View,
 } from 'react-native';
 
-var Board = require('../components/board');
-var {GameStates, Player} = require('../constants/game');
+var Board = require('../components/board')
+var {GameStates, Player} = require('../constants/game')
+import * as PlayModes from '../constants/playModes'
 
 class Game extends Component {
   constructor(props){
     super(props);
     this.onPressTile = this.onPressTile.bind(this)
     this.onPressStone = this.onPressStone.bind(this)
+    this.getInformationAboutOwnColorIfNeeded = this.getInformationAboutOwnColorIfNeeded.bind(this)
   }
   render() {
     var game = this.props.game
@@ -29,8 +31,14 @@ class Game extends Component {
           selectedStones={game.selectedStones}
           possibleTurns={game.possibleTurns}
         />
+        {this.getInformationAboutOwnColorIfNeeded()}
       </View>
     );
+  }
+  getInformationAboutOwnColorIfNeeded() {
+    if(this.props.game.playMode != PlayModes.LOCALLY) {
+      return <Text>Your color: {this.props.game.ownColor}</Text>
+    }
   }
   onPressTile(player, position) {
     this.props.onClickField(player, position)

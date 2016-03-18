@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
-import { FIELD_CLICKED, SET_GOLDEN_STONE, MAKE_TURN, SELECT_LEVEL, STONE_CLICKED } from '../actions/game'
+import { FIELD_CLICKED, SELECT_LEVEL, STONE_CLICKED, SET_PLAY_MODE } from '../actions/game'
 import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 import { levels } from '../constants/levels'
+import * as PlayModes from '../constants/playModes'
 import * as gameLogic from '../logic/gameLogic'
 
 /*tc*/export/*etc*/function switchGameState(state) {
@@ -76,6 +77,53 @@ import * as gameLogic from '../logic/gameLogic'
   }
 }
 
+/*tc*/export/*etc*/function getRandomColor() {
+  var isWhitePlayer = Math.random()<.5
+  if(isWhitePlayer) {
+    return Player.WHITE
+  }
+  return Player.BLACK
+}
+
+/*tc*/export/*etc*/function stoneIsOnPossibleField(state, clickedStone) {
+  return state.possibleTurns[clickedStone.position.col][clickedStone.position.row]
+}
+
+/*tc*/export/*etc*/function getStoneFromID(state, stoneID) {
+  return state.stones.find((stone) => {
+    return stone.id == stoneID
+  })
+}
+
+/*tc*/export/*etc*/function userCanOnlySelectOwnColor(state) {
+  return state.playMode == PlayModes.COMPUTER || 
+          state.playMode == PlayModes.INTERNET
+}
+
+/*tc*/export/*etc*/function itIsTheBlackPlayersTurn(state) {
+  return state.gameState.state == GameStates.BLACK_PLAYER_SET_STONE ||
+          state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE ||
+          state.gameState.state == GameStates.BLACK_PLAYER_MAKE_TURN 
+}
+
+/*tc*/export/*etc*/function itIsTheWhitePlayersTurn(state) {
+  return state.gameState.state == GameStates.WHITE_PLAYER_SET_STONE ||
+          state.gameState.state == GameStates.WHITE_PLAYER_MAKE_TURN
+}
+
+/*tc*/export/*etc*/function currentPlayer(state) {
+  if(itIsTheWhitePlayersTurn(state)) {
+    return Player.WHITE
+  }
+  if(itIsTheBlackPlayersTurn(state)) {
+    return Player.BLACK
+  }
+}
+
+/*tc*/export/*etc*/function itIsNotTheUsersTurn(state) {
+  return currentPlayer(state) != state.ownColor
+}
+
 /*tc*/export/*etc*/function thereAreNotEnoughStonesOfPlayer(state, player) {
   var stones = state.stones.filter((stone) => {
     return stone.player == player
@@ -105,6 +153,9 @@ import * as gameLogic from '../logic/gameLogic'
 }
 
 /*tc*/export/*etc*/function handleSetStone(state, action) {
+  if(userCanOnlySelectOwnColor(state) && itIsNotTheUsersTurn(state)) {
+    return state
+  }
   if(gameLogic.positionIsAllowed(state, action)){
     return setStone(state, action)
   }
@@ -124,7 +175,9 @@ import * as gameLogic from '../logic/gameLogic'
 
 /*tc*/export/*etc*/function getInitialState() {
   return {
+    playMode: PlayModes.NOT_SELECTED,
     level: {},
+    ownColor: Player.WHITE,
     gameState: {
       state: GameStates.WHITE_PLAYER_SET_STONE,
       activePlayer: Player.WHITE
@@ -170,17 +223,10 @@ import * as gameLogic from '../logic/gameLogic'
   return newState
 }
 
-/*tc*/export/*etc*/function stoneIsOnPossibleField(state, clickedStone) {
-  return state.possibleTurns[clickedStone.position.col][clickedStone.position.row]
-}
-
-/*tc*/export/*etc*/function getStoneFromID(state, stoneID) {
-  return state.stones.find((stone) => {
-    return stone.id == stoneID
-  })
-}
-
 /*tc*/export/*etc*/function selectStone(state, clickedStone) {
+  if(userCanOnlySelectOwnColor(state) && itIsNotTheUsersTurn(state)) {
+    return state
+  }
   var newState = Object.assign({}, state)
   newState.selectedStones = gameLogic.changeSelectedStones(newState, clickedStone)
   newState.possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
@@ -199,7 +245,22 @@ import * as gameLogic from '../logic/gameLogic'
   return state
 }
 
-/*tc*/export/*etc*/function stones(state = getInitialState(), action) {
+/*tc*/export/*etc*/function handleSetPlayMode(state, action) {
+  var newState = Object.assign({}, state)
+  newState.playMode = action.playMode
+  switch (action.playMode) {
+    case PlayModes.COMPUTER:
+      newState.ownColor = getRandomColor()
+    case PlayModes.INTERNET:
+      //TODO: Needs to be implemented depending on who started the match etc.
+      newState.ownColor = Player.WHITE
+    default:
+      //do nothing
+  }
+  return newState
+}
+
+/*tc*/export/*etc*/function game(state = getInitialState(), action) {
   switch (action.type) {
     case SELECT_LEVEL:
       return handleSelectLevel(state, action)
@@ -207,9 +268,11 @@ import * as gameLogic from '../logic/gameLogic'
       return handleClickedOnField(state, action)
     case STONE_CLICKED:
       return handleClickedOnStone(state, action)
+    case SET_PLAY_MODE:
+      return handleSetPlayMode(state, action)
     default:
       return state
   }
 }
 
-export default stones
+export default game

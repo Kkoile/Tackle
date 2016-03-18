@@ -8,7 +8,7 @@ import React, {
 
 var Button = require('react-native-button');
 
-var Home = require('./home');
+import Home from '../containers/home'
 
 class Login extends Component{
   constructor(props){

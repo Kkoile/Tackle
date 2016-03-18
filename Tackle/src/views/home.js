@@ -10,8 +10,11 @@ import LevelSelection from '../containers/levelSelection'
 
 class Home extends Component {
   constructor(props) {
-    super(props);
-    this.onPressPlay = this.onPressPlay.bind(this);
+    super(props)
+    this.goToLevelSelection = this.goToLevelSelection.bind(this)
+    this.onPressPlayLocally = this.onPressPlayLocally.bind(this)
+    this.onPressPlayViaInternet = this.onPressPlayViaInternet.bind(this)
+    this.onPressPlayAgainstComputer = this.onPressPlayAgainstComputer.bind(this)
   }
 
   render() {
@@ -19,15 +22,38 @@ class Home extends Component {
       <View style={styles.container}>
           <Button 
             style={styles.button}
-            onPress={this.onPressPlay}
+            onPress={this.onPressPlayLocally}
           >
-            Play
+            Play against Friend (Local)
+          </Button>
+          <Button 
+            style={styles.button}
+            onPress={this.onPressPlayViaInternet}
+          >
+            Play against Friend (Internet)
+          </Button>
+          <Button 
+            style={styles.button}
+            onPress={this.onPressPlayAgainstComputer}
+          >
+            Play against Computer
           </Button>
       </View>
     );
   }
-  onPressPlay() {
-    //TODO: Implement logic to play against Someone
+  onPressPlayLocally() {
+    this.props.playLocally()
+    this.goToLevelSelection()
+  }
+  onPressPlayViaInternet() {
+    this.props.playViaInternet()
+    this.goToLevelSelection()
+  }
+  onPressPlayAgainstComputer() {
+    this.props.playAgainstComputer()
+    this.goToLevelSelection()
+  }
+  goToLevelSelection() {
     this.props.navigator.push({
       title: 'Level Selection',
       component: LevelSelection,

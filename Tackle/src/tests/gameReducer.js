@@ -3,7 +3,7 @@ import * as actions from '../actions/game'
 import reducer from '../reducers/game'
 import * as types from '../constants/game'
 import { levels } from '../constants/levels'
-
+import * as PlayModes from '../constants/playModes'
 /*tc*/export/*etc*/function createFieldWithStones (stones) {
   var field = [
     [0,0,0,0,0,0,0,0,0,0],
@@ -137,6 +137,8 @@ function createNormalStateForGame () {
 
 function createInitialState () {
   return {
+    playMode: PlayModes.NOT_SELECTED,
+    ownColor: types.Player.WHITE,
     level: {},
     gameState: {
       state: types.GameStates.WHITE_PLAYER_SET_STONE,
