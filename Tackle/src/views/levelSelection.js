@@ -36,9 +36,14 @@ class LevelSelection extends Component {
   onPress(name) {
     this.props.onLevelSelect(name)
     this.props.navigator.replace({
-          title: 'Game',
-          component: Game,
-        });
+      title: 'Game',
+      component: Game,
+      leftButtonTitle: 'Back',
+      onLeftButtonPress: () => {
+        this.props.resetGame()
+        this.props.navigator.pop()
+      },
+    });
   }
 }
 

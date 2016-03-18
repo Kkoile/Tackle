@@ -57,6 +57,11 @@ class Home extends Component {
     this.props.navigator.push({
       title: 'Level Selection',
       component: LevelSelection,
+      leftButtonTitle: 'Back',
+      onLeftButtonPress: () => {
+        this.props.resetGame()
+        this.props.navigator.pop()
+      },
     }); 
   }
 }

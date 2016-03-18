@@ -1,6 +1,6 @@
 'use strict';
 import { connect } from 'react-redux'
-import {selectLevel} from '../actions/game'
+import { selectLevel, resetGame } from '../actions/game'
 import LevelSelection from '../views/levelSelection'
 
 const mapStateToProps = (state) => {
@@ -11,6 +11,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onLevelSelect: (name)  => {
       dispatch(selectLevel(name))
+    },
+    resetGame: () => {
+      dispatch(resetGame())
     }
   }
 }

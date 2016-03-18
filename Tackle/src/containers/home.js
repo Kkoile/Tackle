@@ -1,7 +1,7 @@
 'use strict';
 import { connect } from 'react-redux'
 import * as PlayModes from '../constants/playModes'
-import { setPlayMode } from '../actions/game'
+import { setPlayMode, resetGame } from '../actions/game'
 import Home from '../views/home'
 
 const mapStateToProps = (state) => {
@@ -18,6 +18,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     playAgainstComputer: () => {
       dispatch(setPlayMode(PlayModes.COMPUTER))
+    },
+    resetGame: () => {
+      dispatch(resetGame())
     }
   }
 }

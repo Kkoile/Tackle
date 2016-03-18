@@ -1,5 +1,11 @@
 import { combineReducers } from 'redux'
-import { FIELD_CLICKED, SELECT_LEVEL, STONE_CLICKED, SET_PLAY_MODE } from '../actions/game'
+import { 
+    FIELD_CLICKED, 
+    SELECT_LEVEL, 
+    STONE_CLICKED, 
+    SET_PLAY_MODE, 
+    RESET_GAME 
+  } from '../actions/game'
 import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 import { levels } from '../constants/levels'
 import * as PlayModes from '../constants/playModes'
@@ -270,6 +276,8 @@ import * as gameLogic from '../logic/gameLogic'
       return handleClickedOnStone(state, action)
     case SET_PLAY_MODE:
       return handleSetPlayMode(state, action)
+    case RESET_GAME:
+      return getInitialState()
     default:
       return state
   }
