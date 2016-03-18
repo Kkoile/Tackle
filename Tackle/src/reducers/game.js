@@ -10,6 +10,7 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 import { levels } from '../constants/levels'
 import * as PlayModes from '../constants/playModes'
 import * as gameLogic from '../logic/gameLogic'
+import * as computer from '../logic/artificialIntelligence'
 
 /*tc*/export/*etc*/function switchGameState(state) {
   var gameState = state.gameState
@@ -179,11 +180,44 @@ import * as gameLogic from '../logic/gameLogic'
           state.gameState.state == GameStates.BLACK_PLAYER_MAKE_TURN
 }
 
+/*tc*/export/*etc*/function getStateAfterComputerHasSetStone(state) {
+  var stone = computer.setStone(state)
+  var newState = setStone(state, stone)
+  if(newState.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE &&
+      itIsNotTheUsersTurn(newState)) {
+    var goldenStone = computer.setStone(newState)
+    newState = setStone(newState, goldenStone)
+  }
+  return newState
+}
+
+/*tc*/export/*etc*/function getStateAfterComputerHasMadeTurn(state) {
+  var move = computer.getNextMove(state)
+  console.log(move)
+  /*state.selectedStones = move.selectedStones
+  var action = {
+    position: move.destination
+  }
+  var newState = setTurn(state, action)
+  return newState*/
+  return state
+}
+
+/*tc*/export/*etc*/function getStateAfterComputerMadeItsTurn(state) {
+  if(gameStateIsInStoneSetPhase(state)) {
+    return getStateAfterComputerHasSetStone(state)
+  }
+  if(gameStateIsInMakeTurnPhase(state)) {
+    return getStateAfterComputerHasMadeTurn(state)
+  }
+}
+
 /*tc*/export/*etc*/function getInitialState() {
   return {
     playMode: PlayModes.NOT_SELECTED,
     level: {},
     ownColor: Player.WHITE,
+    opponentColor: Player.BLACK,
     gameState: {
       state: GameStates.WHITE_PLAYER_SET_STONE,
       activePlayer: Player.WHITE
@@ -251,29 +285,47 @@ import * as gameLogic from '../logic/gameLogic'
   return state
 }
 
+/*tc*/export/*etc*/function switchColor(color) {
+  if(color == Player.WHITE){
+    return Player.BLACK
+  }else{
+    return Player.WHITE
+  }
+}
+
 /*tc*/export/*etc*/function handleSetPlayMode(state, action) {
   var newState = Object.assign({}, state)
   newState.playMode = action.playMode
   switch (action.playMode) {
     case PlayModes.COMPUTER:
       newState.ownColor = getRandomColor()
+      newState.opponentColor = switchColor(newState.ownColor)
     case PlayModes.INTERNET:
       //TODO: Needs to be implemented depending on who started the match etc.
       newState.ownColor = Player.WHITE
+      newState.opponentColor = Player.BLACK
     default:
       //do nothing
   }
   return newState
 }
 
+/*tc*/export/*etc*/function opponentIsComputer(state) {
+  return state.playMode == PlayModes.COMPUTER
+}
+
 /*tc*/export/*etc*/function game(state = getInitialState(), action) {
+  var newState
   switch (action.type) {
     case SELECT_LEVEL:
-      return handleSelectLevel(state, action)
+      newState = handleSelectLevel(state, action)
+      break;
     case FIELD_CLICKED:
-      return handleClickedOnField(state, action)
+      newState = handleClickedOnField(state, action)
+      break;
     case STONE_CLICKED:
-      return handleClickedOnStone(state, action)
+      newState = handleClickedOnStone(state, action)
+      break;
     case SET_PLAY_MODE:
       return handleSetPlayMode(state, action)
     case RESET_GAME:
@@ -281,6 +333,10 @@ import * as gameLogic from '../logic/gameLogic'
     default:
       return state
   }
+  if(opponentIsComputer(newState) && itIsNotTheUsersTurn(newState)) {
+    newState = getStateAfterComputerMadeItsTurn(newState)
+  }
+  return newState
 }
 
 export default game

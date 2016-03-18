@@ -866,3 +866,90 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   }
   return matrix
 }
+
+/*tc*/export/*etc*/function get90DegreeLevel(tiles) {
+  var newTiles = []
+  var rows = tiles.length
+  var cols = tiles[0].length
+
+  //TODO: Got it to work
+  for(var i=0;i<cols;i++){
+    newTiles.push(Array(rows).fill(1))
+  }
+  tiles.map((row, i) => {
+    row.map((tile, j) => {
+
+    })
+  })
+
+  return newTiles
+}
+
+/*tc*/export/*etc*/function playerHasWon (state, player) {
+  //Existiert die Figur auf dem Feld?
+  for (var i = 1; i < state.field.length - 1; i++) {
+    for (var j = 1; j < state.field[i].length - 1; j++) {
+      var a = true
+      for (var k = 0; k < state.level.tiles.length; k++) {
+        for (var k2 = 0; k2 < state.level.tiles[k].length; k2++) {
+          try {
+            if (parseInt(i) + k > state.field.length - 2 || parseInt(j) + k2 > state.field[i].length - 2) {
+              a = false
+              break
+            }
+            if (state.level.tiles[k][k2] == 2 && state.field[parseInt(i) + k][parseInt(j) + k2] / player == 1) {
+              a = false
+              break
+            }
+            if (state.level.tiles[k][k2] == 1 && state.field[parseInt(i) + k][parseInt(j) + k2] / player != state.level.tiles[k][k2]) {
+              a = false
+              break
+            }
+          } catch (e) {
+            a = false
+          }
+        }
+        if (!a) {
+          break
+        }
+      }
+      if (a) {
+        return true
+      }
+    }
+  }
+
+  var figur90 = get90DegreeLevel(state.level.tiles)
+
+  for (var i = 1; i < state.field.length - 1; i++) {
+    for (var j = 1; j < state.field[i].length - 1; j++) {
+      var a = true;
+      for (var k = 0; k < figur90.length; k++) {
+        for (var k2 = 0; k2 < figur90[k].length; k2++) {
+          try {
+            if (parseInt(i) + k > state.field.length - 2 || parseInt(j) + k2 > state.field[i].length - 2) {
+              a = false
+              break
+            }
+            if (figur90[k][k2] == 2 && state.field[parseInt(i) + k][parseInt(j) + k2] / player == 1) {
+              a = false
+              break
+            }
+            if (figur90[k][k2] == 1 && state.field[parseInt(i) + k][parseInt(j) + k2] / player != figur90[k][k2]) {
+              a = false
+              break
+            }
+          } catch (e) {
+            a = false
+          }
+        }
+        if (!a) {
+          break
+        }
+      }
+      if (a) {
+        return true
+      }
+    }
+  }
+}

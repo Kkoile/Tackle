@@ -2,6 +2,7 @@ import expect from 'expect'
 import * as gameLogic from '../logic/gameLogic'
 import * as reducer from '../reducers/game'
 import * as types from '../constants/game'
+import { levels } from '../constants/levels'
 
 /*tc*/export/*etc*/function createFieldWithStones (stones) {
   var field = [
