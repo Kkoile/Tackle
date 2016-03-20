@@ -4,6 +4,7 @@ import * as gameReducer from '../reducers/game'
 
 var depthInput = 2
 var importantTurn = false
+var firstTime = true
 export function setStone (state) {
     var stone
     if (state.gameState.state != GameStates.BLACK_PLAYER_SET_GOLDEN_STONE) {
@@ -88,21 +89,28 @@ function minimax (depth, state, alpha, beta) {
         for (var i in nextMoves) {
             var move = nextMoves[i]
             //Zug machen und eine Ebene weiter runter gehen
-            var newState = gameReducer.setTurn(move.state, move)
+            if (depth == depthInput && firstTime) {
+                console.log(move.state)
+            }
+            var newState = gameReducer.setTurn(Object.assign({}, move.state), Object.assign({}, move))
+            if (depth == depthInput && firstTime) {
+                console.log(move.state)
+            }
+            firstTime = false
             if (state.gameState.activePlayer == state.opponentColor) {
-                currentScore = minimax(parseInt(depth) - 1, newState, alpha, beta).score
+                currentScore = minimax(parseInt(depth) - 1, Object.assign({}, newState), alpha, beta).score
                 //Zug bewerten
                 if (currentScore > alpha) {
                     alpha = currentScore
-                    bestMove = move
+                    bestMove = Object.assign({}, move)
                     bestMove.score = alpha
                 }
             } else {
-                currentScore = minimax(parseInt(depth) - 1, newState, alpha, beta).score
+                currentScore = minimax(parseInt(depth) - 1, Object.assign({}, newState), alpha, beta).score
                 //Zug bewerten
                 if (currentScore < beta) {
                     beta = currentScore
-                    bestMove = move
+                    bestMove = Object.assign({}, move)
                     bestMove.score = beta
                 }
             }

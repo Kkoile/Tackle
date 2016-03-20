@@ -125,15 +125,15 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
     return false
   }
   var lowestX = 200, lowestY = 200 //some high number
-  var lowestStone
+  var topLeftStone
   stones.map((stone) => {
     if(stone.position.col <= lowestX && stone.position.row <= lowestY){
       lowestX = stone.position.col
       lowestY = stone.position.row
-      lowestStone = stone
+      topLeftStone = stone
     }
   })
-  return lowestStone
+  return topLeftStone
 }
 
 /*tc*/export/*etc*/function stoneAtPositionIsNotSelected(selectedStones, position) {
@@ -148,9 +148,8 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 }
 
 /*tc*/export/*etc*/function stonesBuildAMovableFigure(state) {
-  var width = getWidthOfSelectedStones(state.selectedStones) + 1
-  var height = getHeightOfSelectedStones(state.selectedStones) + 1
-  var topLeftStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
+  var { width, height, topLeftStone } = getSelectedStonesInfo(state)
+
   if(!topLeftStone) {
     return false
   }
@@ -213,17 +212,15 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return stone.position.row == 9 && stone.position.col == 9
 }
 
-/*tc*/export/*etc*/function possibleTurnsDiagonal (state) {
-  var possTurns = createEmptyBoardMatrix(state.field.length)
-  var x = getWidthOfSelectedStones(state.selectedStones) + 1
-  var y = getHeightOfSelectedStones(state.selectedStones) + 1
+/*tc*/export/*etc*/function getPossibleTurnsDiagonal (state) {
+  var possibleTurns = createEmptyBoardMatrix()
   var topLeftStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
   
   //define edges
   if (isTopLeftStone(topLeftStone)) {
     for (var i = 1; i < state.field.length; i++) {
       if (state.field[i][i] == 0) {
-        possTurns[i][i] = 1
+        possibleTurns[i][i] = 1
       } else {
         break
       }
@@ -231,7 +228,7 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   } else if (isTopRightStone(topLeftStone)) {
     for (var i = state.field.length - 1; i > 0; i--) {
       if (state.field[i - 1][state.field.length - i] == 0) {
-        possTurns[i - 1][state.field.length - i] = 1
+        possibleTurns[i - 1][state.field.length - i] = 1
       } else {
         break
       }
@@ -239,7 +236,7 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   } else if (isBottomLeftStone(topLeftStone)) {
     for (var i = 1; i < state.field.length; i++) {
       if (state.field[i][state.field.length - i - 1] == 0) {
-        possTurns[i][state.field.length - i - 1] = 1
+        possibleTurns[i][state.field.length - i - 1] = 1
       } else {
         break
       }
@@ -247,325 +244,364 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   } else if (isBottomRightStone(topLeftStone)) {
     for (var i = state.field.length - 2; i >= 0; i--) {
       if (state.field[i][i] == 0) {
-        possTurns[i][i] = 1
+        possibleTurns[i][i] = 1
       } else {
         break
       }
     }
   }
 
-  return possTurns;
+  return possibleTurns
 }
 
-/*tc*/export/*etc*/function possibleTurnsVertical (state) {
-  var possTurns = createEmptyBoardMatrix(state.field.length)
-  var x = getWidthOfSelectedStones(state.selectedStones) + 1
-  var y = getHeightOfSelectedStones(state.selectedStones) + 1
-  var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
-
-  var colorOpp = Player.WHITE
-  if (lowestStone.player == Player.WHITE) {
-      colorOpp = Player.BLACK
+/*tc*/export/*etc*/function selectedStonesAreInFrontOfOpponentBelow (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var topLeftX = topLeftStone.position.col
+  var topLeftY = topLeftStone.position.row
+  var nextToOpp = false
+  if (!state.field[topLeftX][topLeftY + height]){
+    return false
   }
-
-  //proof below
-  //in front of opponent?
-  try {
-    var nextToOpp = false
-    for (var i = 0; i < x; i++) {
-      if (state.field[lowestStone.position.col + i][lowestStone.position.row + y] == colorOpp) {
-        nextToOpp = true
-      }
-      if (state.field[lowestStone.position.col + i][lowestStone.position.row + y] == lowestStone.player || state.field[lowestStone.position.col + i][lowestStone.position.row + y] == Player.GOLD) {
-        nextToOpp = false
-        break
-      }
+  for (var i = 0; i < width; i++) {
+    var field = state.field[topLeftX + i][topLeftY + height]
+    if (field == colorOpp) {
+      nextToOpp = true
     }
-    if (nextToOpp) {
-      //determine length of opponent
-      var lengthOpp = 1
-      var k = lowestStone.position.row + y
-      for (var j = 0; j < x; j++) {
-        var b = 1
-        try {
-          while (state.field[lowestStone.position.col + j][k + b] == colorOpp) {
-            b++
-          }
-        } catch (e) {
-          break
-        }
-        if (b > lengthOpp) {
-          lengthOpp = b;
-        }
-      }
-      if (lengthOpp < y) {
-        for (var i = 0; i < state.field[0].length - lowestStone.position.row - y; i++) {
-          //is there an obstacle?
-          var a = false
-          for (var j = 0; j < x; j++) {
-            try {
-              if (state.field[lowestStone.position.col + j][lowestStone.position.row + i + y + lengthOpp] != 0) {
-                a = true
-              }
-            } catch (e) {
-              a = true
-            }
-          }
-          //mark fields as possible
-          if (a == false) {
-            possTurns[lowestStone.position.col][lowestStone.position.row + i + 1] = 1;
-          } else {
-            break
-          }
-        }
-      }
-    } else {
-      for (var i = 0; i < state.field[0].length - lowestStone.position.row - y; i++) {
-        //is there an obstacle
-        var a = false
-        for (var j = 0; j < x; j++) {
-          if (state.field[lowestStone.position.col + j][lowestStone.position.row + i + y] != 0) {
-            a = true
-          }
-        }
-        //mark fields as possible
-        if (a == false) {
-          possTurns[lowestStone.position.col][lowestStone.position.row + i + 1] = 1;
-        } else {
-          break
-        }
-      }
+    if (field == topLeftStone.player || field == Player.GOLD) {
+      return false
     }
-  } catch (e) {
   }
-
-  //proof above
-  try {
-    //in front of opponent?
-    var nextToOpp = false
-    for (var i = 0; i < x; i++) {
-      if (state.field[lowestStone.position.col + i][lowestStone.position.row - 1] == colorOpp) {
-        nextToOpp = true
-      }
-      if (state.field[lowestStone.position.col + i][lowestStone.position.row - 1] == lowestStone.player || state.field[lowestStone.position.col + i][lowestStone.position.row - 1] == Player.GOLD) {
-        nextToOpp = false
-        break
-      }
-    }
-    if (nextToOpp) {
-      //determine length of opponent
-      var lengthOpp = 1
-      var k = lowestStone.position.row
-      for (var j = 0; j < x; j++) {
-        var b = 1
-        try {
-          while (state.field[lowestStone.position.col + j][k - b - 1] == colorOpp) {
-            b++
-          }
-        } catch (e) {
-          break
-        }
-        if (b > lengthOpp) {
-          lengthOpp = b
-        }
-      }
-      //can opponent be moved?
-      if (lengthOpp < y) {
-        for (var i = 1; i <= lowestStone.position.row; i++) {
-          //is there an obstacle?
-          var a = false
-          for (var j = 0; j < x; j++) {
-            try {
-              if (state.field[lowestStone.position.col + j][lowestStone.position.row - lengthOpp - i] != 0) {
-                a = true
-              }
-            } catch (e) {
-              a = true
-            }
-          }
-          //mark fields as possible
-          if (a == false) {
-            possTurns[lowestStone.position.col][lowestStone.position.row - i] = 1
-          } else {
-            break
-          }
-        }
-      }
-    } else {
-      for (var i = 1; i <= lowestStone.position.row; i++) {
-        //is there an obstacle?
-        var a = false
-        for (var j = 0; j < x; j++) {
-          if (state.field[lowestStone.position.col + j][lowestStone.position.row - i] != 0) {
-            a = true
-          }
-        }
-        //mark fields as possible
-        if (a == false) {
-          possTurns[lowestStone.position.col][lowestStone.position.row - i] = 1
-        } else {
-          break
-        }
-      }
-    }
-  } catch (e) {
-  }
-
-  return possTurns;
+  return nextToOpp
 }
 
-/*tc*/export/*etc*/function possibleTurnsHorizontal(state) {
-  var possTurns = createEmptyBoardMatrix(state.field.length)
-  var x = getWidthOfSelectedStones(state.selectedStones) + 1
-  var y = getHeightOfSelectedStones(state.selectedStones) + 1
-  var lowestStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
-
-  var colorOpp = Player.WHITE
-  if (lowestStone.player == Player.WHITE) {
-      colorOpp = Player.BLACK
+/*tc*/export/*etc*/function selectedStonesAreInFrontOfOpponentAbove (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var topLeftX = topLeftStone.position.col
+  var topLeftY = topLeftStone.position.row
+  var nextToOpp = false
+  if (!state.field[topLeftX][topLeftY - 1]){
+    return false
   }
+  for (var i = 0; i < width; i++) {
+    var field = state.field[topLeftX + i][topLeftY - 1]
+    if (field == colorOpp) {
+      nextToOpp = true
+    }
+    if (field == topLeftStone.player || field == Player.GOLD) {
+      nextToOpp = false
+      break
+    }
+  }
+  return nextToOpp
+}
 
-  //proof right
-  try {
-    var nextToOpp = false
-    for (var i = 0; i < y; i++) {
-      if (state.field[lowestStone.position.col + x][lowestStone.position.row + i] == colorOpp) {
-        nextToOpp = true
-      }
-      if (state.field[lowestStone.position.col + x][lowestStone.position.row + i] == lowestStone.player || state.field[lowestStone.position.col + x][lowestStone.position.row + i] == Player.GOLD) {
-        nextToOpp = false
-        break
-      }
+/*tc*/export/*etc*/function selectedStonesAreInFrontOfOpponentRight (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var topLeftX = topLeftStone.position.col
+  var topLeftY = topLeftStone.position.row
+  var nextToOpp = false
+  if (!state.field[topLeftX + width]){
+    return false
+  }
+  for (var i = 0; i < height; i++) {
+    var field = state.field[topLeftX + width][topLeftY + i]
+    if (field == colorOpp) {
+      nextToOpp = true
     }
-    if (nextToOpp) {
-      //determine length of the opponent
-      var lengthOpp = 1;
-      var k = lowestStone.position.col + x;
-      for (var j = 0; j < y; j++) {
-        var b = 1
-        try {
-          while (state.field[k + b][lowestStone.position.row + j] == colorOpp) {
-            b++
-          }
-        } catch (e) {
-          break
-        }
-        if (b > lengthOpp) {
-          lengthOpp = b
-        }
-      }
-      //is it possible to move opponent?
-      if (lengthOpp < x) {
-        for (var i = 0; i < state.field.length - lowestStone.position.col - x; i++) {
-          //ist there an obstacle
-          var a = false
-          for (var j = 0; j < y; j++) {
-            try {
-              if (state.field[lowestStone.position.col + i + x + lengthOpp][lowestStone.position.row + j] != 0) {
-                a = true
-              }
-            } catch (e) {
-              a = true
-            }
-          }
-          //mark fields as possible
-          if (a == false) {
-            possTurns[lowestStone.position.col + i + 1][lowestStone.position.row] = 1
+    if (field == topLeftStone.player || field == Player.GOLD) {
+      nextToOpp = false
+      break
+    }
+  }
+  return nextToOpp
+}
+
+/*tc*/export/*etc*/function selectedStonesAreInFrontOfOpponentLeft (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var topLeftX = topLeftStone.position.col
+  var topLeftY = topLeftStone.position.row
+  var nextToOpp = false
+  if (!state.field[topLeftX - 1]){
+    return false
+  }
+  for (var i = 0; i < height; i++) {
+    var field = state.field[topLeftX - 1][topLeftY + i]
+    if (field == colorOpp) {
+      nextToOpp = true
+    }
+    if (field == topLeftStone.player || field == Player.GOLD) {
+      nextToOpp = false
+      break
+    }
+  }
+  return nextToOpp
+}
+
+/*tc*/export/*etc*/function fieldHasGivenColor(state, x, y, colorOpp) {
+  if(x < 0 || x > FIELD_SIZE - 1) {
+    return false
+  }
+  if(y < 0 || y > FIELD_SIZE - 1) {
+    return false
+  }
+  return state.field[x][y] == colorOpp
+}
+
+/*tc*/export/*etc*/function getLengthOfOpponentBelow (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var lengthOpp = 1
+  var topLeftOpponentY = topLeftStone.position.row + height
+  var topLeftX = topLeftStone.position.col
+  for (var j = 0; j < width; j++) {
+    var length = 1
+    while (fieldHasGivenColor(state, topLeftX + j, topLeftOpponentY + length, colorOpp)) {
+      length++
+    }
+    if (length > lengthOpp) {
+      lengthOpp = length
+    }
+  }
+  return lengthOpp
+}
+
+/*tc*/export/*etc*/function getLengthOfOpponentAbove (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var lengthOpp = 1
+  var bottomLeftOpponentY = topLeftStone.position.row - 1
+  var topLeftX = topLeftStone.position.col
+  for (var j = 0; j < width; j++) {
+    var length = 1
+    while (fieldHasGivenColor(state, topLeftX + j, bottomLeftOpponentY - length, colorOpp)) {
+      length++
+    }
+    if (length > lengthOpp) {
+      lengthOpp = length
+    }
+  }
+  return lengthOpp
+}
+
+/*tc*/export/*etc*/function getLengthOfOpponentRight (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var lengthOpp = 1
+  var topLeftOpponentX = topLeftStone.position.col + width
+  var topLeftY = topLeftStone.position.row
+  for (var j = 0; j < height; j++) {
+    var length = 1
+    while (fieldHasGivenColor(state, topLeftOpponentX + length, topLeftY + j, colorOpp)) {
+      length++
+    }
+    if (length > lengthOpp) {
+      lengthOpp = length
+    }
+  }
+  return lengthOpp
+}
+
+/*tc*/export/*etc*/function getLengthOfOpponentLeft (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var lengthOpp = 1
+  var topRightOpponentX = topLeftStone.position.col - 1
+  var topLeftY = topLeftStone.position.row
+  for (var j = 0; j < height; j++) {
+    var length = 1
+    while (fieldHasGivenColor(state, topRightOpponentX - length, topLeftY + j, colorOpp)) {
+      length++
+    }
+    if (length > lengthOpp) {
+      lengthOpp = length
+    }
+  }
+  return lengthOpp
+}
+
+/*tc*/export/*etc*/function thereIsNotAnObstacleBelow (state, selectedStonesInfo, lengthOpp, i) {
+  var { width, height, topLeftStone } = selectedStonesInfo
+  var thereIsNotAnObstacle = true
+  var topLeftX = topLeftStone.position.col
+  var topLeftY = topLeftStone.position.row + height + lengthOpp
+
+  for (var j = 0; j < width; j++) {
+    if (!fieldHasGivenColor(state, topLeftX + j, topLeftY + i, 0)) {
+      thereIsNotAnObstacle = false
+    }
+  }
+  return thereIsNotAnObstacle
+}
+
+/*tc*/export/*etc*/function thereIsNotAnObstacleAbove (state, selectedStonesInfo, lengthOpp, i) {
+  var { width, height, topLeftStone } = selectedStonesInfo
+  var thereIsNotAnObstacle = true
+  var topLeftX = topLeftStone.position.col
+  var topLeftY = topLeftStone.position.row - lengthOpp
+
+  for (var j = 0; j < width; j++) {
+    if (!fieldHasGivenColor(state, topLeftX + j, topLeftY - i, 0)) {
+      thereIsNotAnObstacle = false
+    }
+  }
+  return thereIsNotAnObstacle
+}
+
+/*tc*/export/*etc*/function thereIsNotAnObstacleRight (state, selectedStonesInfo, lengthOpp, i) {
+  var { width, height, topLeftStone } = selectedStonesInfo
+  var thereIsNotAnObstacle = true
+  var topLeftX = topLeftStone.position.col + width + lengthOpp
+  var topLeftY = topLeftStone.position.row
+
+  for (var j = 0; j < height; j++) {
+    if (!fieldHasGivenColor(state, topLeftX + i, topLeftY + j, 0)) {
+      thereIsNotAnObstacle = false
+    }
+  }
+  return thereIsNotAnObstacle
+}
+
+/*tc*/export/*etc*/function thereIsNotAnObstacleLeft (state, selectedStonesInfo, lengthOpp, i) {
+  var { width, height, topLeftStone } = selectedStonesInfo
+  var thereIsNotAnObstacle = true
+  var topLeftX = topLeftStone.position.col - lengthOpp
+  var topLeftY = topLeftStone.position.row
+  for (var j = 0; j < height; j++) {
+    if (!fieldHasGivenColor(state, topLeftX - i, topLeftY + j, 0)) {
+      thereIsNotAnObstacle = false
+    }
+  }
+  return thereIsNotAnObstacle
+}
+
+/*tc*/export/*etc*/function opponentIsShorterThanSelectedStones (lengthOpp, lengthSelectedStones) {
+  return lengthOpp < lengthSelectedStones
+}
+
+/*tc*/export/*etc*/function getPossibleTurnsAboveFromSelectedStones (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var possibleTurns = createEmptyBoardMatrix()
+  try {
+    if (selectedStonesAreInFrontOfOpponentAbove(state, selectedStonesInfo)) {
+      var lengthOpp = getLengthOfOpponentAbove(state, selectedStonesInfo)
+      if (opponentIsShorterThanSelectedStones(lengthOpp, height)) {
+        for (var i = 1; i <= topLeftStone.position.row; i++) {
+          if (thereIsNotAnObstacleAbove(state, selectedStonesInfo, lengthOpp, i)) {
+            possibleTurns[topLeftStone.position.col][topLeftStone.position.row - i] = 1
           } else {
             break
           }
         }
       }
     } else {
-      for (var i = 0; i < state.field.length - lowestStone.position.col - x; i++) {
-        //is there an obstacle
-        var a = false
-        for (var j = 0; j < y; j++) {
-          if (state.field[lowestStone.position.col + i + x][lowestStone.position.row + j] != 0) {
-            a = true
-          }
-        }
-        //mark fields as possible
-        if (a == false) {
-          possTurns[lowestStone.position.col + i + 1][lowestStone.position.row] = 1;
-        } else {
-          break
-        }
-      }
-    }
-  } catch (e) {}
-  //proof left
-  try {
-    var nextToOpp = false
-    for (var i = 0; i < y; i++) {
-      if (state.field[lowestStone.position.col - 1][lowestStone.position.row + i] == colorOpp) {
-        nextToOpp = true
-      }
-      if (state.field[lowestStone.position.col - 1][lowestStone.position.row + i] == lowestStone.player || state.field[lowestStone.position.col - 1][lowestStone.position.row + i] == Player.GOLD) {
-        nextToOpp = false
-        break
-      }
-    }
-    if (nextToOpp) {
-      //determine length of opponent
-      var lengthOpp = 1
-      var k = lowestStone.position.col
-      for (var j = 0; j < y; j++) {
-        var b = 1
-        try {
-          while (state.field[k - b - 1][lowestStone.position.row + j] == colorOpp) {
-            b++
-          }
-        } catch (e) {
-          break
-        }
-        if (b > lengthOpp) {
-          lengthOpp = b
-        }
-      }
-      //is it possible to move opponent?
-      if (lengthOpp < x) {
-        for (var i = 1; i <= lowestStone.position.col; i++) {
-          //is there an obstacle?
-          var a = false
-          for (var j = 0; j < y; j++) {
-            try {
-              if (state.field[lowestStone.position.col - lengthOpp - i][lowestStone.position.row + j] != 0) {
-                a = true
-              }
-            } catch (e) {
-                a = true
-            }
-          }
-          //mark fields as possible
-          if (a == false) {
-            possTurns[lowestStone.position.col - i][lowestStone.position.row] = 1;
-          } else {
-            break
-          }
-        }
-      }
-    } else {
-      for (var i = 1; i <= lowestStone.position.col; i++) {
-        //is there an obstacle
-        var a = false
-        for (var j = 0; j < y; j++) {
-          if (state.field[lowestStone.position.col - i][lowestStone.position.row + j] != 0) {
-            a = true
-          }
-        }
-        //mark fields as possible
-        if (a == false) {
-          possTurns[lowestStone.position.col - i][lowestStone.position.row] = 1;
+      for (var i = 1; i <= topLeftStone.position.row; i++) {
+        if (thereIsNotAnObstacleAbove(state, selectedStonesInfo, 0, i)) {
+          possibleTurns[topLeftStone.position.col][topLeftStone.position.row - i] = 1
         } else {
           break
         }
       }
     }
   } catch (e) {
-
   }
-  return possTurns
+  return possibleTurns
+}
+
+/*tc*/export/*etc*/function getPossibleTurnsBelowFromSelectedStones (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var possibleTurns = createEmptyBoardMatrix()
+  try {
+    if (selectedStonesAreInFrontOfOpponentBelow(state, selectedStonesInfo)) {
+      var lengthOpp = getLengthOfOpponentBelow(state, selectedStonesInfo)
+      if (opponentIsShorterThanSelectedStones(lengthOpp, height)) {
+        for (var i = 0; i < state.field[0].length - topLeftStone.position.row - height; i++) {
+          if (thereIsNotAnObstacleBelow(state, selectedStonesInfo, lengthOpp, i)) {
+            possibleTurns[topLeftStone.position.col][topLeftStone.position.row + i + 1] = 1
+          } else {
+            break
+          }
+        }
+      }
+    } else {
+      for (var i = 0; i < state.field[0].length - topLeftStone.position.row - height; i++) {
+        if (thereIsNotAnObstacleBelow(state, selectedStonesInfo, 0, i)) {
+          possibleTurns[topLeftStone.position.col][topLeftStone.position.row + i + 1] = 1;
+        } else {
+          break
+        }
+      }
+    }
+  } catch (e) {
+  }
+  return possibleTurns
+}
+
+/*tc*/export/*etc*/function getPossibleTurnsRightFromSelectedStones (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var possibleTurns = createEmptyBoardMatrix()
+  try {
+    if (selectedStonesAreInFrontOfOpponentRight(state, selectedStonesInfo)) {
+      var lengthOpp = getLengthOfOpponentRight(state, selectedStonesInfo)
+      if (opponentIsShorterThanSelectedStones(lengthOpp, width)) {
+        for (var i = 0; i < state.field.length - topLeftStone.position.col - width; i++) {
+          if (thereIsNotAnObstacleRight(state, selectedStonesInfo, lengthOpp, i)) {
+            possibleTurns[topLeftStone.position.col + i + 1][topLeftStone.position.row] = 1
+          } else {
+            break
+          }
+        }
+      }
+    } else {
+      for (var i = 0; i < state.field.length - topLeftStone.position.col - width; i++) {
+        if (thereIsNotAnObstacleRight(state, selectedStonesInfo, 0, i)) {
+          possibleTurns[topLeftStone.position.col + i + 1][topLeftStone.position.row] = 1
+        } else {
+          break
+        }
+      }
+    }
+  } catch (e) {
+  }
+  return possibleTurns
+}
+
+/*tc*/export/*etc*/function getPossibleTurnsLeftFromSelectedStones (state, selectedStonesInfo) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var possibleTurns = createEmptyBoardMatrix()
+  try {
+    if (selectedStonesAreInFrontOfOpponentLeft(state, selectedStonesInfo)) {
+      var lengthOpp = getLengthOfOpponentLeft(state, selectedStonesInfo)
+      if (opponentIsShorterThanSelectedStones(lengthOpp, width)) {
+        for (var i = 1; i <= topLeftStone.position.col; i++) {
+          if (thereIsNotAnObstacleLeft(state, selectedStonesInfo, lengthOpp, i)) {
+            possibleTurns[topLeftStone.position.col - i][topLeftStone.position.row] = 1
+          } else {
+            break
+          }
+        }
+      }
+    } else {
+      for (var i = 1; i <= topLeftStone.position.col; i++) {
+        if (thereIsNotAnObstacleLeft(state, selectedStonesInfo, 0, i)) {
+          possibleTurns[topLeftStone.position.col - i][topLeftStone.position.row] = 1
+        } else {
+          break
+        }
+      }
+    }
+  } catch (e) {
+  }
+  return possibleTurns
+}
+
+/*tc*/export/*etc*/function getPossibleTurnsVertical (state, selectedStonesInfo) {
+  var possibleTurnsBelow = getPossibleTurnsBelowFromSelectedStones(state, selectedStonesInfo)
+  var possibleTurnsAbove = getPossibleTurnsAboveFromSelectedStones(state, selectedStonesInfo)
+
+  return getJoinedPossibleTurns(possibleTurnsBelow, possibleTurnsAbove)
+}
+
+/*tc*/export/*etc*/function getPossibleTurnsHorizontal(state, selectedStonesInfo) {
+  var possibleTurnsRight = getPossibleTurnsRightFromSelectedStones(state, selectedStonesInfo)
+  var possibleTurnsLeft = getPossibleTurnsLeftFromSelectedStones(state, selectedStonesInfo)
+
+  return getJoinedPossibleTurns(possibleTurnsRight, possibleTurnsLeft)
 }
 
 /*tc*/export/*etc*/function isCornerStone(stone) {
@@ -584,39 +620,70 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return joinedPossibleTurns
 }
 
-/*tc*/export/*etc*/function getPossibleTurnsForSelectedStones(state) {
-  var possTurns = createEmptyBoardMatrix()
+/*tc*/export/*etc*/function getSelectedStonesInfo(state) {
+  var width = getWidthOfSelectedStones(state.selectedStones)
+  var height = getHeightOfSelectedStones(state.selectedStones)
+  var topLeftStone = getTopLeftStoneOfSelectedStones(state.selectedStones)
 
-  if(stonesBuildAMovableFigure(state)) {
-    var x = getWidthOfSelectedStones(state.selectedStones)
-    var y = getHeightOfSelectedStones(state.selectedStones)
-    if(x == y) {
-      //block
-      possTurns = possibleTurnsHorizontal(state)
-      var possTurns2 = possibleTurnsVertical(state)
-
-      //join arrays
-      possTurns = getJoinedPossibleTurns(possTurns, possTurns2);
-    
-      var stones = state.selectedStones
-      if (stones.length == 1 && isCornerStone(stones[0])) {
-        //Diagonal
-        var possTurns3 = possibleTurnsDiagonal(state)
-        //join arrays
-        possTurns = getJoinedPossibleTurns(possTurns, possTurns3)        
-      }
-    } else if (x > y) {
-      //horizontal
-      possTurns = possibleTurnsHorizontal(state)
-    } else if (x < y) {
-      //vertical
-      possTurns = possibleTurnsVertical(state)
-    }
+  var colorOpp = Player.WHITE
+  if (topLeftStone.player == Player.WHITE) {
+      colorOpp = Player.BLACK
   }
-  return possTurns
+  return {
+    width: width + 1, 
+    height: height + 1, 
+    topLeftStone: topLeftStone, 
+    colorOpp: colorOpp
+  }
 }
 
-/*tc*/export/*etc*/function directionBLA (stones, destination) {
+/*tc*/export/*etc*/function selectedStonesBuildABlock(selectedStonesInfo) {
+  return selectedStonesInfo.width == selectedStonesInfo.height
+}
+
+/*tc*/export/*etc*/function selectedStonesBuildAHorizonalBlock(selectedStonesInfo) {
+  return selectedStonesInfo.width > selectedStonesInfo.height
+}
+
+/*tc*/export/*etc*/function selectedStonesBuildAVerticalBlock(selectedStonesInfo) {
+  return selectedStonesInfo.width < selectedStonesInfo.height
+}
+
+/*tc*/export/*etc*/function selectedStonesCanBeMovedDiagonally(state) {
+  var stones = state.selectedStones
+  return stones.length == 1 && isCornerStone(stones[0])
+}
+
+/*tc*/export/*etc*/function getPossibleTurnsForABlock(state, selectedStonesInfo) {
+  var possibleTurns = []
+  var possibleTurnsHorizontal = getPossibleTurnsHorizontal(state, selectedStonesInfo)
+  var possibleTurnsVertical = getPossibleTurnsVertical(state, selectedStonesInfo)
+
+  possibleTurns = getJoinedPossibleTurns(possibleTurnsHorizontal, possibleTurnsVertical);
+
+  if (selectedStonesCanBeMovedDiagonally(state)) {
+    var possibleTurnsDiagonal = getPossibleTurnsDiagonal(state)
+    possibleTurns = getJoinedPossibleTurns(possibleTurns, possibleTurnsDiagonal)        
+  }
+  return possibleTurns
+}
+
+/*tc*/export/*etc*/function getPossibleTurnsForSelectedStones(state) {
+  if(stonesBuildAMovableFigure(state)) {
+    var selectedStonesInfo = getSelectedStonesInfo(state)
+
+    if(selectedStonesBuildABlock(selectedStonesInfo)) {
+      return getPossibleTurnsForABlock(state, selectedStonesInfo)
+    } else if (selectedStonesBuildAHorizonalBlock(selectedStonesInfo)) {
+      return getPossibleTurnsHorizontal(state, selectedStonesInfo)
+    } else if (selectedStonesBuildAVerticalBlock(selectedStonesInfo)) {
+      return getPossibleTurnsVertical(state, selectedStonesInfo)
+    }
+  }
+  return createEmptyBoardMatrix()
+}
+
+/*tc*/export/*etc*/function getDirectionWhereStoneIsMoved (stones, destination) {
   var direction = 0;
   if (destination.col != stones[0].position.col && destination.row != stones[0].position.row) {
       //diagonal
@@ -643,216 +710,175 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return direction
 }
 
-/*tc*/export/*etc*/function setTurn(state, destination) {
-  var moves = [];
-  var newState = Object.assign({}, state)
-  var stones = newState.selectedStones
-  var x = getWidthOfSelectedStones(stones)
-  var y = getHeightOfSelectedStones(stones)
-  var lowestStone = Object.assign({}, getTopLeftStoneOfSelectedStones(stones))
+/*tc*/export/*etc*/function deleteStonesOnTheField (state, stones) {
+  var field = state.field.slice()
+  stones.map((stone) => {
+    field[stone.position.col][stone.position.row] = 0
+  })
+  return field
+}
 
-  var colorOpp = Player.WHITE
-  if (lowestStone.player == Player.WHITE) {
-      colorOpp = Player.BLACK
-  }
-
-  //delete stones on field
-  for (var i = 0; i < stones.length; i++) {
-    newState.field[stones[i].position.col][stones[i].position.row] = 0
+/*tc*/export/*etc*/function createMovesForStonesToBeMoved (stones) {
+  var moves = []
+  stones.map((stone) => {
     moves.push(
       {
-        stone: stones[i], 
+        stone: stone, 
         destination: {
           col: 0, 
           row: 0
         }
       }
     )
-  }
+  })
+  return moves
+}
 
-  //place stones of opponent new
-  var direction = directionBLA(stones, destination)
+/*tc*/export/*etc*/function placeStonesNewInRightDirection (state, selectedStonesInfo, destination) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var topLeftX = topLeftStone.position.col
+  var topLeftY = topLeftStone.position.row
+  var newState = Object.assign({}, state)
+
+  for (var i = 0; i <= destination.col - topLeftX; i++) {
+    for (var j = 0; j < height + 1; j++) {
+      var x = topLeftStone.position.col + width + i
+      var y = topLeftStone.position.row + j
+      var destinationX = destination.col + width + i
+      var destinationY = destination.row + j
+      if (fieldHasGivenColor(state, x, y, colorOpp)) {
+        newState.field[destinationX][destinationY] = colorOpp
+        newState.field[x][y] = 0
+        var stone = getStoneFromPosition(newState, {col: x, row: y})
+        stone.position.col = destinationX
+        stone.position.row = destinationY
+      }
+    }
+  }
+  return newState
+}
+
+/*tc*/export/*etc*/function placeStonesNewInLeftDirection (state, selectedStonesInfo, destination) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var newState = Object.assign({}, state)
+
+  var sI = Object.assign({}, selectedStonesInfo)
+  sI.width++
+  sI.height++
+  var lengthOpp = getLengthOfOpponentLeft(state, sI)
+
+  for (var i = 0; i < lengthOpp; i++) {
+    for (var j = 0; j < height + 1; j++) {
+      var x = topLeftStone.position.col - i - 1
+      var y = topLeftStone.position.row + j
+      var destinationX = destination.col - i - 1
+      var destinationY = destination.row + j
+      if (fieldHasGivenColor(state, x, y, colorOpp)) {
+        newState.field[destinationX][destinationY] = colorOpp
+        newState.field[x][y] = 0
+        var stone = getStoneFromPosition(newState, {col: x, row: y})
+        stone.position.col = destinationX
+        stone.position.row = destinationY
+      }
+    }
+  }
+  return newState
+}
+
+/*tc*/export/*etc*/function placeStonesNewInBelowDirection (state, selectedStonesInfo, destination) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var topLeftX = topLeftStone.position.col
+  var topLeftY = topLeftStone.position.row
+  var newState = Object.assign({}, state)
+
+  for (var i = 0; i <= destination.row - topLeftY; i++) {
+    for (var j = 0; j < width + 1; j++) {
+      var x = topLeftStone.position.col + j
+      var y = topLeftStone.position.row + height + i
+      var destinationX = destination.col + j
+      var destinationY = destination.row + height + i
+      if (fieldHasGivenColor(state, x, y, colorOpp)) {
+        newState.field[destinationX][destinationY] = colorOpp
+        newState.field[x][y] = 0
+        var stone = getStoneFromPosition(newState, {col: x, row: y})
+        stone.position.col = destinationX
+        stone.position.row = destinationY
+      }
+    }
+  }
+  return newState
+}
+
+/*tc*/export/*etc*/function placeStonesNewInAboveDirection (state, selectedStonesInfo, destination) {
+  var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
+  var newState = Object.assign({}, state)
+
+  var sI = Object.assign({}, selectedStonesInfo)
+  sI.width++
+  sI.height++
+  var lengthOpp = getLengthOfOpponentAbove(state, sI)
+
+  for (var i = 0; i <= lengthOpp; i++) {
+    for (var j = 0; j < width + 1; j++) {
+      var x = topLeftStone.position.col + j
+      var y = topLeftStone.position.row - i
+      var destinationX = destination.col + j
+      var destinationY = destination.row - i
+      if (fieldHasGivenColor(state, x, y, colorOpp)) {
+        newState.field[destinationX][destinationY] = colorOpp
+        newState.field[x][y] = 0
+        var stone = getStoneFromPosition(newState, {col: x, row: y})
+        stone.position.col = destinationX
+        stone.position.row = destinationY
+      }
+    }
+  }
+  return newState
+}
+
+/*tc*/export/*etc*/function placeOpponentsStones (state, selectedStonesInfo, destination) {
+  var direction = getDirectionWhereStoneIsMoved(state.selectedStones, destination)
   switch (direction) {
   case 0:
-    for (var i = 0; i <= destination.col - lowestStone.position.col; i++) {
-      for (var j = 0; j < y + 1; j++) {
-        if (newState.field[lowestStone.position.col + x + i] && newState.field[lowestStone.position.col + x + i][lowestStone.position.row + j] == colorOpp) {
-          newState.field[destination.col + x + i][destination.row + j] = colorOpp
-          newState.field[lowestStone.position.col + x + i][lowestStone.position.row + j] = 0
-          moves.push(
-            {
-              stone: {
-                player: colorOpp,
-                position: {
-                  col: lowestStone.position.col + x + i,
-                  row: lowestStone.position.row + j
-                }
-              }, 
-              destination: 
-                {
-                  col: destination.col + x + i, 
-                  row: destination.row + j
-                }
-            }
-          )
-        }
-      }
-    }
-    break
+    return placeStonesNewInRightDirection(state, selectedStonesInfo, destination)
   case 1:
-    var lengthOpp = 0
-    var k = lowestStone.position.col
-    for (var j = 0; j < y + 1; j++) {
-      var b = 0
-      try {
-        while (newState.field[k - b - 1][lowestStone.position.row + j] == colorOpp) {
-          b++
-        }
-      } catch (e) {
-        break
-      }
-      if (b > lengthOpp) {
-        lengthOpp = b
-      }
-    }
-
-    for (var i = 0; i <= lengthOpp; i++) {
-      for (var j = 0; j < y + 1; j++) {
-        if (newState.field[lowestStone.position.col - i][lowestStone.position.row + j] == colorOpp) {
-          newState.field[destination.col - i][destination.row + j] = colorOpp
-          newState.field[lowestStone.position.col - i][lowestStone.position.row + j] = 0
-          moves.push(
-            {
-              stone: {
-                player: colorOpp,
-                position: {
-                  col: lowestStone.position.col - i,
-                  row: lowestStone.position.row + j
-                }
-              }, 
-              destination: {
-                col: destination.col - i, 
-                row: destination.row + j
-              }
-            }
-          )
-        }
-      }
-    }
-    break
+    return placeStonesNewInLeftDirection(state, selectedStonesInfo, destination)
   case 2:
-    //determine length of opponent
-    var lengthOpp = 0
-    var k = lowestStone.position.row + y + 1
-    for (var j = 0; j < x + 1; j++) {
-      var b = 0
-      try {
-        while (newState.field[lowestStone.position.col + j][k + b] == colorOpp) {
-          b++
-        }
-      } catch (e) {
-        break
-      }
-      if (b > lengthOpp) {
-        lengthOpp = b
-      }
-    }
-    for (var i = 0; i <= destination.row - lowestStone.position.row; i++) {
-      for (var j = 0; j < x + 1; j++) {
-        if (newState.field[lowestStone.position.col + j][lowestStone.position.row + y + i] == colorOpp) {
-          newState.field[destination.col + j][destination.row + y + i] = colorOpp
-          newState.field[lowestStone.position.col + j][lowestStone.position.row + y + i] = 0
-          moves.push(
-            {
-              stone: {
-                player: colorOpp,
-                position: {
-                  col: lowestStone.position.col + j,
-                  row: lowestStone.position.row + y + i
-                }
-              }, 
-              destination: {
-                col: destination.col + j, 
-                row: destination.row + y + i
-              }
-            }
-          )
-        }
-      }
-    }
-    break
+    return placeStonesNewInBelowDirection(state, selectedStonesInfo, destination)
   case 3:
-    //determine length of opponent
-    var lengthOpp = 0
-    var k = lowestStone.position.row
-    for (var j = 0; j < x + 1; j++) {
-      var b = 0
-      try {
-        while (newState.field[lowestStone.position.col + j][k - b - 1] == colorOpp) {
-          b++
-        }
-      } catch (e) {
-        break
-      }
-      if (b > lengthOpp) {
-        lengthOpp = b
-      }
-    }
-
-    for (var i = 0; i <= lengthOpp; i++) {
-      for (var j = 0; j < x + 1; j++) {
-        if (newState.field[lowestStone.position.col + j][lowestStone.position.row - i] == colorOpp) {
-          newState.field[destination.col + j][destination.row - i] = colorOpp
-          newState.field[lowestStone.position.col + j][lowestStone.position.row - i] = 0
-          moves.push(
-            {
-              stone: {
-                player: colorOpp,
-                position: {
-                  col: lowestStone.position.col + j,
-                  row: lowestStone.position.row - i
-                }
-              }, 
-              destination: {
-                col: destination.col + j, 
-                row: destination.row - i
-              }
-            }
-          )
-        }
-      }
-    }
-    break
+    return placeStonesNewInAboveDirection(state, selectedStonesInfo, destination)
   }
+  return state
+}
 
-  //position stones new
-  var counter = 0
-  for (var i = 0; i <= x; i++) {
-    for (var j = 0; j <= y; j++) {
-      newState.field[destination.col + i][destination.row + j] = stones[i].player
-      moves[counter].destination = {
-        col: destination.col + i,
-        row: destination.row + j
-      }
-
-      counter++
-    }
-  }
-
-  moves.map((move) => {
-    var index = -1
-    newState.stones.map((stone, i) => {
-      if(move.stone.position.col == stone.position.col &&
-          move.stone.position.row == stone.position.row){
-        index = i
-      }
-    })
-    if(index > -1){
-      newState.stones[index].position = move.destination
-    }
+/*tc*/export/*etc*/function placeOwnStones (state, selectedStonesInfo, destination) {
+  var { topLeftStone } = selectedStonesInfo
+  var newState = Object.assign({}, state)
+  var distanceX = destination.col - topLeftStone.position.col
+  var distanceY = destination.row - topLeftStone.position.row
+  
+  newState.selectedStones.map((stone) => {
+    newState.field[stone.position.col][stone.position.row] = 0
+    stone.position.col = stone.position.col + distanceX
+    stone.position.row = stone.position.row + distanceY
+    newState.field[stone.position.col][stone.position.row] = stone.player
   })
-
   return newState
+}
+
+/*tc*/export/*etc*/function setTurn(state, destination) {
+  var selectedStonesInfo = getSelectedStonesInfo(state)
+  selectedStonesInfo.width -- 
+  selectedStonesInfo.height --
+  var newState = placeOpponentsStones(state, selectedStonesInfo, destination)
+
+  return placeOwnStones(newState, selectedStonesInfo, destination)
+}
+
+/*tc*/export/*etc*/function getStoneFromPosition(state, position) {
+  return state.stones.find((stone) => {
+    return stone.position.col == position.col && stone.position.row == position.row
+  })
 }
 
 /*tc*/export/*etc*/function turnIsAllowed(state, destination) {

@@ -152,7 +152,7 @@ function createInitialState () {
 }
 
 describe('game reducer', () => {
-  it('should the joined moves', () => {
+  it('should join the moves', () => {
     var state = createNormalStateForGame()
     var moves = []
     var selectedStones = [state.stones[1]]
@@ -161,10 +161,11 @@ describe('game reducer', () => {
 
     var newState = Object.assign({}, state)
     newState.selectedStones = selectedStones.slice()
+    newState.possibleTurns = possibleTurns.slice()
 
     var newMove = {
         state: newState,
-        destination: {
+        position: {
             col: 0,
             row: 1
         }
@@ -201,9 +202,11 @@ describe('game reducer', () => {
       col.map((field, j) => {
         if(field > 0) {
           var newState = Object.assign({}, state)
+          newState.possibleTurns = possibleTurns.slice()
+          newState.selectedStones = state.selectedStones.slice()
           expectedMoves.push({
               state: newState,
-              destination: {
+              position: {
                   col: i,
                   row: j
               }
@@ -228,20 +231,22 @@ describe('game reducer', () => {
     state.field = createFieldWithStones(stones)
     state.stones = stones.slice()
 
-    var possibleTurns = createFieldWithStones([])
-    for(var i=1;i<9;i++){
-      possibleTurns[i][1] = 1
-    }
-
     var expectedMoves = []
+
+    var possibleTurns = createFieldWithStones([])
+    for(var i=2;i<10;i++){
+      possibleTurns[0][i] = 1
+    }
 
     possibleTurns.map((col, i) => {
       col.map((field, j) => {
         if(field > 0) {
           var newState = Object.assign({}, state)
+          newState.possibleTurns = possibleTurns.slice()
+          newState.selectedStones = [createStone(types.Player.BLACK, 0, 1)]
           expectedMoves.push({
               state: newState,
-              destination: {
+              position: {
                   col: i,
                   row: j
               }
@@ -250,12 +255,58 @@ describe('game reducer', () => {
       })
     })
 
-    var moves = aI.generateMoves(state, types.Player.BLACK)
-    moves.map((move) => {
-      if(move.state.selectedStones.length > 1) {
-        console.log(move.state.possibleTurns)
-        console.log(move.position)
+    possibleTurns = createFieldWithStones([])
+    for(var i=1;i<9;i++){
+      possibleTurns[i][1] = 1
+    }
+
+    possibleTurns.map((col, i) => {
+      col.map((field, j) => {
+        if(field > 0) {
+          var newState = Object.assign({}, state)
+          newState.possibleTurns = possibleTurns.slice()
+          newState.selectedStones = [
+            createStone(types.Player.BLACK, 0, 1), 
+            createStone(types.Player.BLACK, 1, 1)
+          ]
+          expectedMoves.push({
+              state: newState,
+              position: {
+                  col: i,
+                  row: j
+              }
+          })
+        }
+      })
+    })
+
+    possibleTurns = createFieldWithStones([])
+    for(var i=2;i<10;i++){
+      possibleTurns[i][1] = 1
+    }
+    for(var i=0;i<10;i++){
+      if(i!=1){
+        possibleTurns[1][i] = 1
       }
+    }
+
+    possibleTurns.map((col, i) => {
+      col.map((field, j) => {
+        if(field > 0) {
+          var newState = Object.assign({}, state)
+          newState.possibleTurns = possibleTurns.slice()
+          newState.selectedStones = [
+            createStone(types.Player.BLACK, 1, 1)
+          ]
+          expectedMoves.push({
+              state: newState,
+              position: {
+                  col: i,
+                  row: j
+              }
+          })
+        }
+      })
     })
 
     expect(
@@ -272,9 +323,10 @@ describe('game reducer', () => {
     state.gameState.activePlayer = types.Player.BLACK
     state.field = createFieldWithStones(stones)
     state.stones = stones.slice()
-    state.selectedStones = [stones[1]]
 
     var bestMove = aI.getNextMove(state)
-    console.log(bestMove)
+    /*console.log(bestMove.state.field)
+    console.log(bestMove.state.selectedStones)
+    console.log(bestMove.position)*/
   })
 })

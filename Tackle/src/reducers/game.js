@@ -52,10 +52,10 @@ import * as computer from '../logic/artificialIntelligence'
 
 /*tc*/export/*etc*/function setTurn(state, action) {
   var newState = Object.assign({}, state)
-  newState = gameLogic.setTurn(state, action.position)
+  newState = gameLogic.setTurn(newState, Object.assign({}, action.position))
   newState.selectedStones = []
   newState.possibleTurns = createEmptyBoardMatrix()
-  newState.gameState = switchGameState(state)
+  newState.gameState = switchGameState(newState)
   return newState
 }
 
