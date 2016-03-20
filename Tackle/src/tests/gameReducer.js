@@ -139,6 +139,7 @@ function createInitialState () {
   return {
     playMode: PlayModes.NOT_SELECTED,
     ownColor: types.Player.WHITE,
+    opponentColor: types.Player.BLACK,
     level: {},
     gameState: {
       state: types.GameStates.WHITE_PLAYER_SET_STONE,

@@ -658,7 +658,7 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 
   //delete stones on field
   for (var i = 0; i < stones.length; i++) {
-    state.field[stones[i].position.col][stones[i].position.row] = 0
+    newState.field[stones[i].position.col][stones[i].position.row] = 0
     moves.push(
       {
         stone: stones[i], 

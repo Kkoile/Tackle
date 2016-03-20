@@ -1,5 +1,7 @@
 import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 import * as gameLogic from './gameLogic'
+import * as gameReducer from '../reducers/game'
+
 var depthInput = 2
 var importantTurn = false
 export function setStone (state) {
@@ -83,10 +85,10 @@ function minimax (depth, state, alpha, beta) {
         }
         return bestMove
     } else {
-        for (i in nextMoves) {
+        for (var i in nextMoves) {
             var move = nextMoves[i]
             //Zug machen und eine Ebene weiter runter gehen
-            var newState = gameLogic.setTurn(move.state, move.destination)
+            var newState = gameReducer.setTurn(move.state, move)
             if (state.gameState.activePlayer == state.opponentColor) {
                 currentScore = minimax(parseInt(depth) - 1, newState, alpha, beta).score
                 //Zug bewerten
@@ -135,17 +137,17 @@ function evaluate (state) {
     }
     return score
 }
-function generateMoves (state, color) { 
+/*tc*/export/*etc*/function generateMoves (state, color) {
     var moves = []
-    fieldTemp = state.field.slice()
-    var newState = Object.assign({}, state)
+    var fieldTemp = state.field.slice()
 
-    for (i in fieldTemp) {
-        for (j in fieldTemp[i]) {
+    for (var i in fieldTemp) {
+        for (var j in fieldTemp[i]) {
             var possibleTurns = null
             if (fieldTemp[i][j] == color) {
+                var newState = Object.assign({}, state)
                 //Für jeden einzelnen Stein die möglichen Züge berechnen
-                var stones = [getStoneFromPosition(newState, {col:i, row:j})]
+                var stones = [Object.assign({}, getStoneFromPosition(newState, {col:i, row:j}))]
                 newState.selectedStones = stones
                 possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
                 moves = addPossibleTurns(moves, newState, stones, possibleTurns)
@@ -160,9 +162,10 @@ function generateMoves (state, color) {
                     }
                 }
                 if (horizontalLength > 1) { //gibt es überhaupt eine Schlange?
+                    newState = Object.assign({}, state)
                     var stones = [] //new Stone[horizontalLength];
                     for (var k = 0; k < horizontalLength; k++) {
-                        stones[k] = getStoneFromPosition(newState, {col: parseInt(i) + k, row: j})
+                        stones[k] = Object.assign({}, getStoneFromPosition(newState, {col: parseInt(i) + k, row: j}))
                     }
                     newState.selectedStones = stones
                     possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
@@ -179,10 +182,11 @@ function generateMoves (state, color) {
                     }
                 }
                 if (verticalLength > 1) { //gibt es überhaupt eine Schlange?
+                    newState = Object.assign({}, state)
                     var stones = []
 
                     for (var k = 0; k < verticalLength; k++) {
-                        stones[k] = getStoneFromPosition(newState, {col: i, row: parseInt(j) + k});
+                        stones[k] = Object.assign({}, getStoneFromPosition(newState, {col: i, row: parseInt(j) + k}))
                     }
                     newState.selectedStones = stones
                     possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
@@ -206,11 +210,12 @@ function generateMoves (state, color) {
                 }
 
                 if (vLength > 1 && horizontalLength > 1) { //ob es einen Block gibt
+                    newState = Object.assign({}, state)
                     var stones = []
                     var counter = 0
                     for (var k = 0; k < horizontalLength; k++) {
                         for (var k2 = 0; k2 < vLength; k2++) {
-                            stones[counter] = getStoneFromPosition(newState, {col:k, row:k2})
+                            stones[counter] = Object.assign({}, getStoneFromPosition(newState, {col:k, row:k2}))
                             counter++
                         }
                     }
@@ -225,22 +230,22 @@ function generateMoves (state, color) {
     return moves
 }
 
-function addPossibleTurns (moves, state, selectedStones, possibleTurns) {
-    //2 Arrays zusammenbringen
-    for (var k = 0; k < possibleTurns.length; k++) {
-        for (var k2 = 0; k2 < possibleTurns[k].length; k2++) {
-            if (possibleTurns[k][k2] > 0) {
+/*tc*/export/*etc*/function addPossibleTurns (moves, state, selectedStones, possibleTurns) {
+    possibleTurns.map((col, i) => {
+        col.map((field, j) => {
+            if(field > 0) {
                 var newState = Object.assign({}, state)
                 newState.selectedStones = selectedStones.slice()
+                newState.possibleTurns = possibleTurns.slice()
                 moves.push({
                     state: newState,
-                    destination: {
-                        col: k,
-                        row: k2
+                    position: {
+                        col: i,
+                        row: j
                     }
                 })
             }
-        }
-    }
+        })
+    })
     return moves
 }

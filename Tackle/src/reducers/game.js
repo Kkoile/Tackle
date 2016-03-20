@@ -192,7 +192,7 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function getStateAfterComputerHasMadeTurn(state) {
-  var move = computer.getNextMove(state)
+  var move = computer.getNextMove(Object.assign({}, state))
   console.log(move)
   /*state.selectedStones = move.selectedStones
   var action = {
