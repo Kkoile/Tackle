@@ -1639,7 +1639,7 @@ describe('game logic', () => {
     var expectedStoneC = createStone(types.Player.BLACK, action.position.col - 1, action.position.row)
     var expectedField = createFieldWithStones([expectedStoneA, expectedStoneB, expectedStoneC])
     expectedState.field = expectedField
-    expectedState.stones = [expectedStoneB, expectedStoneA, expectedStoneC]
+    expectedState.stones = [expectedStoneA, expectedStoneB, expectedStoneC]
     expect(reducer.makeTurn(state, action)).toEqual(expectedState)
   })
   it('should set the turn and return the new state', () => {
@@ -1678,7 +1678,7 @@ describe('game logic', () => {
     var expectedStoneC = createStone(types.Player.BLACK, action.position.col + 2, action.position.row)
     var expectedField = createFieldWithStones([expectedStoneA, expectedStoneB, expectedStoneC])
     expectedState.field = expectedField
-    expectedState.stones = [expectedStoneB, expectedStoneA, expectedStoneC]
+    expectedState.stones = [expectedStoneA, expectedStoneB, expectedStoneC]
     expect(reducer.makeTurn(state, action)).toEqual(expectedState)
   })
 })

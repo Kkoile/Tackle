@@ -718,7 +718,7 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return field
 }
 
-/*tc*/export/*etc*/function createMovesForStonesToBeMoves (stones) {
+/*tc*/export/*etc*/function createMovesForStonesToBeMoved (stones) {
   var moves = []
   stones.map((stone) => {
     moves.push(
@@ -734,11 +734,10 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return moves
 }
 
-/*tc*/export/*etc*/function placeStonesNewInRightDirection (state, selectedStonesInfo, stones, destination) {
+/*tc*/export/*etc*/function placeStonesNewInRightDirection (state, selectedStonesInfo, destination) {
   var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
   var topLeftX = topLeftStone.position.col
   var topLeftY = topLeftStone.position.row
-  var moves = []
   var newState = Object.assign({}, state)
 
   for (var i = 0; i <= destination.col - topLeftX; i++) {
@@ -759,13 +758,8 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return newState
 }
 
-/*tc*/export/*etc*/function placeStonesNewInLeftDirection (state, selectedStonesInfo, stones, destination) {
+/*tc*/export/*etc*/function placeStonesNewInLeftDirection (state, selectedStonesInfo, destination) {
   var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
-  var destinationX = destination.col
-  var destinationY = destination.row
-  var topLeftX = topLeftStone.position.col
-  var topLeftY = topLeftStone.position.row
-  var moves = []
   var newState = Object.assign({}, state)
 
   var sI = Object.assign({}, selectedStonesInfo)
@@ -791,11 +785,10 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return newState
 }
 
-/*tc*/export/*etc*/function placeStonesNewInBelowDirection (state, selectedStonesInfo, stones, destination) {
+/*tc*/export/*etc*/function placeStonesNewInBelowDirection (state, selectedStonesInfo, destination) {
   var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
   var topLeftX = topLeftStone.position.col
   var topLeftY = topLeftStone.position.row
-  var moves = []
   var newState = Object.assign({}, state)
 
   for (var i = 0; i <= destination.row - topLeftY; i++) {
@@ -816,11 +809,8 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return newState
 }
 
-/*tc*/export/*etc*/function placeStonesNewInAboveDirection (state, selectedStonesInfo, stones, destination) {
+/*tc*/export/*etc*/function placeStonesNewInAboveDirection (state, selectedStonesInfo, destination) {
   var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
-  var topLeftX = topLeftStone.position.col
-  var topLeftY = topLeftStone.position.row
-  var moves = []
   var newState = Object.assign({}, state)
 
   var sI = Object.assign({}, selectedStonesInfo)
@@ -846,65 +836,43 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return newState
 }
 
+/*tc*/export/*etc*/function placeOpponentsStones (state, selectedStonesInfo, destination) {
+  var direction = getDirectionWhereStoneIsMoved(state.selectedStones, destination)
+  switch (direction) {
+  case 0:
+    return placeStonesNewInRightDirection(state, selectedStonesInfo, destination)
+  case 1:
+    return placeStonesNewInLeftDirection(state, selectedStonesInfo, destination)
+  case 2:
+    return placeStonesNewInBelowDirection(state, selectedStonesInfo, destination)
+  case 3:
+    return placeStonesNewInAboveDirection(state, selectedStonesInfo, destination)
+  }
+  return state
+}
+
+/*tc*/export/*etc*/function placeOwnStones (state, selectedStonesInfo, destination) {
+  var { topLeftStone } = selectedStonesInfo
+  var newState = Object.assign({}, state)
+  var distanceX = destination.col - topLeftStone.position.col
+  var distanceY = destination.row - topLeftStone.position.row
+  
+  newState.selectedStones.map((stone) => {
+    newState.field[stone.position.col][stone.position.row] = 0
+    stone.position.col = stone.position.col + distanceX
+    stone.position.row = stone.position.row + distanceY
+    newState.field[stone.position.col][stone.position.row] = stone.player
+  })
+  return newState
+}
 
 /*tc*/export/*etc*/function setTurn(state, destination) {
-  var newState = Object.assign({}, state)
-  var stones = newState.selectedStones
   var selectedStonesInfo = getSelectedStonesInfo(state)
   selectedStonesInfo.width -- 
   selectedStonesInfo.height --
-  var { width, height, topLeftStone } = selectedStonesInfo
+  var newState = placeOpponentsStones(state, selectedStonesInfo, destination)
 
-  var colorOpp = Player.WHITE
-  if (topLeftStone.player == Player.WHITE) {
-      colorOpp = Player.BLACK
-  }
-
-  newState.field = deleteStonesOnTheField(newState, stones)
-  var moves = createMovesForStonesToBeMoves(stones)
-
-  var direction = getDirectionWhereStoneIsMoved(stones, destination)
-  switch (direction) {
-  case 0:
-    newState = placeStonesNewInRightDirection(newState, selectedStonesInfo, stones, destination)
-    break
-  case 1:
-    newState = placeStonesNewInLeftDirection(newState, selectedStonesInfo, stones, destination)
-    break
-  case 2:
-    newState = placeStonesNewInBelowDirection(newState, selectedStonesInfo, stones, destination)
-    break
-  case 3:
-    newState = placeStonesNewInAboveDirection(newState, selectedStonesInfo, stones, destination)
-    break
-  }
-
-  //position stones new
-  var counter = 0
-  for (var i = 0; i <= width; i++) {
-    for (var j = 0; j <= height; j++) {
-      newState.field[destination.col + i][destination.row + j] = stones[i].player
-      moves[counter].destination = {
-        col: destination.col + i,
-        row: destination.row + j
-      }
-      counter++
-    }
-  }
-
-  moves.map((move) => {
-    var index = -1
-    newState.stones.map((stone, i) => {
-      if(move.stone.position.col == stone.position.col &&
-          move.stone.position.row == stone.position.row){
-        index = i
-      }
-    })
-    if(index > -1){
-      newState.stones[index].position = move.destination
-    }
-  })
-  return newState
+  return placeOwnStones(newState, selectedStonesInfo, destination)
 }
 
 /*tc*/export/*etc*/function getStoneFromPosition(state, position) {
