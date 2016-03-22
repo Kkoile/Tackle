@@ -4,11 +4,16 @@ import React, {
   StyleSheet,
 } from 'react-native';
 
-import { createStore } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import {Provider} from 'react-redux'
 import tackleApp from '../reducers/index'
+import thunkMiddleware from 'redux-thunk'
 
-let store = createStore(tackleApp)
+const finalCreateStore = compose(
+  applyMiddleware(thunkMiddleware)
+)(createStore)
+
+let store = finalCreateStore(tackleApp)
 
 var Login = require('./login.js');
 

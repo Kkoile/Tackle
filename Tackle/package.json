@@ -12,7 +12,8 @@
     "react-native-button": "^1.4.2",
     "react-native-grid-view": "^0.3.7",
     "react-redux": "^4.4.1",
-    "redux": "^3.3.1"
+    "redux": "^3.3.1",
+    "redux-thunk": "latest"
   },
   "devDependencies": {
     "babel-register": "^6.7.2",

@@ -28,3 +28,17 @@ export function setPlayMode(playMode) {
 export function resetGame() {
   return { type: RESET_GAME }
 }
+
+// Example Async Action
+export function exampleAsyncAction() {
+  return (dispatch, getState) => {
+    // Dispatch something directly
+    dispatch(resetGame())
+
+    // Something Async or long going
+    setTimeout(() => {
+      //Dispatch something when finished
+      dispatch(resetGame())
+    }, 1000)
+  }
+}
