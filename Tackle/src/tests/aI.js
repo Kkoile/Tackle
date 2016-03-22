@@ -151,7 +151,7 @@ function createInitialState () {
   }
 }
 
-describe('game reducer', () => {
+describe('artificial intelligence', () => {
   it('should join the moves', () => {
     var state = createNormalStateForGame()
     var moves = []
@@ -159,7 +159,7 @@ describe('game reducer', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[0][1] = 1
 
-    var newState = Object.assign({}, state)
+    var newState = JSON.parse(JSON.stringify(state))
     newState.selectedStones = selectedStones.slice()
     newState.possibleTurns = possibleTurns.slice()
 
@@ -201,7 +201,7 @@ describe('game reducer', () => {
     possibleTurns.map((col, i) => {
       col.map((field, j) => {
         if(field > 0) {
-          var newState = Object.assign({}, state)
+          var newState = JSON.parse(JSON.stringify(state))
           newState.possibleTurns = possibleTurns.slice()
           newState.selectedStones = state.selectedStones.slice()
           expectedMoves.push({
@@ -241,7 +241,7 @@ describe('game reducer', () => {
     possibleTurns.map((col, i) => {
       col.map((field, j) => {
         if(field > 0) {
-          var newState = Object.assign({}, state)
+          var newState = JSON.parse(JSON.stringify(state))
           newState.possibleTurns = possibleTurns.slice()
           newState.selectedStones = [createStone(types.Player.BLACK, 0, 1)]
           expectedMoves.push({
@@ -263,7 +263,7 @@ describe('game reducer', () => {
     possibleTurns.map((col, i) => {
       col.map((field, j) => {
         if(field > 0) {
-          var newState = Object.assign({}, state)
+          var newState = JSON.parse(JSON.stringify(state))
           newState.possibleTurns = possibleTurns.slice()
           newState.selectedStones = [
             createStone(types.Player.BLACK, 0, 1), 
@@ -293,7 +293,7 @@ describe('game reducer', () => {
     possibleTurns.map((col, i) => {
       col.map((field, j) => {
         if(field > 0) {
-          var newState = Object.assign({}, state)
+          var newState = JSON.parse(JSON.stringify(state))
           newState.possibleTurns = possibleTurns.slice()
           newState.selectedStones = [
             createStone(types.Player.BLACK, 1, 1)

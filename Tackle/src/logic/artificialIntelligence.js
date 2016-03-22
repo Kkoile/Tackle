@@ -8,7 +8,6 @@ var firstTime = true
 export function setStone (state) {
     var stone
     if (state.gameState.state != GameStates.BLACK_PLAYER_SET_GOLDEN_STONE) {
-        var field = state.field.slice()
         do {
             var position = {
                 col: 0,
@@ -20,12 +19,12 @@ export function setStone (state) {
                 //left side
                 position.col = 0
                 position.row = Math.round(Math.random() * (FIELD_SIZE - 1))
-                break;
+                break
             case 1:
                 //right side
                 position.col = FIELD_SIZE - 1
                 position.row = Math.round(Math.random() * (FIELD_SIZE - 1))
-                break;
+                break
             case 2:
                 //top side
                 position.col = Math.round(Math.random() * (FIELD_SIZE - 1))
@@ -89,16 +88,9 @@ function minimax (depth, state, alpha, beta) {
         for (var i in nextMoves) {
             var move = nextMoves[i]
             //Zug machen und eine Ebene weiter runter gehen
-            if (depth == depthInput && firstTime) {
-                console.log(move.state)
-            }
-            var newState = gameReducer.setTurn(Object.assign({}, move.state), Object.assign({}, move))
-            if (depth == depthInput && firstTime) {
-                console.log(move.state)
-            }
-            firstTime = false
+            var newState = gameReducer.setTurn(JSON.parse(JSON.stringify(move.state)), JSON.parse(JSON.stringify(move)))
             if (state.gameState.activePlayer == state.opponentColor) {
-                currentScore = minimax(parseInt(depth) - 1, Object.assign({}, newState), alpha, beta).score
+                currentScore = minimax(parseInt(depth) - 1, JSON.parse(JSON.stringify(newState)), alpha, beta).score
                 //Zug bewerten
                 if (currentScore > alpha) {
                     alpha = currentScore
@@ -106,7 +98,7 @@ function minimax (depth, state, alpha, beta) {
                     bestMove.score = alpha
                 }
             } else {
-                currentScore = minimax(parseInt(depth) - 1, Object.assign({}, newState), alpha, beta).score
+                currentScore = minimax(parseInt(depth) - 1, JSON.parse(JSON.stringify(newState)), alpha, beta).score
                 //Zug bewerten
                 if (currentScore < beta) {
                     beta = currentScore
@@ -153,10 +145,11 @@ function evaluate (state) {
         for (var j in fieldTemp[i]) {
             var possibleTurns = null
             if (fieldTemp[i][j] == color) {
-                var newState = Object.assign({}, state)
+                var newState = JSON.parse(JSON.stringify(state))
                 //Für jeden einzelnen Stein die möglichen Züge berechnen
                 var stones = [Object.assign({}, getStoneFromPosition(newState, {col:i, row:j}))]
                 newState.selectedStones = stones
+                
                 possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
                 moves = addPossibleTurns(moves, newState, stones, possibleTurns)
 

@@ -51,8 +51,8 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function setTurn(state, action) {
-  var newState = Object.assign({}, state)
-  newState = gameLogic.setTurn(newState, Object.assign({}, action.position))
+  var newState = JSON.parse(JSON.stringify(state))
+  newState = gameLogic.setTurn(newState, action.position)
   newState.selectedStones = []
   newState.possibleTurns = createEmptyBoardMatrix()
   newState.gameState = switchGameState(newState)
@@ -60,7 +60,7 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function clearSelectedStones(state, action) {
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
   newState.selectedStones = []
   newState.possibleTurns = createEmptyBoardMatrix()
   return newState
@@ -144,7 +144,7 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function setStone(state, action) {
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
   var { player, position } = action
   if(state.gameState.state == GameStates.BLACK_PLAYER_SET_GOLDEN_STONE){
     player = Player.GOLD
@@ -192,15 +192,13 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function getStateAfterComputerHasMadeTurn(state) {
-  var move = computer.getNextMove(Object.assign({}, state))
-  console.log(move)
-  /*state.selectedStones = move.selectedStones
+  var move = computer.getNextMove(JSON.parse(JSON.stringify(state)))
+  state.selectedStones = move.state.selectedStones
   var action = {
-    position: move.destination
+    position: move.position
   }
   var newState = setTurn(state, action)
-  return newState*/
-  return state
+  return newState
 }
 
 /*tc*/export/*etc*/function getStateAfterComputerMadeItsTurn(state) {
@@ -245,7 +243,7 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function handleSelectLevel(state, action) {
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
   var level = getLevelFromName(action.level)
   if(level) {
     newState.level = level
@@ -267,7 +265,7 @@ import * as computer from '../logic/artificialIntelligence'
   if(userCanOnlySelectOwnColor(state) && itIsNotTheUsersTurn(state)) {
     return state
   }
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
   newState.selectedStones = gameLogic.changeSelectedStones(newState, clickedStone)
   newState.possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
   return newState
@@ -294,7 +292,7 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function handleSetPlayMode(state, action) {
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
   newState.playMode = action.playMode
   switch (action.playMode) {
     case PlayModes.COMPUTER:

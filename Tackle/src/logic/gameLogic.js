@@ -57,10 +57,11 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 }
 
 /*tc*/export/*etc*/function positionIsAllowed(state, action) {
-  var {row, col} = action.position
+  var { row, col } = action.position
   var locationIsAlreadyTaken = false
   state.stones.map((stone) => {
-    if(stone.position == action.position) {
+    if(stone.position.col == col
+        && stone.position.row == row) {
       locationIsAlreadyTaken = true
     }
   })
@@ -683,7 +684,7 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return createEmptyBoardMatrix()
 }
 
-/*tc*/export/*etc*/function getDirectionWhereStoneIsMoved (stones, destination) {
+/*tc*/export/*etc*/function getDirectionWhereStonesAreMoved (stones, destination) {
   var direction = 0;
   if (destination.col != stones[0].position.col && destination.row != stones[0].position.row) {
       //diagonal
@@ -738,7 +739,7 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
   var topLeftX = topLeftStone.position.col
   var topLeftY = topLeftStone.position.row
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
 
   for (var i = 0; i <= destination.col - topLeftX; i++) {
     for (var j = 0; j < height + 1; j++) {
@@ -747,6 +748,28 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
       var destinationX = destination.col + width + i
       var destinationY = destination.row + j
       if (fieldHasGivenColor(state, x, y, colorOpp)) {
+        if(destinationX<0 || destinationX>9){
+          console.log('right')
+          console.log('x: ' + destinationX)
+          console.log('width: ' + width)
+          console.log('height: ' + height)
+          console.log('lengthOpp: ' + lengthOpp)
+          console.log(state.field)
+          console.log(state.stones)
+          console.log(state.selectedStones)
+          console.log(destination)
+        }
+        if(destinationY<0 || destinationY>9){
+          console.log('right')
+          console.log('y: ' + destinationY)
+          console.log('width: ' + width)
+          console.log('height: ' + height)
+          console.log('lengthOpp: ' + lengthOpp)
+          console.log(state.field)
+          console.log(state.stones)
+          console.log(state.selectedStones)
+          console.log(destination)
+        }
         newState.field[destinationX][destinationY] = colorOpp
         newState.field[x][y] = 0
         var stone = getStoneFromPosition(newState, {col: x, row: y})
@@ -760,9 +783,9 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 
 /*tc*/export/*etc*/function placeStonesNewInLeftDirection (state, selectedStonesInfo, destination) {
   var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
 
-  var sI = Object.assign({}, selectedStonesInfo)
+  var sI = JSON.parse(JSON.stringify(selectedStonesInfo))
   sI.width++
   sI.height++
   var lengthOpp = getLengthOfOpponentLeft(state, sI)
@@ -774,6 +797,28 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
       var destinationX = destination.col - i - 1
       var destinationY = destination.row + j
       if (fieldHasGivenColor(state, x, y, colorOpp)) {
+        if(destinationX<0 || destinationX>9){
+          console.log('left')
+          console.log('x: ' + destinationX)
+          console.log('width: ' + width)
+          console.log('height: ' + height)
+          console.log('lengthOpp: ' + lengthOpp)
+          console.log(state.field)
+          console.log(state.stones)
+          console.log(state.selectedStones)
+          console.log(destination)
+        }
+        if(destinationY<0 || destinationY>9){
+          console.log('left')
+          console.log('y: ' + destinationY)
+          console.log('width: ' + width)
+          console.log('height: ' + height)
+          console.log('lengthOpp: ' + lengthOpp)
+          console.log(state.field)
+          console.log(state.stones)
+          console.log(state.selectedStones)
+          console.log(destination)
+        }
         newState.field[destinationX][destinationY] = colorOpp
         newState.field[x][y] = 0
         var stone = getStoneFromPosition(newState, {col: x, row: y})
@@ -789,7 +834,7 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
   var topLeftX = topLeftStone.position.col
   var topLeftY = topLeftStone.position.row
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
 
   for (var i = 0; i <= destination.row - topLeftY; i++) {
     for (var j = 0; j < width + 1; j++) {
@@ -798,6 +843,28 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
       var destinationX = destination.col + j
       var destinationY = destination.row + height + i
       if (fieldHasGivenColor(state, x, y, colorOpp)) {
+        if(destinationX<0 || destinationX>9){
+          console.log('below')
+          console.log('x: ' + destinationX)
+          console.log('width: ' + width)
+          console.log('height: ' + height)
+          console.log('lengthOpp: ' + lengthOpp)
+          console.log(state.field)
+          console.log(state.stones)
+          console.log(state.selectedStones)
+          console.log(destination)
+        }
+        if(destinationY<0 || destinationY>9){
+          console.log('below')
+          console.log('y: ' + destinationY)
+          console.log('width: ' + width)
+          console.log('height: ' + height)
+          console.log('lengthOpp: ' + lengthOpp)
+          console.log(state.field)
+          console.log(state.stones)
+          console.log(state.selectedStones)
+          console.log(destination)
+        }
         newState.field[destinationX][destinationY] = colorOpp
         newState.field[x][y] = 0
         var stone = getStoneFromPosition(newState, {col: x, row: y})
@@ -811,9 +878,9 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 
 /*tc*/export/*etc*/function placeStonesNewInAboveDirection (state, selectedStonesInfo, destination) {
   var { width, height, topLeftStone, colorOpp } = selectedStonesInfo
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
 
-  var sI = Object.assign({}, selectedStonesInfo)
+  var sI = JSON.parse(JSON.stringify(selectedStonesInfo))
   sI.width++
   sI.height++
   var lengthOpp = getLengthOfOpponentAbove(state, sI)
@@ -825,6 +892,28 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
       var destinationX = destination.col + j
       var destinationY = destination.row - i
       if (fieldHasGivenColor(state, x, y, colorOpp)) {
+        if(destinationX<0 || destinationX>9){
+          console.log('above')
+          console.log('x: ' + destinationX)
+          console.log('width: ' + width)
+          console.log('height: ' + height)
+          console.log('lengthOpp: ' + lengthOpp)
+          console.log(state.field)
+          console.log(state.stones)
+          console.log(state.selectedStones)
+          console.log(destination)
+        }
+        if(destinationY<0 || destinationY>9){
+          console.log('above')
+          console.log('y: ' + destinationY)
+          console.log('width: ' + width)
+          console.log('height: ' + height)
+          console.log('lengthOpp: ' + lengthOpp)
+          console.log(state.field)
+          console.log(state.stones)
+          console.log(state.selectedStones)
+          console.log(destination)
+        }
         newState.field[destinationX][destinationY] = colorOpp
         newState.field[x][y] = 0
         var stone = getStoneFromPosition(newState, {col: x, row: y})
@@ -837,30 +926,52 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 }
 
 /*tc*/export/*etc*/function placeOpponentsStones (state, selectedStonesInfo, destination) {
-  var direction = getDirectionWhereStoneIsMoved(state.selectedStones, destination)
+  var sI = JSON.parse(JSON.stringify(selectedStonesInfo))
+  sI.width++
+  sI.height++
+  var direction = getDirectionWhereStonesAreMoved(state.selectedStones, destination)
   switch (direction) {
   case 0:
-    return placeStonesNewInRightDirection(state, selectedStonesInfo, destination)
+    if(selectedStonesAreInFrontOfOpponentRight(state, sI)) {
+      return placeStonesNewInRightDirection(state, selectedStonesInfo, destination)
+    } else {
+      return state
+    }
   case 1:
-    return placeStonesNewInLeftDirection(state, selectedStonesInfo, destination)
+    if(selectedStonesAreInFrontOfOpponentLeft(state, sI)) {
+      return placeStonesNewInLeftDirection(state, selectedStonesInfo, destination)
+    } else {
+      return state
+    }
   case 2:
-    return placeStonesNewInBelowDirection(state, selectedStonesInfo, destination)
+    if(selectedStonesAreInFrontOfOpponentBelow(state, sI)) {
+      return placeStonesNewInBelowDirection(state, selectedStonesInfo, destination)
+    } else {
+      return state
+    }
   case 3:
-    return placeStonesNewInAboveDirection(state, selectedStonesInfo, destination)
+    if(selectedStonesAreInFrontOfOpponentAbove(state, sI)) {
+      return placeStonesNewInAboveDirection(state, selectedStonesInfo, destination)
+    } else {
+      return state
+    }
   }
   return state
 }
 
 /*tc*/export/*etc*/function placeOwnStones (state, selectedStonesInfo, destination) {
   var { topLeftStone } = selectedStonesInfo
-  var newState = Object.assign({}, state)
+  var newState = JSON.parse(JSON.stringify(state))
   var distanceX = destination.col - topLeftStone.position.col
   var distanceY = destination.row - topLeftStone.position.row
   
   newState.selectedStones.map((stone) => {
+    var actualStone = getStoneFromPosition(newState, stone.position)
     newState.field[stone.position.col][stone.position.row] = 0
     stone.position.col = stone.position.col + distanceX
     stone.position.row = stone.position.row + distanceY
+    actualStone.position.col = stone.position.col
+    actualStone.position.row = stone.position.row
     newState.field[stone.position.col][stone.position.row] = stone.player
   })
   return newState
