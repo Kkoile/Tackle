@@ -14,6 +14,7 @@ class Game extends Component {
     super(props);
     this.onPressTile = this.onPressTile.bind(this)
     this.onPressStone = this.onPressStone.bind(this)
+    this.notifyIfPlayerHasWon = this.notifyIfPlayerHasWon.bind(this)
     this.getInformationAboutOwnColorIfNeeded = this.getInformationAboutOwnColorIfNeeded.bind(this)
   }
   render() {
@@ -32,12 +33,24 @@ class Game extends Component {
           possibleTurns={game.possibleTurns}
         />
         {this.getInformationAboutOwnColorIfNeeded()}
+        <Text>Level: {game.level.name}</Text>
+        {this.notifyIfPlayerHasWon()}
       </View>
     );
   }
   getInformationAboutOwnColorIfNeeded() {
     if(this.props.game.playMode != PlayModes.LOCALLY) {
       return <Text>Your color: {this.props.game.ownColor}</Text>
+    }
+  }
+  notifyIfPlayerHasWon() {
+    var playerHasWon = this.props.game.playerHasWon
+    if(playerHasWon) {
+      return (
+        <View>
+          <Text>{playerHasWon} has won</Text>
+        </View>
+      )
     }
   }
   onPressTile(player, position) {

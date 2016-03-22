@@ -57,6 +57,12 @@ import * as computer from '../logic/artificialIntelligence'
   newState.selectedStones = []
   newState.possibleTurns = createEmptyBoardMatrix()
   newState.gameState = switchGameState(newState)
+  if(gameLogic.playerHasWon(newState, Player.WHITE)) {
+    newState.playerHasWon = Player.WHITE
+  }
+  if(gameLogic.playerHasWon(newState, Player.BLACK)) {
+    newState.playerHasWon = Player.BLACK
+  }
   return newState
 }
 
@@ -203,6 +209,9 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function getStateAfterComputerMadeItsTurn(state) {
+  if(state.playerHasWon) {
+    return state
+  }
   if(gameStateIsInStoneSetPhase(state)) {
     return getStateAfterComputerHasSetStone(state)
   }
@@ -253,6 +262,9 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function handleClickedOnField(state, action) {
+  if(state.playerHasWon) {
+    return state
+  }
   if(gameStateIsInStoneSetPhase(state)){
     return handleSetStone(state, action)
   }
@@ -273,6 +285,9 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function handleClickedOnStone(state, action) {
+  if(state.playerHasWon) {
+    return state
+  }
   if(gameStateIsInMakeTurnPhase(state)){
     var clickedStone = getStoneFromID(state, action.stoneID)
     if(stoneIsOnPossibleField(state, clickedStone)){
