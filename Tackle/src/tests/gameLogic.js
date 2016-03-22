@@ -1315,6 +1315,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA]),
       stones: [stoneA],
       selectedStones: [stoneA],
@@ -1324,6 +1325,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1350,6 +1352,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA]),
       stones: [stoneA],
       selectedStones: [stoneA],
@@ -1359,6 +1362,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1386,6 +1390,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA, stoneB]),
       stones: [stoneA, stoneB],
       selectedStones: [stoneA],
@@ -1395,6 +1400,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1422,6 +1428,7 @@ describe('game logic', () => {
     }
     var possibleTurns = createFieldWithStones([])
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA]),
       stones: [stoneA],
       selectedStones: [stoneA],
@@ -1431,6 +1438,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1458,6 +1466,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA, stoneB]),
       stones: [stoneA, stoneB],
       selectedStones: [stoneA, stoneB],
@@ -1467,6 +1476,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1496,6 +1506,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA, stoneB, stoneC]),
       stones: [stoneA, stoneB, stoneC],
       selectedStones: [stoneA, stoneB],
@@ -1505,6 +1516,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1535,6 +1547,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA, stoneB, stoneC]),
       stones: [stoneA, stoneB, stoneC],
       selectedStones: [stoneA, stoneB],
@@ -1544,6 +1557,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1576,6 +1590,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA, stoneB, stoneC, stoneD, stoneE]),
       stones: [stoneA, stoneB, stoneC, stoneD, stoneE],
       selectedStones: [stoneA, stoneB, stoneC, stoneD],
@@ -1585,6 +1600,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1617,6 +1633,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA, stoneB, stoneC]),
       stones: [stoneA, stoneB, stoneC],
       selectedStones: [stoneA, stoneB],
@@ -1626,6 +1643,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
@@ -1656,6 +1674,7 @@ describe('game logic', () => {
     var possibleTurns = createFieldWithStones([])
     possibleTurns[action.position.col][action.position.row] = 1
     var state = {
+      level: levels[0],
       field: createFieldWithStones([stoneA, stoneB, stoneC]),
       stones: [stoneA, stoneB, stoneC],
       selectedStones: [stoneA, stoneB],
@@ -1665,6 +1684,7 @@ describe('game logic', () => {
       }
     }
     var expectedState = {
+      level: levels[0],
       field: [],
       stones: [],
       selectedStones: [],
