@@ -748,28 +748,6 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
       var destinationX = destination.col + width + i
       var destinationY = destination.row + j
       if (fieldHasGivenColor(state, x, y, colorOpp)) {
-        if(destinationX<0 || destinationX>9){
-          console.log('right')
-          console.log('x: ' + destinationX)
-          console.log('width: ' + width)
-          console.log('height: ' + height)
-          console.log('lengthOpp: ' + lengthOpp)
-          console.log(state.field)
-          console.log(state.stones)
-          console.log(state.selectedStones)
-          console.log(destination)
-        }
-        if(destinationY<0 || destinationY>9){
-          console.log('right')
-          console.log('y: ' + destinationY)
-          console.log('width: ' + width)
-          console.log('height: ' + height)
-          console.log('lengthOpp: ' + lengthOpp)
-          console.log(state.field)
-          console.log(state.stones)
-          console.log(state.selectedStones)
-          console.log(destination)
-        }
         newState.field[destinationX][destinationY] = colorOpp
         newState.field[x][y] = 0
         var stone = getStoneFromPosition(newState, {col: x, row: y})
@@ -797,28 +775,6 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
       var destinationX = destination.col - i - 1
       var destinationY = destination.row + j
       if (fieldHasGivenColor(state, x, y, colorOpp)) {
-        if(destinationX<0 || destinationX>9){
-          console.log('left')
-          console.log('x: ' + destinationX)
-          console.log('width: ' + width)
-          console.log('height: ' + height)
-          console.log('lengthOpp: ' + lengthOpp)
-          console.log(state.field)
-          console.log(state.stones)
-          console.log(state.selectedStones)
-          console.log(destination)
-        }
-        if(destinationY<0 || destinationY>9){
-          console.log('left')
-          console.log('y: ' + destinationY)
-          console.log('width: ' + width)
-          console.log('height: ' + height)
-          console.log('lengthOpp: ' + lengthOpp)
-          console.log(state.field)
-          console.log(state.stones)
-          console.log(state.selectedStones)
-          console.log(destination)
-        }
         newState.field[destinationX][destinationY] = colorOpp
         newState.field[x][y] = 0
         var stone = getStoneFromPosition(newState, {col: x, row: y})
@@ -843,28 +799,6 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
       var destinationX = destination.col + j
       var destinationY = destination.row + height + i
       if (fieldHasGivenColor(state, x, y, colorOpp)) {
-        if(destinationX<0 || destinationX>9){
-          console.log('below')
-          console.log('x: ' + destinationX)
-          console.log('width: ' + width)
-          console.log('height: ' + height)
-          console.log('lengthOpp: ' + lengthOpp)
-          console.log(state.field)
-          console.log(state.stones)
-          console.log(state.selectedStones)
-          console.log(destination)
-        }
-        if(destinationY<0 || destinationY>9){
-          console.log('below')
-          console.log('y: ' + destinationY)
-          console.log('width: ' + width)
-          console.log('height: ' + height)
-          console.log('lengthOpp: ' + lengthOpp)
-          console.log(state.field)
-          console.log(state.stones)
-          console.log(state.selectedStones)
-          console.log(destination)
-        }
         newState.field[destinationX][destinationY] = colorOpp
         newState.field[x][y] = 0
         var stone = getStoneFromPosition(newState, {col: x, row: y})
@@ -892,28 +826,6 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
       var destinationX = destination.col + j
       var destinationY = destination.row - i
       if (fieldHasGivenColor(state, x, y, colorOpp)) {
-        if(destinationX<0 || destinationX>9){
-          console.log('above')
-          console.log('x: ' + destinationX)
-          console.log('width: ' + width)
-          console.log('height: ' + height)
-          console.log('lengthOpp: ' + lengthOpp)
-          console.log(state.field)
-          console.log(state.stones)
-          console.log(state.selectedStones)
-          console.log(destination)
-        }
-        if(destinationY<0 || destinationY>9){
-          console.log('above')
-          console.log('y: ' + destinationY)
-          console.log('width: ' + width)
-          console.log('height: ' + height)
-          console.log('lengthOpp: ' + lengthOpp)
-          console.log(state.field)
-          console.log(state.stones)
-          console.log(state.selectedStones)
-          console.log(destination)
-        }
         newState.field[destinationX][destinationY] = colorOpp
         newState.field[x][y] = 0
         var stone = getStoneFromPosition(newState, {col: x, row: y})
