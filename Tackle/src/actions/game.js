@@ -1,23 +1,23 @@
 export const FIELD_CLICKED = 'FIELD_CLICKED'
-export const MAKE_TURN = 'MAKE_TURN'
+export const COMPUTERS_TURN = 'COMPUTERS_TURN'
 export const SELECT_LEVEL = 'SELECT_LEVEL'
 export const STONE_CLICKED = 'STONE_CLICKED'
 export const SET_PLAY_MODE = 'SET_PLAY_MODE'
 export const RESET_GAME = 'RESET_GAME'
 
-export function fieldClicked(player, position) {
+export function fieldClickedAction(player, position) {
   return { type: FIELD_CLICKED, player, position }
 }
 
-export function makeTurn(player, turn) {
-  return { type: MAKE_TURN, player, turn }
+export function letComputerMakeItsTurn() {
+  return { type: COMPUTERS_TURN }
 }
 
 export function selectLevel(level) {
   return { type: SELECT_LEVEL, level }
 }
 
-export function stoneClicked(stoneID) {
+export function stoneClickedAction(stoneID) {
   return { type: STONE_CLICKED, stoneID }
 }
 
@@ -29,16 +29,20 @@ export function resetGame() {
   return { type: RESET_GAME }
 }
 
-// Example Async Action
-export function exampleAsyncAction() {
+export function fieldClicked(player, position) {
   return (dispatch, getState) => {
-    // Dispatch something directly
-    dispatch(resetGame())
-
-    // Something Async or long going
+    dispatch(fieldClickedAction(player, position))
     setTimeout(() => {
-      //Dispatch something when finished
-      dispatch(resetGame())
-    }, 1000)
+      dispatch(letComputerMakeItsTurn())
+    }, 500)
+  }
+}
+
+export function stoneClicked(stoneID) {
+  return (dispatch, getState) => {
+    dispatch(stoneClickedAction(stoneID))
+    setTimeout(() => {
+      dispatch(letComputerMakeItsTurn())
+    }, 500)
   }
 }

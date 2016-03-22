@@ -4,7 +4,8 @@ import {
     SELECT_LEVEL, 
     STONE_CLICKED, 
     SET_PLAY_MODE, 
-    RESET_GAME 
+    RESET_GAME,
+    COMPUTERS_TURN
   } from '../actions/game'
 import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 import { levels } from '../constants/levels'
@@ -313,28 +314,26 @@ import * as computer from '../logic/artificialIntelligence'
 }
 
 /*tc*/export/*etc*/function game(state = getInitialState(), action) {
-  var newState
   switch (action.type) {
     case SELECT_LEVEL:
-      newState = handleSelectLevel(state, action)
-      break;
+      return handleSelectLevel(state, action)
     case FIELD_CLICKED:
-      newState = handleClickedOnField(state, action)
-      break;
+      return handleClickedOnField(state, action)
     case STONE_CLICKED:
-      newState = handleClickedOnStone(state, action)
-      break;
+      return handleClickedOnStone(state, action)
     case SET_PLAY_MODE:
       return handleSetPlayMode(state, action)
     case RESET_GAME:
       return getInitialState()
+    case COMPUTERS_TURN:
+      if(opponentIsComputer(state) && itIsNotTheUsersTurn(state)) {
+        return getStateAfterComputerMadeItsTurn(state)
+      }
+      return state
     default:
       return state
   }
-  if(opponentIsComputer(newState) && itIsNotTheUsersTurn(newState)) {
-    newState = getStateAfterComputerMadeItsTurn(newState)
-  }
-  return newState
+  return state
 }
 
 export default game
