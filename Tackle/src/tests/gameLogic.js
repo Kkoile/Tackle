@@ -1682,4 +1682,263 @@ describe('game logic', () => {
     expectedState.stones = [expectedStoneA, expectedStoneB, expectedStoneC]
     expect(reducer.makeTurn(state, action)).toEqual(expectedState)
   })
+  it('should return that figure turm3 is on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 5, 3)
+    var stoneC = createStone(types.Player.WHITE, 6, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[0]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles)).toEqual(true)
+  })
+  it('should return that figure turm3 is not on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 5, 3)
+    var stoneC = createStone(types.Player.WHITE, 7, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[0]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles)).toEqual(false)
+  })
+  it('should return that figure turm3 is on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 4)
+    var stoneB = createStone(types.Player.WHITE, 3, 5)
+    var stoneC = createStone(types.Player.WHITE, 3, 6)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[0]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles90)).toEqual(true)
+  })
+  it('should return that figure turm3 is not on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 4)
+    var stoneB = createStone(types.Player.WHITE, 3, 5)
+    var stoneC = createStone(types.Player.WHITE, 3, 7)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[0]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles90)).toEqual(false)
+  })
+  it('should return that figure treppe3 is on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 6)
+    var stoneB = createStone(types.Player.WHITE, 5, 5)
+    var stoneC = createStone(types.Player.WHITE, 6, 4)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[1]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles)).toEqual(true)
+  })
+  it('should return that figure treppe3 is not on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 5, 4)
+    var stoneC = createStone(types.Player.WHITE, 7, 5)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[1]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles)).toEqual(false)
+  })
+  it('should return that figure treppe3 is on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 4)
+    var stoneB = createStone(types.Player.WHITE, 4, 5)
+    var stoneC = createStone(types.Player.WHITE, 5, 6)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[1]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles90)).toEqual(true)
+  })
+  it('should return that figure treppe3 is not on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 4)
+    var stoneB = createStone(types.Player.WHITE, 4, 5)
+    var stoneC = createStone(types.Player.WHITE, 4, 6)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[1]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles90)).toEqual(false)
+  })
+  it('should return that figure bluete is on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 2)
+    var stoneB = createStone(types.Player.WHITE, 3, 4)
+    var stoneC = createStone(types.Player.WHITE, 2, 3)
+    var stoneD = createStone(types.Player.WHITE, 4, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC, stoneD]),
+      stones: [stoneA, stoneB, stoneC, stoneD],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[4]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles)).toEqual(true)
+  })
+  it('should return that figure bluete is not on field', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 2)
+    var stoneB = createStone(types.Player.WHITE, 3, 4)
+    var stoneC = createStone(types.Player.WHITE, 2, 3)
+    var stoneD = createStone(types.Player.WHITE, 4, 3)
+    var stoneE = createStone(types.Player.WHITE, 3, 3)
+    var state = {
+      field: createFieldWithStones([stoneA, stoneB, stoneC, stoneD, stoneE]),
+      stones: [stoneA, stoneB, stoneC, stoneD, stoneE],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    var level = levels[4]
+    expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles)).toEqual(false)
+  })
+  it('should return that player has won', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 5, 3)
+    var stoneC = createStone(types.Player.WHITE, 6, 3)
+    var state = {
+      level: levels[0],
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    expect(gameLogic.playerHasWon(state, types.Player.WHITE)).toEqual(true)
+  })
+  it('should return that player has not won', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 5, 3)
+    var stoneC = createStone(types.Player.WHITE, 7, 3)
+    var state = {
+      level: levels[0],
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    expect(gameLogic.playerHasWon(state, types.Player.WHITE)).toEqual(false)
+  })
+  it('should return that player has not won', () => {
+    var stoneA = createStone(types.Player.WHITE, 4, 3)
+    var stoneB = createStone(types.Player.WHITE, 5, 3)
+    var stoneC = createStone(types.Player.BLACK, 6, 3)
+    var state = {
+      level: levels[0],
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    expect(gameLogic.playerHasWon(state, types.Player.WHITE)).toEqual(false)
+  })
+  it('should return that player has won', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 4)
+    var stoneB = createStone(types.Player.WHITE, 3, 5)
+    var stoneC = createStone(types.Player.WHITE, 3, 6)
+    var state = {
+      level: levels[0],
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    expect(gameLogic.playerHasWon(state, types.Player.WHITE)).toEqual(true)
+  })
+  it('should return that player has not won', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 4)
+    var stoneB = createStone(types.Player.WHITE, 3, 5)
+    var stoneC = createStone(types.Player.WHITE, 3, 7)
+    var state = {
+      level: levels[0],
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    expect(gameLogic.playerHasWon(state, types.Player.WHITE)).toEqual(false)
+  })
+  it('should return that player has not won', () => {
+    var stoneA = createStone(types.Player.WHITE, 3, 4)
+    var stoneB = createStone(types.Player.WHITE, 3, 5)
+    var stoneC = createStone(types.Player.BLACK, 3, 6)
+    var state = {
+      level: levels[0],
+      field: createFieldWithStones([stoneA, stoneB, stoneC]),
+      stones: [stoneA, stoneB, stoneC],
+      selectedStones: [],
+      possibleTurns: createFieldWithStones([]),
+      gameState: {
+        state: types.GameStates.WHITE_PLAYER_MAKE_TURN
+      }
+    }
+    expect(gameLogic.playerHasWon(state, types.Player.WHITE)).toEqual(false)
+  })
 })
