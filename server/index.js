@@ -3,7 +3,8 @@ var fs = require('fs');
 var server = require('http').Server(app)
 var io = require('socket.io')(server)
 var jwt = require('jsonwebtoken')
-var cert = fs.readFileSync('private.key')
+//var cert = fs.readFileSync('private.key')
+var cert = 'MySecretToken1234'
 var users = JSON.parse(fs.readFileSync('users.json')).users
 
 var game = require('./game.js')
