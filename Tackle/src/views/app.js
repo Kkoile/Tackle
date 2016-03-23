@@ -15,9 +15,7 @@ const finalCreateStore = compose(
 
 let store = finalCreateStore(tackleApp)
 
-var Login = require('./login.js');
-
-import Game from '../containers/game'
+import Login from '../containers/login'
 
 class App extends Component{
   render() {

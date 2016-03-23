@@ -8,12 +8,15 @@
     "test:watch": "npm test -- --watch"
   },
   "dependencies": {
+    "es6-promise": "^3.1.2",
+    "isomorphic-fetch": "^2.2.1",
     "react-native": "^0.21.0",
     "react-native-button": "^1.4.2",
     "react-native-grid-view": "^0.3.7",
     "react-redux": "^4.4.1",
     "redux": "^3.3.1",
-    "redux-thunk": "latest"
+    "redux-thunk": "latest",
+    "superagent": "^1.8.2"
   },
   "devDependencies": {
     "babel-register": "^6.7.2",

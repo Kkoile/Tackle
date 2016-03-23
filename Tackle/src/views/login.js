@@ -35,10 +35,11 @@ class Login extends Component{
   }
   onPressLogin() {
     //TODO: Implement login 
-    this.props.navigator.replace({
+    /*this.props.navigator.replace({
       title: 'Home',
       component: Home,
-    });
+    });*/
+    this.props.onPressLogin(this.state.name)
   }
 }
 

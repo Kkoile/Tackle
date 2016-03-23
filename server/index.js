@@ -11,6 +11,8 @@ var game = require('./game.js');
 server.listen(8080)
 
 app.post('/login/:name', function(req, res) {
+  res.header('Access-Control-Allow-Origin', "*")
+
   if (users.indexOf(req.params.name) < 0) {
     users.push(req.params.name)
     fs.writeFile('users.json', JSON.stringify(users), function(err) {
