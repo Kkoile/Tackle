@@ -31,7 +31,7 @@ app.post('/login/:name', function(req, res) {
         res.status(500).send('Failed to save username!')
       }
       jwt.sign({username: req.params.name}, cert, {
-        algorithm: 'RS256'
+        algorithm: 'HS256'
       }, function(token) {
         res.status(200).json({token: token})
       });
