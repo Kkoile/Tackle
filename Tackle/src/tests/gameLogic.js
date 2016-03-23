@@ -1844,7 +1844,7 @@ describe('game logic', () => {
         state: types.GameStates.WHITE_PLAYER_MAKE_TURN
       }
     }
-    var level = levels[4]
+    var level = levels[5]
     expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles)).toEqual(true)
   })
   it('should return that figure bluete is not on field', () => {
@@ -1862,7 +1862,7 @@ describe('game logic', () => {
         state: types.GameStates.WHITE_PLAYER_MAKE_TURN
       }
     }
-    var level = levels[4]
+    var level = levels[5]
     expect(gameLogic.figureIsOnField(state, types.Player.WHITE, level.tiles)).toEqual(false)
   })
   it('should return that player has won', () => {
