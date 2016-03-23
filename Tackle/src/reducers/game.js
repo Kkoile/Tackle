@@ -314,10 +314,12 @@ import * as computer from '../logic/artificialIntelligence'
     case PlayModes.COMPUTER:
       newState.ownColor = getRandomColor()
       newState.opponentColor = switchColor(newState.ownColor)
+      return newState
     case PlayModes.INTERNET:
       //TODO: Needs to be implemented depending on who started the match etc.
       newState.ownColor = Player.WHITE
       newState.opponentColor = Player.BLACK
+      return newState
     default:
       //do nothing
   }

@@ -13,7 +13,7 @@ export function letComputerMakeItsTurn() {
   return { type: COMPUTERS_TURN }
 }
 
-export function selectLevel(level) {
+export function selectLevelAction(level) {
   return { type: SELECT_LEVEL, level }
 }
 
@@ -41,6 +41,15 @@ export function fieldClicked(player, position) {
 export function stoneClicked(stoneID) {
   return (dispatch, getState) => {
     dispatch(stoneClickedAction(stoneID))
+    setTimeout(() => {
+      dispatch(letComputerMakeItsTurn())
+    }, 500)
+  }
+}
+
+export function selectLevel(level) {
+  return (dispatch, getState) => {
+    dispatch(selectLevelAction(level))
     setTimeout(() => {
       dispatch(letComputerMakeItsTurn())
     }, 500)
