@@ -6,9 +6,19 @@ var jwt = require('jsonwebtoken')
 var cert = fs.readFileSync('private.key')
 var users = JSON.parse(fs.readFileSync('users.json')).users
 
-var game = require('./game.js');
+var game = require('./game.js')
 
-server.listen(8080)
+server.listen(8080, function() {
+  console.log('=================================================')
+  console.log('= Hallo Nils,                                   =')
+  console.log('= diese Nachricht dient dazu dir mitzuteilen,   =')
+  console.log('= dass dieser Server läuft!                     =')
+  console.log('=                                               =')
+  console.log('= Mit freundlichen Grüßen                       =')
+  console.log('= Dustin Hoffner                                =')
+  console.log('=                                               =')
+  console.log('=================================================')
+})
 
 app.post('/login/:name', function(req, res) {
   res.header('Access-Control-Allow-Origin', "*")
