@@ -10,7 +10,7 @@ var game = require('./game.js');
 
 server.listen(8080)
 
-app.get('/login/:name', function(req, res) {
+app.post('/login/:name', function(req, res) {
   if (users.indexOf(req.params.name) < 0) {
     users.push(req.params.name)
     fs.writeFile('users.json', JSON.stringify(users), function(err) {
