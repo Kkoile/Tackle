@@ -5,8 +5,9 @@ import React, {
   View,
 } from 'react-native';
 
-var Button = require('react-native-button');
+var Button = require('react-native-button')
 import LevelSelection from '../containers/levelSelection'
+var {Actions} = require('react-native-redux-router')
 
 class Home extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
+          <Text>Hallo {this.props.tackleApp.login.userName}</Text>
           <Button 
             style={styles.button}
             onPress={this.onPressPlayLocally}
@@ -54,15 +56,7 @@ class Home extends Component {
     this.goToLevelSelection()
   }
   goToLevelSelection() {
-    this.props.navigator.push({
-      title: 'Level Selection',
-      component: LevelSelection,
-      leftButtonTitle: 'Back',
-      onLeftButtonPress: () => {
-        this.props.resetGame()
-        this.props.navigator.pop()
-      },
-    }); 
+    Actions.levelSelection()
   }
 }
 

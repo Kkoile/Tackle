@@ -8,11 +8,35 @@ import React, {
   View
 } from 'react-native';
 
-var App = require('./src/views/app.js');
+import {
+  Router, 
+  routerReducer, 
+  Route, 
+  Container, 
+  Animations, 
+  Schema
+} from 'react-native-redux-router'
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
+import {Provider} from 'react-redux'
+import tackleApp from './src/reducers/index'
+import thunkMiddleware from 'redux-thunk'
+
+const finalCreateStore = compose(
+  applyMiddleware(thunkMiddleware)
+)(createStore)
+
+let store = finalCreateStore(combineReducers({routerReducer, tackleApp}))
+console.log(store.getState())
+
+import App from './src/views/app'
 
 class Tackle extends Component {
   render() {
-    return <App/>;
+    return (
+      <Provider store={store}>
+        <App />
+      </Provider>
+    )
   }
 }
 

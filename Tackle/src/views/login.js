@@ -4,17 +4,22 @@ import React, {
   Text,
   TextInput,
   View,
-} from 'react-native';
+} from 'react-native'
 
-var Button = require('react-native-button');
+var Button = require('react-native-button')
 
 import Home from '../containers/home'
+import { States } from '../constants/login'
+import { Actions } from 'react-native-redux-router'
 
 class Login extends Component{
   constructor(props){
-    super(props);
-    this.onPressLogin = this.onPressLogin.bind(this);
-    this.state = {name: ''};
+    super(props)
+    this.onPressLogin = this.onPressLogin.bind(this)
+    this.informThatUserNameIsAlreadyTakenIfNeeded = this.informThatUserNameIsAlreadyTakenIfNeeded.bind(this)
+    this.state = {name: ''}
+    props.getName()
+    props.getToken()
   }
   render() {
     return (
@@ -30,15 +35,18 @@ class Login extends Component{
         <Button style={styles.button} onPress={this.onPressLogin}>
           Login
         </Button>
+        {this.informThatUserNameIsAlreadyTakenIfNeeded()}
       </View>
-    );
+    )
+  }
+  informThatUserNameIsAlreadyTakenIfNeeded() {
+    if(this.props.tackleApp.login.state == States.USER_NAME_ALREADY_TAKEN) {
+      return (
+        <Text>Username is already taken</Text>
+      )
+    }
   }
   onPressLogin() {
-    //TODO: Implement login 
-    /*this.props.navigator.replace({
-      title: 'Home',
-      component: Home,
-    });*/
     this.props.onPressLogin(this.state.name)
   }
 }

@@ -56,6 +56,7 @@ io.use(function(socket, next) {
 
 io.on('connection', function(socket) {
   socket.on('auth', function(token) {
+    console.log(token)
     jwt.verify(token, cert, function(err, decoded) {
       if (err) {
         socket.emit('auth', {success: false})

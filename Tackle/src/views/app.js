@@ -2,40 +2,45 @@ import React, {
   Component,
   NavigatorIOS,
   StyleSheet,
-} from 'react-native';
+  View,
+} from 'react-native'
 
-import { createStore, applyMiddleware, compose } from 'redux'
-import {Provider} from 'react-redux'
-import tackleApp from '../reducers/index'
-import thunkMiddleware from 'redux-thunk'
+import '../UserAgent'
+import io from 'socket.io-client/socket.io'
 
-const finalCreateStore = compose(
-  applyMiddleware(thunkMiddleware)
-)(createStore)
+import {
+  Router, 
+  routerReducer, 
+  Route, 
+  Container, 
+  Animations, 
+  Schema
+} from 'react-native-redux-router'
 
-let store = finalCreateStore(tackleApp)
+import { SERVER_URL } from '../constants/connection'
 
 import Login from '../containers/login'
+import Home from '../containers/home'
+import LevelSelection from '../containers/levelSelection'
+import Game from '../containers/game'
 
 class App extends Component{
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
-      <Provider store={store}>
-        <NavigatorIOS
-          style={styles.container}
-          initialRoute={{
-            title: 'Tackle',
-            component: Login,
-          }}/>
-      </Provider>
-    );
+      <View style={{flex:1}}>
+        <View style={{position:'absolute',left:0,right:0,top:0,bottom:0,backgroundColor:'#F5FCFF'}}/>
+        <Router>
+          <Route name="login" component={Login} initial={true} hideNavBar={true} title="Login"/>
+          <Route name="home" component={Home} initial={false} hideNavBar={false} title="Home"/>
+          <Route name="levelSelection" component={LevelSelection} initial={false} hideNavBar={true} title="LevelSelection"/>
+          <Route name="game" component={Game} initial={false} hideNavBar={false} title="Game"/>
+        </Router>
+      </View>
+    )
   }
 }
 
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  }
-});
-
-module.exports = App;
+module.exports = App
