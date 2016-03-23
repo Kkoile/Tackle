@@ -942,6 +942,13 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return tile == 2 && fieldHasGivenColor(state, x, y, player)
 }
 
+/*tc*/export/*etc*/function getOtherPlayer (player) {
+  if(player == Player.WHITE) {
+    return Player.BLACK
+  }
+  return Player.WHITE
+}
+
 /*tc*/export/*etc*/function figureStartsAtPosition (state, player, figure, x, y) {
   var figureExists = true
   figure.map((col, i) => {
@@ -970,6 +977,65 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
     })
   })
   return figureIsOnField
+}
+
+
+/*tc*/export/*etc*/function countMatchesWithFigureAtPosition (state, player, figure, x, y) {
+  var count = 0
+  figure.map((col, i) => {
+    col.map((tile, j) => {
+      var fieldX = x + i
+      var fieldY = y + j
+      if(!tileOnFieldHasNotRequiredPlayer(state, player, tile, fieldX, fieldY)
+          && !tileOnFieldHasPlayerWhereItIsNotRequired(state, player, tile, fieldX, fieldY)) {
+        count++
+      }
+    })
+  })
+  return count
+}
+
+/*tc*/export/*etc*/function countMatchesWithFigureOnField (state, player, figure) {
+  var field = state.field
+  var count = 0
+  field.map((col, i) => {
+    col.map((tile, j) => {
+      if(colIsInCourt(i) && rowIsInCourt(j)) {
+        var countTemp = countMatchesWithFigureAtPosition(state, player, figure, i, j)
+        if(countTemp > count) {
+          count = countTemp
+        }
+      }
+    })
+  })
+  return count
+}
+
+/*tc*/export/*etc*/function evaluateStateForPlayer (state, player) {
+  var score = 0
+  var ownCount = countMatchesWithFigureOnField(state, player, state.level.tiles)
+  var opponentCount = countMatchesWithFigureOnField(state, getOtherPlayer(player), state.level.tiles)
+  var ownCount90 = countMatchesWithFigureOnField(state, player, state.level.tiles90)
+  var opponentCount90 = countMatchesWithFigureOnField(state, getOtherPlayer(player), state.level.tiles90)
+
+  if(ownCount90 > ownCount) {
+    ownCount = ownCount90
+  }
+  if(opponentCount90 > opponentCount) {
+    opponentCount = opponentCount90
+  }
+
+  if(ownCount == state.level.count) {
+    score += 1000
+  }else{
+    score += ownCount*ownCount
+  }
+  if(opponentCount == state.level.count) {
+    score -= 1000
+  }else{
+    score -= opponentCount*opponentCount
+  }
+  return score
 }
 
 /*tc*/export/*etc*/function playerHasWon (state, player) {

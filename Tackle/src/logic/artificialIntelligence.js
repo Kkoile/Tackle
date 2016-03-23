@@ -49,7 +49,7 @@ export function setStone (state) {
 }
 
 export function getNextMove (state) {
-    return minimax(depthInput, Object.assign({}, state), -2000, +2000)
+    return minimax(depthInput, JSON.parse(JSON.stringify(state)), -2000000, +2000000)
 }
 
 function createStone(state, player, position) {
@@ -69,7 +69,7 @@ function getStoneFromPosition(state, position) {
 
 function minimax (depth, state, alpha, beta) {
     //Alle moeglichen Zuege berechnen
-    var nextMoves = generateMoves(state, state.gameState.activePlayer)
+    var nextMoves = []
     var currentScore = 0
     var bestMove = {
         selectedStones: [],
@@ -85,6 +85,7 @@ function minimax (depth, state, alpha, beta) {
         }
         return bestMove
     } else {
+        nextMoves = generateMoves(state, state.gameState.activePlayer)
         for (var i in nextMoves) {
             var move = nextMoves[i]
             //Zug machen und eine Ebene weiter runter gehen
@@ -94,20 +95,23 @@ function minimax (depth, state, alpha, beta) {
                 //Zug bewerten
                 if (currentScore > alpha) {
                     alpha = currentScore
-                    bestMove = Object.assign({}, move)
+                    bestMove = JSON.parse(JSON.stringify(move))
                     bestMove.score = alpha
+                }
+                if (alpha >= beta) {
+                    return alpha
                 }
             } else {
                 currentScore = minimax(parseInt(depth) - 1, JSON.parse(JSON.stringify(newState)), alpha, beta).score
                 //Zug bewerten
                 if (currentScore < beta) {
                     beta = currentScore
-                    bestMove = Object.assign({}, move)
+                    bestMove = JSON.parse(JSON.stringify(move))
                     bestMove.score = beta
                 }
-            }
-            if (alpha >= beta) {
-                break
+                if (beta <= alpha) {
+                    return beta
+                }
             }
         }
 
@@ -126,16 +130,7 @@ function minimax (depth, state, alpha, beta) {
 
 }
 function evaluate (state) {
-    //Wenn man selber gewinnt plus 100
-    //Wenn der Gegner gewinnt minus 100
-    var score = 0
-    if (gameLogic.playerHasWon(state, state.opponentColor)) {
-        score += 100
-    }
-    if (gameLogic.playerHasWon(state, state.ownColor)) {
-        score -= 100
-    }
-    return score
+    return gameLogic.evaluateStateForPlayer(state, state.opponentColor)
 }
 /*tc*/export/*etc*/function generateMoves (state, color) {
     var moves = []
@@ -147,7 +142,7 @@ function evaluate (state) {
             if (fieldTemp[i][j] == color) {
                 var newState = JSON.parse(JSON.stringify(state))
                 //Für jeden einzelnen Stein die möglichen Züge berechnen
-                var stones = [Object.assign({}, getStoneFromPosition(newState, {col:i, row:j}))]
+                var stones = [JSON.parse(JSON.stringify(getStoneFromPosition(newState, {col:i, row:j})))]
                 newState.selectedStones = stones
                 
                 possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
@@ -163,10 +158,10 @@ function evaluate (state) {
                     }
                 }
                 if (horizontalLength > 1) { //gibt es überhaupt eine Schlange?
-                    newState = Object.assign({}, state)
+                    newState = JSON.parse(JSON.stringify(state))
                     var stones = [] //new Stone[horizontalLength];
                     for (var k = 0; k < horizontalLength; k++) {
-                        stones[k] = Object.assign({}, getStoneFromPosition(newState, {col: parseInt(i) + k, row: j}))
+                        stones[k] = JSON.parse(JSON.stringify(getStoneFromPosition(newState, {col: parseInt(i) + k, row: j})))
                     }
                     newState.selectedStones = stones
                     possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
@@ -183,11 +178,11 @@ function evaluate (state) {
                     }
                 }
                 if (verticalLength > 1) { //gibt es überhaupt eine Schlange?
-                    newState = Object.assign({}, state)
+                    newState = JSON.parse(JSON.stringify(state))
                     var stones = []
 
                     for (var k = 0; k < verticalLength; k++) {
-                        stones[k] = Object.assign({}, getStoneFromPosition(newState, {col: i, row: parseInt(j) + k}))
+                        stones[k] = JSON.parse(JSON.stringify(getStoneFromPosition(newState, {col: i, row: parseInt(j) + k})))
                     }
                     newState.selectedStones = stones
                     possibleTurns = gameLogic.getPossibleTurnsForSelectedStones(newState)
@@ -211,12 +206,12 @@ function evaluate (state) {
                 }
 
                 if (vLength > 1 && horizontalLength > 1) { //ob es einen Block gibt
-                    newState = Object.assign({}, state)
+                    newState = JSON.parse(JSON.stringify(state))
                     var stones = []
                     var counter = 0
                     for (var k = 0; k < horizontalLength; k++) {
                         for (var k2 = 0; k2 < vLength; k2++) {
-                            stones[counter] = Object.assign({}, getStoneFromPosition(newState, {col:k, row:k2}))
+                            stones[counter] =JSON.parse(JSON.stringify(getStoneFromPosition(newState, {col:k, row:k2})))
                             counter++
                         }
                     }
@@ -235,7 +230,7 @@ function evaluate (state) {
     possibleTurns.map((col, i) => {
         col.map((field, j) => {
             if(field > 0) {
-                var newState = Object.assign({}, state)
+                var newState = JSON.parse(JSON.stringify(state))
                 newState.selectedStones = selectedStones.slice()
                 newState.possibleTurns = possibleTurns.slice()
                 moves.push({
