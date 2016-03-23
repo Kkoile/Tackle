@@ -3,21 +3,29 @@ import React, {
   StyleSheet,
   View,
   TouchableHighlight
-} from 'react-native';
-
-var BORDER_WIDTH = 1;
-var TILE_SIZE = 50;
+} from 'react-native'
 
 class Form extends Component {
 
   constructor(props) {
     super(props)
     this.onPress = this.onPress.bind(this)
+    var form = props.form;
+    var longestSide = form.tiles.length
+    if(form.tiles[0].length>longestSide) {
+      longestSide = form.tiles[0].length
+    }
+    this.TILE_SIZE = props.width / longestSide * 0.9
   }
 
   render() {
     var form = this.props.form;
-    
+    var TILE_SIZE = this.TILE_SIZE
+    var figureWidth = form.tiles[0].length * TILE_SIZE
+    var figureHeight = form.tiles.length * TILE_SIZE
+    var startPositionLeft = this.props.width / 2 - figureWidth / 2
+    var startPositionTop = this.props.width / 2 - figureHeight / 2
+
     return (
       <TouchableHighlight 
         underlayColor={'rgba(220,220,220,0.5)'}
@@ -26,8 +34,8 @@ class Form extends Component {
         style={[
           styles.containerView, 
           {
-            height: form.tiles.length*TILE_SIZE, 
-            width: form.tiles[0].length*TILE_SIZE
+            height: this.props.width, 
+            width: this.props.width
           }
         ]}
       >
@@ -40,15 +48,25 @@ class Form extends Component {
           >
           {tile.map(function(tileEntry, j) {
             var position = {
-              left: j*TILE_SIZE, 
-              top: i*TILE_SIZE
+              left: j*TILE_SIZE + startPositionLeft, 
+              top: i*TILE_SIZE + startPositionTop
+            }
+
+            var backgroundColor = 'transparent'
+            if(tileEntry == 1) {
+              backgroundColor = '#F9F6B2'
+            }
+            if(tileEntry == 2) {
+              backgroundColor = '#50E8F9'
             }
 
             var tileStyles = [
               styles.tile,
               {
-                backgroundColor: tileEntry == 0 ? 'transparent' : '#F9F6B2',
-                borderWidth: tileEntry
+                backgroundColor: backgroundColor,
+                borderWidth: tileEntry == 0 ? 0 : 1,
+                width: TILE_SIZE,
+                height: TILE_SIZE,
               },
               position
             ]
@@ -71,12 +89,9 @@ class Form extends Component {
 var styles = StyleSheet.create({
   tile: {
     position: 'absolute',
-    width: TILE_SIZE,
-    height: TILE_SIZE,
     borderColor: '#A7A7A7'
   },
   containerView: {
-    flex: 1,
     marginTop: 15
   },
   innerView: {

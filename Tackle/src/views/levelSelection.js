@@ -3,12 +3,14 @@ import React, {
   StyleSheet,
   Text,
   View
-} from 'react-native';
+} from 'react-native'
 
 var GridView = require('react-native-grid-view')
 var Form = require('../components/form')
 
-import Game from '../containers/game';
+import Game from '../containers/game'
+
+var LEVELS_PER_ROW = 2
 
 class LevelSelection extends Component {
 
@@ -22,15 +24,23 @@ class LevelSelection extends Component {
     return (
       <GridView
         items={this.props.levelSelection.forms}
-        itemsPerRow={2}
+        itemsPerRow={LEVELS_PER_ROW}
         renderItem={this.renderItem}
         style={styles.listView}
       />
-    );
+    )
   }
 
   renderItem(item) {
-    return <Form key={item.name} form={item} onPress={this.onPress} />
+    var { SCREEN_WIDTH } = this.props.screenResolution
+    return (
+      <Form 
+        key={item.name} 
+        form={item} 
+        onPress={this.onPress} 
+        width={SCREEN_WIDTH * 0.8 / LEVELS_PER_ROW} 
+      />
+    )
   }
 
   onPress(name) {
@@ -43,7 +53,7 @@ class LevelSelection extends Component {
         this.props.resetGame()
         this.props.navigator.pop()
       },
-    });
+    })
   }
 }
 
@@ -53,6 +63,6 @@ var styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     flex: 1
   }
-});
+})
 
-module.exports = LevelSelection;
+module.exports = LevelSelection
