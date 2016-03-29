@@ -325,8 +325,5 @@ describe('artificial intelligence', () => {
     state.stones = stones.slice()
 
     var bestMove = aI.getNextMove(state)
-    /*console.log(bestMove.state.field)
-    console.log(bestMove.state.selectedStones)
-    console.log(bestMove.position)*/
   })
 })

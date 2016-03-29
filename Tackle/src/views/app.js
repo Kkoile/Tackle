@@ -5,9 +5,6 @@ import React, {
   View,
 } from 'react-native'
 
-import '../UserAgent'
-import io from 'socket.io-client/socket.io'
-
 import {
   Router, 
   routerReducer, 
@@ -17,8 +14,6 @@ import {
   Schema
 } from 'react-native-redux-router'
 
-import { SERVER_URL } from '../constants/connection'
-
 import Login from '../containers/login'
 import Home from '../containers/home'
 import LevelSelection from '../containers/levelSelection'
@@ -26,7 +21,7 @@ import Game from '../containers/game'
 
 class App extends Component{
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
     return (

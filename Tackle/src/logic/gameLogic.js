@@ -916,24 +916,6 @@ import { GameStates, Player, FIELD_SIZE } from '../constants/game'
   return matrix
 }
 
-/*tc*/export/*etc*/function get90DegreeLevel(tiles) {
-  var newTiles = []
-  var rows = tiles.length
-  var cols = tiles[0].length
-
-  //TODO: Got it to work
-  for(var i=0;i<cols;i++){
-    newTiles.push(Array(rows).fill(1))
-  }
-  tiles.map((row, i) => {
-    row.map((tile, j) => {
-
-    })
-  })
-
-  return newTiles
-}
-
 /*tc*/export/*etc*/function tileOnFieldHasNotRequiredPlayer (state, player, tile, x, y) {
   return !(tile == 1 && fieldHasGivenColor(state, x, y, player)) && tile == 1
 }

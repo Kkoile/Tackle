@@ -3,16 +3,13 @@ import React, {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
+} from 'react-native'
 
 var Button = require('react-native-button')
-import LevelSelection from '../containers/levelSelection'
-var {Actions} = require('react-native-redux-router')
 
 class Home extends Component {
   constructor(props) {
     super(props)
-    this.goToLevelSelection = this.goToLevelSelection.bind(this)
     this.onPressPlayLocally = this.onPressPlayLocally.bind(this)
     this.onPressPlayViaInternet = this.onPressPlayViaInternet.bind(this)
     this.onPressPlayAgainstComputer = this.onPressPlayAgainstComputer.bind(this)
@@ -41,22 +38,16 @@ class Home extends Component {
             Play against Computer
           </Button>
       </View>
-    );
+    )
   }
   onPressPlayLocally() {
     this.props.playLocally()
-    this.goToLevelSelection()
   }
   onPressPlayViaInternet() {
     this.props.playViaInternet()
-    this.goToLevelSelection()
   }
   onPressPlayAgainstComputer() {
     this.props.playAgainstComputer()
-    this.goToLevelSelection()
-  }
-  goToLevelSelection() {
-    Actions.levelSelection()
   }
 }
 
@@ -74,6 +65,6 @@ var styles = StyleSheet.create({
     marginTop: 65,
     alignItems: 'center',
   },
-});
+})
 
-module.exports = Home;
+module.exports = Home

@@ -3,32 +3,32 @@ import React, {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
+} from 'react-native'
 
 var Board = require('../components/board')
-var {GameStates, Player} = require('../constants/game')
+import { GameStates, Player } from '../constants/game'
 import * as PlayModes from '../constants/playModes'
 
 class Game extends Component {
   constructor(props){
-    super(props);
+    super(props)
     this.onPressTile = this.onPressTile.bind(this)
     this.onPressStone = this.onPressStone.bind(this)
     this.notifyIfPlayerHasWon = this.notifyIfPlayerHasWon.bind(this)
     this.getInformationAboutOwnColorIfNeeded = this.getInformationAboutOwnColorIfNeeded.bind(this)
   }
   render() {
-    var game = this.props.game
+    var game = this.props.tackleApp.game
     return (
       <View style={styles.container}>
         <Text>Game</Text>
         <Board 
           onPressTile={this.onPressTile}
-          onPressStone={this.onPressStone} 
+          onPressStone={this.onPressStone}
           stones={game.stones}
           activePlayer={game.activePlayer}
           gameState={game.gameState}
-          screenResolution={this.props.screenResolution}
+          screenResolution={this.props.tackleApp.screenResolution}
           selectedStones={game.selectedStones}
           possibleTurns={game.possibleTurns}
         />
@@ -36,15 +36,15 @@ class Game extends Component {
         <Text>Level: {game.level.name}</Text>
         {this.notifyIfPlayerHasWon()}
       </View>
-    );
+    )
   }
   getInformationAboutOwnColorIfNeeded() {
-    if(this.props.game.playMode != PlayModes.LOCALLY) {
-      return <Text>Your color: {this.props.game.ownColor}</Text>
+    if(this.props.tackleApp.game.playMode != PlayModes.LOCALLY) {
+      return <Text>Your color: {this.props.tackleApp.game.ownColor}</Text>
     }
   }
   notifyIfPlayerHasWon() {
-    var playerHasWon = this.props.game.playerHasWon
+    var playerHasWon = this.props.tackleApp.game.playerHasWon
     if(playerHasWon) {
       return (
         <View>
@@ -67,6 +67,6 @@ var styles = StyleSheet.create({
     marginTop: 65,
     alignItems: 'center',
   },
-});
+})
 
-module.exports = Game;
+module.exports = Game

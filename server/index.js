@@ -42,8 +42,8 @@ app.post('/login/:name', function(req, res) {
 });
 
 io.use(function(socket, next) {
-  if (socket.request.headers.token != null) {
-    jwt.verify(socket.request.headers.token, cert, function(err, decoded) {
+  if (socket.handshake.query.token != null) {
+    jwt.verify(socket.handshake.query.token, cert, function(err, decoded) {
       if (err) {
         return next(new Error('Authentication error'))
       }
@@ -55,9 +55,8 @@ io.use(function(socket, next) {
 });
 
 io.on('connection', function(socket) {
-  socket.on('auth', function(token) {
-    console.log(token)
-    jwt.verify(token, cert, function(err, decoded) {
+  socket.on('auth', function(obj) {
+    jwt.verify(obj.token, cert, function(err, decoded) {
       if (err) {
         socket.emit('auth', {success: false})
       }

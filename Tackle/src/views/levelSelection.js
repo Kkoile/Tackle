@@ -8,8 +8,6 @@ import React, {
 var GridView = require('react-native-grid-view')
 var Form = require('../components/form')
 
-import Game from '../containers/game'
-
 var LEVELS_PER_ROW = 2
 
 class LevelSelection extends Component {
@@ -23,7 +21,7 @@ class LevelSelection extends Component {
   render() {
     return (
       <GridView
-        items={this.props.levelSelection.forms}
+        items={this.props.tackleApp.levelSelection.forms}
         itemsPerRow={LEVELS_PER_ROW}
         renderItem={this.renderItem}
         style={styles.listView}
@@ -32,7 +30,7 @@ class LevelSelection extends Component {
   }
 
   renderItem(item) {
-    var { SCREEN_WIDTH } = this.props.screenResolution
+    var { SCREEN_WIDTH } = this.props.tackleApp.screenResolution
     return (
       <Form 
         key={item.name} 
@@ -45,15 +43,6 @@ class LevelSelection extends Component {
 
   onPress(name) {
     this.props.onLevelSelect(name)
-    this.props.navigator.replace({
-      title: 'Game',
-      component: Game,
-      leftButtonTitle: 'Back',
-      onLeftButtonPress: () => {
-        this.props.resetGame()
-        this.props.navigator.pop()
-      },
-    })
   }
 }
 

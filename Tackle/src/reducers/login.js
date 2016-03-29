@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux'
 import { States } from '../constants/login'
-import { SERVER_URL } from '../constants/connection'
 import * as Storage from '../store/localStorage'
 
 import { 
-    REQUEST_LOGIN,
     RECEIVE_LOGIN,
     NAME_LOADED,
     TOKEN_LOADED,
@@ -12,9 +10,6 @@ import {
   } from '../actions/login'
 
 var { Actions } = require('react-native-redux-router')
-
-import '../UserAgent'
-import io from 'socket.io-client/socket.io'
 
 /*tc*/export/*etc*/function loginHasSucceeded(res) {
   if(res.status == 200) {
@@ -72,7 +67,6 @@ import io from 'socket.io-client/socket.io'
 /*tc*/export/*etc*/function handleAuth(state, action) {
   var newState = JSON.parse(JSON.stringify(state))
   var socket = action.socket
-  //console.log(socket)
   socket.emit('auth', {token: action.token})
   return newState
 }
@@ -83,8 +77,6 @@ import io from 'socket.io-client/socket.io'
 
 /*tc*/export/*etc*/function login(state = getInitialState(), action) {
   switch (action.type) {
-    case REQUEST_LOGIN:
-      return state
     case RECEIVE_LOGIN:
       return handleReceiveLogin(state, action)
     case NAME_LOADED:

@@ -6,22 +6,12 @@ import {
   LOGIN
 } from '../constants/connection'
 
-export const REQUEST_LOGIN = 'REQUEST_LOGIN'
 export const RECEIVE_LOGIN = 'RECEIVE_LOGIN'
 export const GET_NAME = 'GET_NAME'
 export const NAME_LOADED = 'NAME_LOADED'
 export const GET_TOKEN = 'GET_TOKEN'
 export const TOKEN_LOADED = 'TOKEN_LOADED'
 export const AUTH = 'AUTH'
-
-var {Actions} = require('react-native-redux-router')
-
-export function requestLogin(name) {
-  return {
-    type: REQUEST_LOGIN,
-    name
-  }
-}
 
 export function receiveLogin(name, response) {
   return {
@@ -63,17 +53,6 @@ export function getName() {
   }
 }
 
-export function redirectToHomeIfNeeded(state) {
-  var { token, userName } = state.tackleApp.login
-  if(token && userName) {
-    redirectToHome()
-  }
-}
-
-export function redirectToHome() {
-  Actions.home()
-}
-
 export function auth(token, socket) {
   return {
     type: AUTH,
@@ -85,19 +64,18 @@ export function auth(token, socket) {
 export function doAuthIfNeeded(dispatch, state) {
   var { token } = state.tackleApp.login
   var { socket } = state.tackleApp.connection
-  if(token) {
+  if(token && socket) {
     dispatch(auth(token, socket))
   }
 }
 
 export function doLogin(name) {
   return (dispatch, getState) => {
-    dispatch(requestLogin(name))
     request
       .post(SERVER_URL + LOGIN + name)
       .end(function(err, res){
         dispatch(receiveLogin(name, res))
-        doAuthIfNeeded(dispatch, getState())
+        dispatch(getToken())
       })
   }
 }
