@@ -16,6 +16,7 @@ import {
 
 import Login from '../containers/login'
 import Home from '../containers/home'
+import UserList from '../containers/userList'
 import LevelSelection from '../containers/levelSelection'
 import Game from '../containers/game'
 
@@ -30,6 +31,7 @@ class App extends Component{
         <Router>
           <Route name="login" component={Login} initial={true} hideNavBar={true} title="Login"/>
           <Route name="home" component={Home} initial={false} hideNavBar={false} title="Home"/>
+          <Route name="userList" component={UserList} initial={false} hideNavBar={false} title="UserList"/>
           <Route name="levelSelection" component={LevelSelection} initial={false} hideNavBar={true} title="LevelSelection"/>
           <Route name="game" component={Game} initial={false} hideNavBar={false} title="Game"/>
         </Router>

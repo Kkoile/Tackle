@@ -26,7 +26,6 @@ const finalCreateStore = compose(
 )(createStore)
 
 let store = finalCreateStore(combineReducers({routerReducer, tackleApp}))
-console.log(store.getState())
 
 import App from './src/views/app'
 

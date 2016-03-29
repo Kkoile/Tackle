@@ -1,7 +1,8 @@
-'use strict';
+'use strict'
 import { connect } from 'react-redux'
 import * as PlayModes from '../constants/playModes'
 import { setPlayMode, resetGame } from '../actions/game'
+import { onPlayViaInternet } from '../actions/connection'
 import Home from '../views/home'
 
 var { Actions } = require('react-native-redux-router')
@@ -18,7 +19,8 @@ const mapDispatchToProps = (dispatch) => {
     },
     playViaInternet: () => {
       dispatch(setPlayMode(PlayModes.INTERNET))
-      Actions.levelSelection()
+      dispatch(onPlayViaInternet())
+      Actions.userList()
     },
     playAgainstComputer: () => {
       dispatch(setPlayMode(PlayModes.COMPUTER))

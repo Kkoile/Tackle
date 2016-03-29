@@ -6,6 +6,10 @@ import {
   LOGIN
 } from '../constants/connection'
 
+import {
+  onUpdateUsers
+} from '../actions/connection'
+
 export const RECEIVE_LOGIN = 'RECEIVE_LOGIN'
 export const GET_NAME = 'GET_NAME'
 export const NAME_LOADED = 'NAME_LOADED'
@@ -66,6 +70,10 @@ export function doAuthIfNeeded(dispatch, state) {
   var { socket } = state.tackleApp.connection
   if(token && socket) {
     dispatch(auth(token, socket))
+
+    socket.on('users', function(users) {
+      dispatch(onUpdateUsers(users))
+    })
   }
 }
 

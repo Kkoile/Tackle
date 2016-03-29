@@ -1,7 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- */
 'use strict';
 import React, {
   AppRegistry,
@@ -11,40 +7,40 @@ import React, {
   View
 } from 'react-native';
 
+import {
+  Router, 
+  routerReducer, 
+  Route, 
+  Container, 
+  Animations, 
+  Schema
+} from 'react-native-redux-router'
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
+import {Provider} from 'react-redux'
+import tackleApp from './src/reducers/index'
+import thunkMiddleware from 'redux-thunk'
+
+const finalCreateStore = compose(
+  applyMiddleware(thunkMiddleware)
+)(createStore)
+
+let store = finalCreateStore(combineReducers({routerReducer, tackleApp}))
+
+import App from './src/views/app'
+
 class Tackle extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
+      <Provider store={store}>
+        <App />
+      </Provider>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });
 
