@@ -43,7 +43,6 @@ var { Actions } = require('react-native-redux-router')
 }
 
 /*tc*/export/*etc*/function handleReceiveLogin(state, action) {
-  console.log(action)
   if(loginHasSucceeded(action.response)) {
     return finishLogin(state, action)
   }

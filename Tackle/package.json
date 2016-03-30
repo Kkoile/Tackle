@@ -13,6 +13,7 @@
     "react-native": "^0.21.0",
     "react-native-button": "^1.4.2",
     "react-native-grid-view": "^0.3.7",
+    "react-native-navbar": "^1.4.2",
     "react-native-redux-router": "^1.0.6",
     "react-redux": "^4.4.1",
     "redux": "^3.3.1",
