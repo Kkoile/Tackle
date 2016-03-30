@@ -4,7 +4,9 @@ import { TOKEN_LOADED } from '../actions/login'
 import { 
   UPDATE_USERS, 
   PLAY_VIA_INTERNET,
-  USER_PRESSED
+  USER_PRESSED,
+  ATTACKED,
+  REPLY_ATTACK
 } from '../actions/connection'
 
 import '../UserAgent'
@@ -15,6 +17,7 @@ var { Actions } = require('react-native-redux-router')
 /*tc*/export/*etc*/function getInitialState() {
   return {
     socket: undefined,
+    attacked: undefined,
     users: []
   }
 }
@@ -58,6 +61,20 @@ var { Actions } = require('react-native-redux-router')
   return state
 }
 
+/*tc*/export/*etc*/function onAttacked(state, action) {
+  state.attacked = action.data.username
+  return state
+}
+
+/*tc*/export/*etc*/function onReplyAttack(state, action) {
+  var socket = state.socket
+  socket.emit('replyAttack', action.answer)
+  if(!action.answer) {
+    state.attacked = undefined
+  }
+  return state
+}
+
 /*tc*/export/*etc*/function connection(state = getInitialState(), action) {
   switch (action.type) {
     case TOKEN_LOADED:
@@ -68,6 +85,10 @@ var { Actions } = require('react-native-redux-router')
       return onUpdateUsers(state, action)
     case USER_PRESSED:
       return onUserPressed(state, action)
+    case ATTACKED:
+      return onAttacked(state, action)
+    case REPLY_ATTACK:
+      return onReplyAttack(state, action)
     default:
       return state
   }

@@ -2,7 +2,6 @@
 import React, {
   AppRegistry,
   Component,
-  NavigatorIOS,
   StyleSheet,
   Text,
   View

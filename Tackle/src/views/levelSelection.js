@@ -5,6 +5,9 @@ import React, {
   View
 } from 'react-native'
 
+import * as PlayModes from '../constants/playModes'
+import { Player } from '../constants/game'
+
 var GridView = require('react-native-grid-view')
 var Form = require('../components/form')
 
@@ -19,14 +22,23 @@ class LevelSelection extends Component {
   }
 
   render() {
-    return (
-      <GridView
-        items={this.props.tackleApp.levelSelection.forms}
-        itemsPerRow={LEVELS_PER_ROW}
-        renderItem={this.renderItem}
-        style={styles.listView}
-      />
-    )
+    if(this.props.tackleApp.game.playMode === PlayModes.INTERNET
+        && this.props.tackleApp.game.ownColor !== Player.WHITE) {
+      return (
+        <View style={styles.listView}>
+          <Text>Please wait till the opponent has chosen a level to play</Text>
+        </View> 
+      )
+    } else {
+      return (
+        <GridView
+          items={this.props.tackleApp.levelSelection.forms}
+          itemsPerRow={LEVELS_PER_ROW}
+          renderItem={this.renderItem}
+          style={styles.listView}
+        />
+      )   
+    }
   }
 
   renderItem(item) {

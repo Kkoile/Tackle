@@ -1,7 +1,10 @@
 'use strict'
 import { connect } from 'react-redux'
 import UserList from '../views/userList'
-import { onUserPressed } from '../actions/connection'
+import { 
+	onUserPressed,
+	replyAttack
+} from '../actions/connection'
 
 var { Actions } = require('react-native-redux-router')
 
@@ -14,6 +17,12 @@ const mapDispatchToProps = (dispatch) => {
   	onPressedUser: (user) => {
       dispatch(onUserPressed(user))
     },
+    acceptAttack: () => {
+    	dispatch(replyAttack(true))
+    },
+    declineAttack: () => {
+    	dispatch(replyAttack(false))
+    }
   }
 }
 

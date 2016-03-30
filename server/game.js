@@ -32,8 +32,8 @@ module.exports = function(io, socket) {
         var op = onlineUsers[data.username]
         if (op.gamedata.attacking === false && op.gamedata.inGame === false && op.gamedata.ready === true && op.gamedata.attacked === false) {
           socket.gamedata.attacking = data.username
-          op.gamedata.attacked = data.username
-          op.emit('attack', data)
+          op.gamedata.attacked = socket.jwtData.username
+          op.emit('attack', {username: socket.jwtData.username})
           io.emit('users', getUsers())
         }
       }
@@ -65,6 +65,12 @@ module.exports = function(io, socket) {
       io.emit('users', getUsers())
     }
   })
+  socket.on('levelSelection', function(data){
+    if(socket.gamedata.inGame != null && onlineUsers[socket.gamedata.inGame] != null){
+      var op = onlineUsers[socket.gamedata.inGame]
+      op.emit('levelSelection', data)
+    }
+  })
   socket.on('turn', function(data){
     if(socket.gamedata.inGame != null && onlineUsers[socket.gamedata.inGame] != null){
       var op = onlineUsers[socket.gamedata.inGame]
@@ -74,6 +80,7 @@ module.exports = function(io, socket) {
   socket.on('ready', function(data) {
     if (data === true || data === false) {
       socket.gamedata.ready = data
+      io.emit('users', getUsers())
     }
   })
   io.emit('users', getUsers())

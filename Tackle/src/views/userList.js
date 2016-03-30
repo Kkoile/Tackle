@@ -14,21 +14,44 @@ class UserList extends Component {
   }
 
   render() {
+    var ownUser = this.props.tackleApp.login.userName
     var userButtons = []
     var users = this.props.tackleApp.connection.users
     users.map((user) => {
-      userButtons.push(
-        <Button 
-          key={user}
-          style={styles.button}
-          onPress={() => this.onPressedUser(user)}
-        >
-          {user}
-        </Button>
-      )
+      if(user !== ownUser) {
+        userButtons.push(
+          <Button 
+            key={user}
+            style={styles.button}
+            onPress={() => this.onPressedUser(user)}
+          >
+            {user}
+          </Button>
+        )
+      }
     })
+    var attacked
+    if(this.props.tackleApp.connection.attacked) {
+      attacked =
+        <View>
+          <Text>You're attacked by {this.props.tackleApp.connection.attacked}</Text>
+          <Button 
+            style={styles.button}
+            onPress={() => this.props.acceptAttack()}
+          >
+            Accept
+          </Button>
+          <Button 
+            style={styles.button}
+            onPress={() => this.props.declineAttack()}
+          >
+            Decline
+          </Button>
+        </View>
+    }
     return (
       <View style={styles.container}>
+        {attacked}
         <Text>Available Users: </Text>
         {userButtons}
       </View>
@@ -50,7 +73,7 @@ var styles = StyleSheet.create({
   },
   container: {
     padding: 30,
-    marginTop: 65,
+    marginTop: 200,
     alignItems: 'center',
   },
 })

@@ -5,7 +5,11 @@ import {
     STONE_CLICKED, 
     SET_PLAY_MODE, 
     RESET_GAME,
-    COMPUTERS_TURN
+    COMPUTERS_TURN,
+    OPPONENTS_TURN,
+    SET_OPPONENTS_TURN,
+    NOTIFY_LEVEL_SELECTION,
+    SET_PLAYER
   } from '../actions/game'
 import { GameStates, Player, FIELD_SIZE } from '../constants/game'
 import { levels } from '../constants/levels'
@@ -91,12 +95,16 @@ import * as computer from '../logic/artificialIntelligence'
   }
 }
 
-/*tc*/export/*etc*/function getRandomColor() {
-  var isWhitePlayer = Math.random()<.5
+/*tc*/export/*etc*/function getColorFromRandomBoolean(isWhitePlayer) {
   if(isWhitePlayer) {
     return Player.WHITE
   }
   return Player.BLACK
+}
+
+/*tc*/export/*etc*/function getRandomColor() {
+  var isWhitePlayer = Math.random()<.5
+  return getColorFromRandomBoolean(isWhitePlayer)
 }
 
 /*tc*/export/*etc*/function stoneIsOnPossibleField(state, clickedStone) {
@@ -326,8 +334,53 @@ import * as computer from '../logic/artificialIntelligence'
   return newState
 }
 
+/*tc*/export/*etc*/function handleSetPlayer(state, action) {
+  var newState = JSON.parse(JSON.stringify(state))
+  newState.ownColor = getColorFromRandomBoolean(action.isWhitePlayer)
+  newState.opponentColor = switchColor(newState.ownColor)
+  return newState
+}
+
 /*tc*/export/*etc*/function opponentIsComputer(state) {
   return state.playMode == PlayModes.COMPUTER
+}
+
+/*tc*/export/*etc*/function opponentIsInternet(state) {
+  return state.playMode == PlayModes.INTERNET
+}
+
+/*tc*/export/*etc*/function handleComputersTurn(state, action) {
+  if(opponentIsComputer(state) && itIsNotTheUsersTurn(state)) {
+    return getStateAfterComputerMadeItsTurn(state)
+  }
+  return state
+}
+
+/*tc*/export/*etc*/function notifyOpponentOfLevelSelection(state, action) {
+  if(opponentIsInternet(state) && !itIsNotTheUsersTurn(state)) {
+    var socket = action.socket
+    socket.emit('levelSelection', state.level.name)
+  }
+  return state
+}
+
+/*tc*/export/*etc*/function handleOpponentsTurn(state, action) {
+  if(opponentIsInternet(state) && itIsNotTheUsersTurn(state)) {
+    var socket = action.socket
+    socket.emit('turn', state)
+  }
+  return state
+}
+
+/*tc*/export/*etc*/function setOpponentsTurn(state, action) {
+  var newState = JSON.parse(JSON.stringify(state))
+  if(opponentIsInternet(state) && itIsNotTheUsersTurn(state)) {
+    var oppState = action.oppState
+    newState.field = oppState.field
+    newState.stones = oppState.stones
+    newState.gameState = oppState.gameState
+  }
+  return newState
 }
 
 /*tc*/export/*etc*/function game(state = getInitialState(), action) {
@@ -340,13 +393,18 @@ import * as computer from '../logic/artificialIntelligence'
       return handleClickedOnStone(state, action)
     case SET_PLAY_MODE:
       return handleSetPlayMode(state, action)
+    case SET_PLAYER:
+      return handleSetPlayer(state, action)
     case RESET_GAME:
       return getInitialState()
     case COMPUTERS_TURN:
-      if(opponentIsComputer(state) && itIsNotTheUsersTurn(state)) {
-        return getStateAfterComputerMadeItsTurn(state)
-      }
-      return state
+      return handleComputersTurn(state, action)
+    case OPPONENTS_TURN:
+      return handleOpponentsTurn(state, action)
+    case SET_OPPONENTS_TURN:
+      return setOpponentsTurn(state, action)
+    case NOTIFY_LEVEL_SELECTION:
+      return notifyOpponentOfLevelSelection(state, action)
     default:
       return state
   }

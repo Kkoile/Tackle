@@ -35,6 +35,7 @@ class Game extends Component {
         {this.getInformationAboutOwnColorIfNeeded()}
         <Text>Level: {game.level.name}</Text>
         {this.notifyIfPlayerHasWon()}
+        {this.showPlayerToWaitIfNeeded()}
       </View>
     )
   }
@@ -51,6 +52,13 @@ class Game extends Component {
           <Text>{playerHasWon} has won</Text>
         </View>
       )
+    }
+  }
+  showPlayerToWaitIfNeeded() {
+    var { game } = this.props.tackleApp
+    if(game.playMode != PlayModes.LOCALLY
+      && game.gameState.activePlayer != game.ownColor) {
+      return <Text>Please wait till your opponent has made its turn!</Text>
     }
   }
   onPressTile(player, position) {
