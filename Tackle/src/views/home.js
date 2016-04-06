@@ -27,6 +27,8 @@ class Home extends Component {
           </Button>
           <Button 
             style={styles.button}
+            styleDisabled={styles.buttonDisabled}
+            disabled={this.props.tackleApp.connection.onlyLocal}
             onPress={this.onPressPlayViaInternet}
           >
             Play against Friend (Internet)
@@ -59,6 +61,9 @@ var styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     color: '#656565'
+  },
+  buttonDisabled: {
+    backgroundColor: 'red'
   },
   container: {
     padding: 30,

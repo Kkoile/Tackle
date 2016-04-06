@@ -12,6 +12,7 @@ export const USER_PRESSED = 'USER_PRESSED'
 export const ATTACKED = 'ATTACKED'
 export const REPLY_ATTACK = 'REPLY_ATTACK'
 export const CHOOSE_LEVEL = 'CHOOSE_LEVEL'
+export const CONNECTION_FAILED = 'CONNECTION_FAILED'
 
 export function onUpdateUsers(users) {
   return {

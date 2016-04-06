@@ -6,7 +6,8 @@ import {
     RECEIVE_LOGIN,
     NAME_LOADED,
     TOKEN_LOADED,
-    AUTH
+    AUTH,
+    AUTH_RESPONSE
   } from '../actions/login'
 
 var { Actions } = require('react-native-redux-router')

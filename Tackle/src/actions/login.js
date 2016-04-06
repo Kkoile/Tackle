@@ -10,12 +10,17 @@ import {
   onUpdateUsers
 } from '../actions/connection'
 
+var { Actions } = require('react-native-redux-router')
+
 export const RECEIVE_LOGIN = 'RECEIVE_LOGIN'
 export const GET_NAME = 'GET_NAME'
 export const NAME_LOADED = 'NAME_LOADED'
 export const GET_TOKEN = 'GET_TOKEN'
 export const TOKEN_LOADED = 'TOKEN_LOADED'
 export const AUTH = 'AUTH'
+export const AUTH_RESPONSE = 'AUTH_SUCCEEDED'
+
+import { CONNECTION_FAILED } from './connection'
 
 export function receiveLogin(name, response) {
   return {
@@ -36,6 +41,7 @@ export function getToken() {
   return (dispatch, getState) => {
     Storage.getToken().then(token => {
       dispatch(onTokenLoaded(token))
+      Actions.home()
       doAuthIfNeeded(dispatch, getState())
     })
   }
@@ -71,6 +77,12 @@ export function doAuthIfNeeded(dispatch, state) {
   if(token && socket) {
     dispatch(auth(token, socket))
 
+    socket.on('connect_error', function(auth) {
+      dispatch({type: CONNECTION_FAILED})
+    })
+    socket.on('auth', function(auth) {
+      dispatch({type: AUTH_RESPONSE, success: auth.success})
+    })
     socket.on('users', function(users) {
       dispatch(onUpdateUsers(users))
     })

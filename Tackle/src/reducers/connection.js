@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux'
 import { SERVER_URL } from '../constants/connection'
-import { TOKEN_LOADED } from '../actions/login'
+import { TOKEN_LOADED, AUTH_RESPONSE } from '../actions/login'
 import { 
   UPDATE_USERS, 
   PLAY_VIA_INTERNET,
   USER_PRESSED,
   ATTACKED,
-  REPLY_ATTACK
+  REPLY_ATTACK,
+  CONNECTION_FAILED
 } from '../actions/connection'
 
 import '../UserAgent'
@@ -23,22 +24,26 @@ var { Actions } = require('react-native-redux-router')
 }
 
 /*tc*/export/*etc*/function onTokenLoaded(state, action) {
+  var onlyLocal = true
   var opts = {
     query: {
       'token': action.token
     }
   }
   var socket = io(SERVER_URL, opts)
-  socket.on('auth', function(auth) {
-    if(auth.success) {
-      Actions.home()
-    }else{
-      //TODO: What happens, if auth failed?
-    }
-  })
   return {
+    onlyLocal: onlyLocal,
     socket: socket
   }
+}
+
+/*tc*/export/*etc*/function onAuthResponse(state, action) {
+  if(action.success){
+    state.onlyLocal = false
+  }else{
+    state.onlyLocal = true
+  }
+  return state
 }
 
 /*tc*/export/*etc*/function onPlayViaInternet(state, action) {
@@ -75,6 +80,11 @@ var { Actions } = require('react-native-redux-router')
   return state
 }
 
+/*tc*/export/*etc*/function onConnectionFailed(state, action) {
+  state.onlyLocal = true
+  return state
+}
+
 /*tc*/export/*etc*/function connection(state = getInitialState(), action) {
   switch (action.type) {
     case TOKEN_LOADED:
@@ -89,6 +99,10 @@ var { Actions } = require('react-native-redux-router')
       return onAttacked(state, action)
     case REPLY_ATTACK:
       return onReplyAttack(state, action)
+    case CONNECTION_FAILED:
+      return onConnectionFailed(state, action)
+    case AUTH_RESPONSE:
+      return onAuthResponse(state, action)
     default:
       return state
   }
